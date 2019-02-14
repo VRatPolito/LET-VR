@@ -10,7 +10,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-public enum ControllerType { ArmSwing, FootSwing, CVirtualizer, KatWalk };
+public enum ControllerType { ArmSwing, FootSwing, CVirtualizer, KatWalk, RealWalk };
 
 
 public class LocomotionManager : UnitySingleton<LocomotionManager>
@@ -132,12 +132,16 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
                 RightTracker = cr.Find("Tracker (right)");
                 break;
             case ControllerType.CVirtualizer:
-                var pc = CurrentPlayerController.GetComponent<PlayerColliderManager>();
+                var pc = CurrentPlayerController.GetComponent<CircularLimitTracking>();
                 CameraEye = pc.CameraEye;
                 break;
             case ControllerType.KatWalk:
-                pc = CurrentPlayerController.GetComponent<PlayerColliderManager>();
+                pc = CurrentPlayerController.GetComponent<CircularLimitTracking>();
                 CameraEye = pc.CameraEye;
+                break;
+            case ControllerType.RealWalk:
+                var cvr= CurrentPlayerController.GetComponent<CharacterControllerVR>();
+                CameraEye = cvr.CameraEye;
                 break;
         }
 
@@ -194,7 +198,10 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
                 break;
             case ControllerType.KatWalk:
                 CurrentPlayerController.GetComponentInChildren<KATDevice>().multiply = 1.0f;
-                CurrentPlayerController.GetComponentInChildren<KATDevice>().multiplyBack = 0.4f;
+                CurrentPlayerController.GetComponentInChildren<KATDevice>().multiplyBack = 0.4f;             
+                break;
+            case ControllerType.RealWalk:
+                CurrentPlayerController.GetComponent<CharacterControllerVR>().Blocked = false;
                 break;
         }
     }
@@ -215,6 +222,9 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
             case ControllerType.KatWalk:
                 CurrentPlayerController.GetComponentInChildren<KATDevice>().multiply = 0;
                 CurrentPlayerController.GetComponentInChildren<KATDevice>().multiplyBack = 0;
+                break;
+            case ControllerType.RealWalk:
+                CurrentPlayerController.GetComponent<CharacterControllerVR>().Blocked = true;
                 break;
         }
     }
