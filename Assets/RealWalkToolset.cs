@@ -14,7 +14,37 @@ public class RealWalkToolset : MonoBehaviour
     {
         _input = GetComponent<InputManagement>();
         _input.OnLeftPadPressed += LeftPadPressed;
-        _input.OnLeftPadPressed += RightPadPressed;
+        _input.OnRightPadPressed += RightPadPressed;
+        _input.OnLeftPadTouched += LeftPadTouched;
+        _input.OnRightPadTouched += RightPadTouched;
+    }
+
+    private void LeftPadTouched(object sender, ClickedEventArgs arg)
+    {
+        PadTouched(arg.padX, arg.padY);
+    }
+
+    private void RightPadTouched(object sender, ClickedEventArgs arg)
+    {
+        PadTouched(arg.padX, arg.padY);
+    }
+
+    private void PadTouched(float padX, float padY)
+    {
+        if (padY > -padX && padY >= padX)         //up
+        {
+        }
+        else if (padY < padX && padY >= -padX)   //right
+        {
+            Rotate(1);
+        }
+        else if (padY < padX && padY <= -padX)   //down
+        {
+        }
+        else //if(padY > padX && padY <= -padX)  left
+        {
+            Rotate(-1);
+        }
     }
 
     private void RightPadPressed(object sender, ClickedEventArgs arg)
@@ -35,7 +65,7 @@ public class RealWalkToolset : MonoBehaviour
         }
        else if (padY < padX && padY >= -padX)   //right
         {
-            RotateRight();
+            Rotate(15);
         }
        else if (padY < padX && padY <= -padX)   //down
         {
@@ -43,7 +73,7 @@ public class RealWalkToolset : MonoBehaviour
         }
        else //if(padY > padX && padY <= -padX)  left
         {
-            RotateLeft();
+            Rotate(-15);
         }
 
     }
@@ -59,11 +89,6 @@ public class RealWalkToolset : MonoBehaviour
         }
     }
 
-    private void RotateRight()
-    {
-        transform.Rotate(new Vector3(0, 90, 0));
-    }
-
     private void TeleportPrev()
     {
         _currPoint--;
@@ -72,8 +97,8 @@ public class RealWalkToolset : MonoBehaviour
         transform.position = _teleportPoints[_currPoint];
     }
 
-    private void RotateLeft()
+    private void Rotate(float a)
     {
-        transform.Rotate(new Vector3(0, -90, 0));
+        transform.Rotate(new Vector3(0, a, 0));
     }
 }
