@@ -16,11 +16,8 @@ public class PlayerColliderManager : MonoBehaviour
     void Start()
     {
         if (height == 0.0f)
-        {
-            height = Head.position.y;
-            if (height < 1.62f)
-                height = 1.62f;
-        }
+            height = LocomotionManager.Instance.CalibrationData.HeadHeight;
+
         GetComponent<CharacterController>().height = height;
         GetComponent<NavMeshObstacle>().height = height;
 
