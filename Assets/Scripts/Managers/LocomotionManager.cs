@@ -162,7 +162,7 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
 
     private void Update()
     {
-        if (Input.GetKeyDown(_freezePalyerKeyCode))
+        if (Input.GetKeyDown(_freezePalyerKeyCode) || (Locomotion == ControllerType.RealWalk && CurrentPlayerController != null && (CurrentPlayerController.GetComponent<InputManagement>().IsLeftGripped && CurrentPlayerController.GetComponent<InputManagement>().IsRightGripped)))
             IsPlayerFreezed = !IsPlayerFreezed;
 
 

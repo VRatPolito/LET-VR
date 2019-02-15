@@ -420,7 +420,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh123182
+  m_Name: pb_Mesh68806
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -4314,6 +4314,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4014390728746312671, guid: 8aee1000b059b2542a1b5f75dddab8e9,
+        type: 3}
+      propertyPath: _teleportPoints.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4014390728746312671, guid: 8aee1000b059b2542a1b5f75dddab8e9,
+        type: 3}
+      propertyPath: _teleportPoints.Array.data[0].x
+      value: 42.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4014390728746312671, guid: 8aee1000b059b2542a1b5f75dddab8e9,
+        type: 3}
+      propertyPath: _teleportPoints.Array.data[0].z
+      value: 26
+      objectReference: {fileID: 0}
+    - target: {fileID: 4014390728746312671, guid: 8aee1000b059b2542a1b5f75dddab8e9,
+        type: 3}
+      propertyPath: _teleportPoints.Array.data[1].x
+      value: 16.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4014390728746312671, guid: 8aee1000b059b2542a1b5f75dddab8e9,
+        type: 3}
+      propertyPath: _teleportPoints.Array.data[1].z
+      value: 26
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8aee1000b059b2542a1b5f75dddab8e9, type: 3}
