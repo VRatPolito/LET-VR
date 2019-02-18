@@ -61,7 +61,7 @@ public class CharacterControllerVR : MonoBehaviour {
             Vector3 moveDirection = new Vector3();
             if (_playerCollider.isGrounded)
             {
-                moveDirection = NewCenterEyeLocalPos - _prevCenterEyeLocalPos;
+                moveDirection = transform.TransformDirection(NewCenterEyeLocalPos - _prevCenterEyeLocalPos);
                 while (_externalMotion.Count > 0)
                     moveDirection += _externalMotion.Dequeue();
             }
