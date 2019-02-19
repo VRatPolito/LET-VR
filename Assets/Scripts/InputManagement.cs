@@ -282,7 +282,8 @@ public class InputManagement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-            if (Input.GetButtonDown("Fire Left Mouse"))
+#if MOUSEANDKEYBOARD
+        if (Input.GetButtonDown("Fire Left Mouse"))
                 IsLeftMouseClicked = true;
             else if (Input.GetButtonUp("Fire Left Mouse"))
                 IsLeftMouseClicked = false;
@@ -297,7 +298,8 @@ public class InputManagement : MonoBehaviour
             if (Input.GetButtonDown("Drop Item Right"))
                 IsRightDropPressed = true;
             else if (Input.GetButtonUp("Drop Item Right"))
-                IsRightDropPressed = false;      
+                IsRightDropPressed = false;
+#endif
     }
 
     private void LeftTriggerClicked(object sender, ClickedEventArgs e)

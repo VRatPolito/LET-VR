@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 046c8806f4943c741bfa0a33fa20d56b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _teleportPoints: []
 --- !u!1001 &8024601721874815675
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -67,6 +68,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 143989061141002904, guid: 23b331d8a58ac6149b8e80410cf5240a,
+        type: 3}
+      propertyPath: m_Radius
+      value: 0.02
+      objectReference: {fileID: 0}
     - target: {fileID: 114247078355575060, guid: 23b331d8a58ac6149b8e80410cf5240a,
         type: 3}
       propertyPath: LeftController
@@ -82,6 +88,36 @@ PrefabInstance:
       propertyPath: BlipSource
       value: 
       objectReference: {fileID: 7960192736670648249}
+    - target: {fileID: 5131096528093996081, guid: 23b331d8a58ac6149b8e80410cf5240a,
+        type: 3}
+      propertyPath: CameraRig
+      value: 
+      objectReference: {fileID: 8019801423805896097}
+    - target: {fileID: 5131096528093996081, guid: 23b331d8a58ac6149b8e80410cf5240a,
+        type: 3}
+      propertyPath: CameraEye
+      value: 
+      objectReference: {fileID: 8021479722207834585}
+    - target: {fileID: 5131096528093996081, guid: 23b331d8a58ac6149b8e80410cf5240a,
+        type: 3}
+      propertyPath: _playerCollider
+      value: 
+      objectReference: {fileID: 7972094776961916963}
+    - target: {fileID: 8314054607297287215, guid: 23b331d8a58ac6149b8e80410cf5240a,
+        type: 3}
+      propertyPath: Head
+      value: 
+      objectReference: {fileID: 8021479722207834585}
+    - target: {fileID: 5238949989976337253, guid: 23b331d8a58ac6149b8e80410cf5240a,
+        type: 3}
+      propertyPath: LeftController
+      value: 
+      objectReference: {fileID: 8023720268151987653}
+    - target: {fileID: 5238949989976337253, guid: 23b331d8a58ac6149b8e80410cf5240a,
+        type: 3}
+      propertyPath: RightController
+      value: 
+      objectReference: {fileID: 8023436122884666975}
     - target: {fileID: 114319316932060434, guid: 23b331d8a58ac6149b8e80410cf5240a,
         type: 3}
       propertyPath: left
@@ -127,36 +163,6 @@ PrefabInstance:
       propertyPath: _ears
       value: 
       objectReference: {fileID: 8019995076691183613}
-    - target: {fileID: 5131096528093996081, guid: 23b331d8a58ac6149b8e80410cf5240a,
-        type: 3}
-      propertyPath: CameraRig
-      value: 
-      objectReference: {fileID: 8019801423805896097}
-    - target: {fileID: 5131096528093996081, guid: 23b331d8a58ac6149b8e80410cf5240a,
-        type: 3}
-      propertyPath: CameraEye
-      value: 
-      objectReference: {fileID: 8021479722207834585}
-    - target: {fileID: 5131096528093996081, guid: 23b331d8a58ac6149b8e80410cf5240a,
-        type: 3}
-      propertyPath: _playerCollider
-      value: 
-      objectReference: {fileID: 7972094776961916963}
-    - target: {fileID: 8314054607297287215, guid: 23b331d8a58ac6149b8e80410cf5240a,
-        type: 3}
-      propertyPath: Head
-      value: 
-      objectReference: {fileID: 8021479722207834585}
-    - target: {fileID: 5238949989976337253, guid: 23b331d8a58ac6149b8e80410cf5240a,
-        type: 3}
-      propertyPath: LeftController
-      value: 
-      objectReference: {fileID: 8023720268151987653}
-    - target: {fileID: 5238949989976337253, guid: 23b331d8a58ac6149b8e80410cf5240a,
-        type: 3}
-      propertyPath: RightController
-      value: 
-      objectReference: {fileID: 8023436122884666975}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23b331d8a58ac6149b8e80410cf5240a, type: 3}
 --- !u!1 &8023237576185046391 stripped

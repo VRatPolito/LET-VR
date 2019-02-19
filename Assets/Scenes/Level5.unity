@@ -7558,6 +7558,16 @@ PrefabInstance:
       propertyPath: _teleportPoints.Array.data[3].z
       value: -32.5
       objectReference: {fileID: 0}
+    - target: {fileID: 7979793411662166049, guid: 8aee1000b059b2542a1b5f75dddab8e9,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7980275944838154031, guid: 8aee1000b059b2542a1b5f75dddab8e9,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8aee1000b059b2542a1b5f75dddab8e9, type: 3}
 --- !u!4 &1576298454 stripped
