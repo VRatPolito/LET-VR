@@ -19,26 +19,57 @@ public class RealWalkToolset : MonoBehaviour
         _input.OnRightPadTouched += RightPadTouched;
     }
 
-    private void LeftPadTouched(object sender, ClickedEventArgs arg)
+
+    private void RightPadPressed(object sender, ClickedEventArgs arg)
     {
-        PadTouched(arg.padX, arg.padY);
+        if (arg.padY > -arg.padX && arg.padY >= arg.padX)         //up
+        {
+            Translate2D(0, 1f);
+        }
+        else if (arg.padY < arg.padX && arg.padY >= -arg.padX)   //right
+        {
+            Translate2D(1f, 0);
+        }
+        else if (arg.padY < arg.padX && arg.padY <= -arg.padX)   //down
+        {
+            Translate2D(0, -1f);
+        }
+        else //if(padY > padX && padY <= -padX)  left
+        {
+            Translate2D(-1f, 0);
+        }
     }
 
     private void RightPadTouched(object sender, ClickedEventArgs arg)
     {
-        PadTouched(arg.padX, arg.padY);
+        if (arg.padY > -arg.padX && arg.padY >= arg.padX)         //up
+        {
+            Translate2D(0, .1f);
+        }
+        else if (arg.padY < arg.padX && arg.padY >= -arg.padX)   //right
+        {
+            Translate2D(.1f, 0);
+        }
+        else if (arg.padY < arg.padX && arg.padY <= -arg.padX)   //down
+        {
+            Translate2D(0, -.1f);
+        }
+        else //if(padY > padX && padY <= -padX)  left
+        {
+            Translate2D(-.1f, 0);
+        }
     }
 
-    private void PadTouched(float padX, float padY)
+    private void LeftPadTouched(object sender, ClickedEventArgs arg)
     {
-        if (padY > -padX && padY >= padX)         //up
+        if (arg.padY > -arg.padX && arg.padY >= arg.padX)         //up
         {
         }
-        else if (padY < padX && padY >= -padX)   //right
+        else if (arg.padY < arg.padX && arg.padY >= -arg.padX)   //right
         {
             Rotate(1);
         }
-        else if (padY < padX && padY <= -padX)   //down
+        else if (arg.padY < arg.padX && arg.padY <= -arg.padX)   //down
         {
         }
         else //if(padY > padX && padY <= -padX)  left
@@ -47,27 +78,17 @@ public class RealWalkToolset : MonoBehaviour
         }
     }
 
-    private void RightPadPressed(object sender, ClickedEventArgs arg)
-    {
-        PadPressed(arg.padX, arg.padY);
-    }
-
     private void LeftPadPressed(object sender, ClickedEventArgs arg)
     {
-        PadPressed(arg.padX, arg.padY);
-    }
-
-    private void PadPressed(float padX, float padY)
-    {
-       if(padY > -padX && padY >= padX)         //up
+       if(arg.padY > -arg.padX && arg.padY >= arg.padX)         //up
         {
             TeleportNext();
         }
-       else if (padY < padX && padY >= -padX)   //right
+       else if (arg.padY < arg.padX && arg.padY >= -arg.padX)   //right
         {
             Rotate(15);
         }
-       else if (padY < padX && padY <= -padX)   //down
+       else if (arg.padY < arg.padX && arg.padY <= -arg.padX)   //down
         {
             TeleportPrev();
         }
@@ -75,7 +96,6 @@ public class RealWalkToolset : MonoBehaviour
         {
             Rotate(-15);
         }
-
     }
 
     private void TeleportNext()
@@ -100,5 +120,10 @@ public class RealWalkToolset : MonoBehaviour
     private void Rotate(float a)
     {
         transform.Rotate(new Vector3(0, a, 0));
+    }
+
+    private void Translate2D(float x, float z)
+    {
+        transform.Translate(new Vector3(x, 0, z));
     }
 }
