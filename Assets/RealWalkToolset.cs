@@ -8,11 +8,13 @@ public class RealWalkToolset : MonoBehaviour
     [SerializeField]
     private List<Vector3> _teleportPoints;
     private InputManagement _input;
+    private CharacterControllerVR _cVR;
     private int _currPoint = 0;
 
     private void Awake()
     {
         _input = GetComponent<InputManagement>();
+        _cVR = GetComponent<CharacterControllerVR>();
         _input.OnLeftPadPressed += LeftPadPressed;
         _input.OnRightPadPressed += RightPadPressed;
         _input.OnLeftPadTouched += LeftPadTouched;
@@ -124,6 +126,7 @@ public class RealWalkToolset : MonoBehaviour
 
     private void Translate2D(float x, float z)
     {
-        transform.Translate(new Vector3(x, 0, z));
+        var p = _cVR.CameraEye.localToWorldMatrix * new Vector3(x, 0, z);
+        transform.Translate(new Vector3(p.x, 0, p.z), Space.World);
     }
 }
