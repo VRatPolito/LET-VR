@@ -20,7 +20,7 @@ public class RealWalkToolset : MonoBehaviour
     }
 
 
-    private void RightPadPressed(object sender, ClickedEventArgs arg)
+    private void LeftPadPressed(object sender, ClickedEventArgs arg)
     {
         if (arg.padY > -arg.padX && arg.padY >= arg.padX)         //up
         {
@@ -40,7 +40,7 @@ public class RealWalkToolset : MonoBehaviour
         }
     }
 
-    private void RightPadTouched(object sender, ClickedEventArgs arg)
+    private void LeftPadTouched(object sender, ClickedEventArgs arg)
     {
         if (arg.padY > -arg.padX && arg.padY >= arg.padX)         //up
         {
@@ -60,7 +60,7 @@ public class RealWalkToolset : MonoBehaviour
         }
     }
 
-    private void LeftPadTouched(object sender, ClickedEventArgs arg)
+    private void RightPadTouched(object sender, ClickedEventArgs arg)
     {
         if (arg.padY > -arg.padX && arg.padY >= arg.padX)         //up
         {
@@ -78,7 +78,7 @@ public class RealWalkToolset : MonoBehaviour
         }
     }
 
-    private void LeftPadPressed(object sender, ClickedEventArgs arg)
+    private void RightPadPressed(object sender, ClickedEventArgs arg)
     {
        if(arg.padY > -arg.padX && arg.padY >= arg.padX)         //up
         {
