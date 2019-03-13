@@ -111,7 +111,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
             "" + _diffsum,
             "" + _errors,
             "" + ((float)_count / (float)_angles.Count * 100),
-            "" + GetAvgGazeWalkAngle(),                             //just joking, it's hand to hand avg dist
+            "" + GetAvgGazeWalkAngle() * 100,                             //just joking, it's hand to hand avg dist %
             "" + Level3Manager.Instance.RobotsCoinCollectorController.Score
         };
         WriteToCSV("PW", values, 2);
@@ -202,7 +202,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
             var hd = Vector3.Distance(cl, cr);
             if (hd > .6f* LocomotionManager.Instance.CalibrationData.ControllerDistance)
                 _count++;
-            _angles.Add(hd);
+            _angles.Add(hd / LocomotionManager.Instance.CalibrationData.ControllerDistance);
 
             var currpos = LocomotionManager.Instance.CurrentPlayerController.position;
             if (currpos == _prevpos)
