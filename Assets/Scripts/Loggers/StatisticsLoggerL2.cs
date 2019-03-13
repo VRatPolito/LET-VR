@@ -117,7 +117,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
             "" + _timeStop,
             "" + _errors
         };
-        WriteToCSV("ST", values, 4);
+        WriteToCSV("SL", values, 4);
         Level2Manager.Instance.StartHalfSlope.gameObject.SetActive(true);
         Level2Manager.Instance.StartHalfStairs.gameObject.SetActive(true);
     }
@@ -188,7 +188,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
             "" + _timeStop,
             "" + _errors
         };
-        WriteToCSV("SL", values, 4);
+        WriteToCSV("ST", values, 4);
         _stairslopeWalking = false;
     }
 
