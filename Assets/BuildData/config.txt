@@ -1,2 +1,2 @@
 #SetLocomotion Method among {ArmSwing, FootSwing, CVirtualizer, KatWalk, RealWalk}
-LocomotionMethod=RealWalk
+LocomotionMethod=ArmSwing

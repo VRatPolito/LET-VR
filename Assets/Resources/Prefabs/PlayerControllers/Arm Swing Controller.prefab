@@ -1120,7 +1120,7 @@ MonoBehaviour:
   stoppingInertiaTimeToStopAtMaxSpeed: 0.35
   FootSwinging: 0
   Target: {fileID: 143989061141002904}
-  DirectionalTracker: {fileID: 114858651928704604}
+  DirectionalTracker: {fileID: 0}
   _FootSwingingPaused: 0
 --- !u!1 &1658180417744100
 GameObject:
@@ -1804,7 +1804,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2983702913870600587}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2, y: 0, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children:
   - {fileID: 399114004200464210}
