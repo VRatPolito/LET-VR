@@ -132,12 +132,12 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
                 RightTracker = cr.Find("Tracker (right)");
                 break;
             case ControllerType.CVirtualizer:
-                var pc = CurrentPlayerController.GetComponent<CircularLimitTracking>();
-                CameraEye = pc.CameraEye;
+                var pcm = CurrentPlayerController.GetComponent<PlayerColliderManager>();
+                CameraEye = pcm.Head;
                 break;
             case ControllerType.KatWalk:
-                pc = CurrentPlayerController.GetComponent<CircularLimitTracking>();
-                CameraEye = pc.CameraEye;
+                pcm = CurrentPlayerController.GetComponent<PlayerColliderManager>();
+                CameraEye = pcm.Head;
                 break;
             case ControllerType.RealWalk:
                 var cvr= CurrentPlayerController.GetComponent<CharacterControllerVR>();
