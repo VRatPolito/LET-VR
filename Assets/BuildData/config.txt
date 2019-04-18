@@ -1,0 +1,2 @@
+#SetLocomotion Method among {ArmSwing, FootSwing, CVirtualizer}
+LocomotionMethod=ArmSwing
