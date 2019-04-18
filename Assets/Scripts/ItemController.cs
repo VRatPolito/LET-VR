@@ -9,9 +9,7 @@ public class ItemController : MonoBehaviour
 {
     public ItemControllerType Type;
     public Transform LeftController, RightController;
-
-    [HideInInspector]
-    public bool LeftBrochureEnabled, RightBrochureEnabled;
+    
     [HideInInspector]
     public Transform ItemLeft, ItemRight;
     [HideInInspector]
@@ -39,28 +37,6 @@ public class ItemController : MonoBehaviour
         BlipSource = GetComponent<AudioSource>();
         RightItemSource = RightController.GetComponent<AudioSource>();
         LeftItemSource = LeftController.GetComponent<AudioSource>();
-        LeftBrochureEnabled = false;
-        RightBrochureEnabled = false;
-        /*var tc = GameObject.FindGameObjectWithTag("TunnelController");
-        if (tc != null)
-        {
-            var list = tc.GetComponent<ItemList>().ItemPrefabs;
-            int i = 0;
-            ItemsLeft = new Transform[list.Count];
-            ItemsRight = new Transform[list.Count];
-            foreach (Transform t in list)
-            {
-                var o = Instantiate(t, t.position, t.rotation, null);
-                var g = o.GetComponent<GrabbableItem>();
-                g.SetUp(this, ControllerHand.LeftHand);
-                ItemsLeft[i] = o.transform;
-                o = Instantiate(t, t.position, t.rotation, null);
-                g = o.GetComponent<GrabbableItem>();
-                g.SetUp(this, ControllerHand.RightHand);
-                ItemsRight[i] = o.transform;
-                i++;
-            }
-        }*/
     }
 
     public bool LeftHandFree()
@@ -90,23 +66,6 @@ public class ItemController : MonoBehaviour
         }
         else
             return null;
-    }
-
-    public virtual void DisableRightBrochure()
-    {
-        throw new NotImplementedException();
-    }
-    public virtual void DisableLeftBrochure()
-    {
-        throw new NotImplementedException();
-    }
-    public virtual void EnableRightBrochure()
-    {
-        throw new NotImplementedException();
-    }
-    public virtual void EnableLeftBrochure()
-    {
-        throw new NotImplementedException();
     }
 
     // Update is called once per frame
@@ -167,20 +126,7 @@ public class ItemController : MonoBehaviour
             g = item.parent.GetComponent<GrabbableItemSlave>();
         return g;
     }
-    /*public static bool NullCheck(Transform t)
-    {
-        try
-        {
-            return t.Equals(null);
-        }
-        catch
-        {
-            if (t == null)
-                return true;
-            else
-                return false;
-        }
-    }*/
+
     public virtual void GrabItem(GenericItem i, ControllerHand hand)
     {
         throw new NotImplementedException();
@@ -219,30 +165,6 @@ public class ItemController : MonoBehaviour
         {
             LeftInteracting = true;
             DropItem(ControllerHand.LeftHand, false);
-        }
-    }
-
-
-    public void ToggleLeftBrochure(object sender, ClickedEventArgs e)
-    {
-        if (!leftoperating)
-        {
-            leftoperating = true;
-            ToggleBrochure(ControllerHand.LeftHand);
-        }
-    }
-
-    public virtual void ToggleBrochure(ControllerHand leftHand)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void ToggleRightBrochure(object sender, ClickedEventArgs e)
-    {
-        if (!rightoperating)
-        {
-            rightoperating = true;
-            ToggleBrochure(ControllerHand.RightHand);
         }
     }
 }

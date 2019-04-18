@@ -50,22 +50,7 @@ public class VRItemController : ItemController
         RightVibrationController = RightController.GetComponent<VibrationController>();
         LeftVRController = LeftController.GetComponent<SteamVR_TrackedController>();
         RightVRController = RightController.GetComponent<SteamVR_TrackedController>();
-
-        /*switch (ButtonToUse)
-        {
-            case ControllerButtonInput.Trigger:
-                LeftVRController.TriggerClicked += ToggleLeftBrochure;
-                RightVRController.TriggerClicked += ToggleRightBrochure;
-                break;
-            case ControllerButtonInput.Grip:
-                LeftVRController.Gripped += ToggleLeftBrochure;
-                RightVRController.Gripped += ToggleRightBrochure;
-                break;
-            default:
-                LeftVRController.PadClicked += ToggleLeftBrochure;
-                RightVRController.PadClicked += ToggleRightBrochure;
-                break;
-        }*/
+        
         switch (ButtonToInteract)
         {
             case ControllerButtonInput.Pad:
@@ -116,26 +101,6 @@ public class VRItemController : ItemController
         foreach (ItemController i in c)
             if (i != this)
                 i.enabled = false;
-        /*var cn = GetComponents<ItemControllerNet>();
-        foreach (ItemControllerNet i in cn)
-            i.enabled = false;
-        var oc = GetComponent<OfflineItemController>();
-        if (oc != null)
-            oc.enabled = false;
-        var cl = LeftController.GetComponent<ControllerManager>();
-        if (cl != null)
-        {
-            cl.Controller = this;
-            cl.ControllerNet = null;
-            cl.OfflineController = null;
-        }
-        var cr = RightController.GetComponent<ControllerManager>();
-        if (cr != null)
-        {
-            cr.Controller = this;
-            cr.ControllerNet = null;
-            cr.OfflineController = null;
-        }*/
     }
     // Update is called once per frame
     void Update()
@@ -183,20 +148,6 @@ public class VRItemController : ItemController
                 StartPulse(hand);
             }
         }
-    }
-
-    public void SetBrochureAvailable(bool state)
-    {
-        if (BrochureAvailable == state)
-            return;
-        if (BrochureAvailable)
-        {
-            if (LeftBrochureEnabled)
-                DisableLeftBrochure();
-            if (RightBrochureEnabled)
-                DisableRightBrochure();
-        }
-        BrochureAvailable = state;
     }
 
     void StartPulse()
@@ -847,7 +798,7 @@ public class VRItemController : ItemController
         {
             if (o == toucheditemleft)
                 return;
-            if (o.tag == "Item" && toucheditemleft == null && o != toucheditemright && !LeftBrochureEnabled)
+            if (o.tag == "Item" && toucheditemleft == null && o != toucheditemright)
             {
                 var g = o.GetComponent<GenericItem>();
                 if (g != null)
@@ -867,18 +818,10 @@ public class VRItemController : ItemController
                     }
                 }
             }
-            /*else if (o.tag == "NPC" && toucheditemleft == null && o != toucheditemright && !LeftBrochureEnabled)
-            {
-                var n = o.GetComponentInParent<NPCController>();
-                if (n == null)
-                    Debug.Log("No NPC Controller component on NPC-tagged object: " + o.name);
-                else
-                    VRInteract(n, hand);
-            }*/
         }
         else if (hand == ControllerHand.RightHand && ItemRight == null)
         {
-            if (o.tag == "Item" && toucheditemright == null && o != toucheditemleft && !RightBrochureEnabled)
+            if (o.tag == "Item" && toucheditemright == null && o != toucheditemleft)
             {
                 var g = o.GetComponent<GenericItem>();
                 if (g != null)
@@ -898,26 +841,8 @@ public class VRItemController : ItemController
                     }
                 }
             }
-            /*else if (o.tag == "NPC" && toucheditemright == null && o != toucheditemleft && !RightBrochureEnabled)
-            {
-                var n = o.GetComponentInParent<NPCController>();
-                if (n == null)
-                    Debug.Log("No NPC Controller component on NPC-tagged object: " + o.name);
-                else
-                    VRInteract(n, hand);
-            }*/
         }
     }
-
-    /*private void VRInteract(NPCController n, ControllerHand hand)
-    {
-        if (n != null && n.CanInteract())
-        {
-            toucheditemright = n.transform;
-            n.EnableOutline();
-            ShowCanInteractVR(hand);
-        }
-    }*/
 
     private void VRInteract(GrabbableItemSlave gbs, ControllerHand hand)
     {
@@ -1091,7 +1016,7 @@ public class VRItemController : ItemController
                 DropItem(ControllerHand.LeftHand, false);
                 return;
             }
-            else if (!LeftBrochureEnabled && toucheditemleft != null)
+            else if (toucheditemleft != null)
             {
                 if (ItemLeft == null && !LeftInteracting)
                 {
@@ -1152,7 +1077,7 @@ public class VRItemController : ItemController
                 DropItem(ControllerHand.RightHand, false);
                 return;
             }
-            else if (!RightBrochureEnabled && toucheditemright != null)
+            else if (toucheditemright != null)
             {
                 if (ItemRight == null && !RightInteracting)
                 {
@@ -1362,8 +1287,6 @@ public class VRItemController : ItemController
                 if (OnDrop != null)
                     OnDrop.Invoke();
             }
-            else if (LeftBrochureEnabled)
-                DisableLeftBrochure();
             LeftInteracting = false;
             leftoperating = false;
         }
@@ -1414,8 +1337,6 @@ public class VRItemController : ItemController
                 if (OnDrop != null)
                     OnDrop.Invoke();
             }
-            else if (RightBrochureEnabled)
-                DisableRightBrochure();
             RightInteracting = false;
             rightoperating = false;
         }
@@ -1429,60 +1350,6 @@ public class VRItemController : ItemController
     void DropRightItem(object sender, ClickedEventArgs e)
     {
         DropRightItem(false);
-    }
-
-
-    private void EnableLeftBrochure(object sender, ClickedEventArgs e)
-    {
-        EnableLeftBrochure();
-    }
-    private void EnableRightBrochure(object sender, ClickedEventArgs e)
-    {
-        EnableRightBrochure();
-    }
-    public override void EnableLeftBrochure()
-    {
-            if (!RightBrochureEnabled && ItemLeft == null)
-            {
-                LeftBrochureEnabled = true;
-                EnableItem(ItemCodes.Brochure, null, ControllerHand.LeftHand);
-            }
-    }
-
-    public override void EnableRightBrochure()
-    {
-            if (!LeftBrochureEnabled && ItemRight == null)
-            {
-                RightBrochureEnabled = true;
-                EnableItem(ItemCodes.Brochure, null, ControllerHand.RightHand);
-            }
-    }
-
-    private void DisableRightBrochure(object sender, ClickedEventArgs e)
-    {
-        DisableRightBrochure();
-    }
-
-    private void DisableLeftBrochure(object sender, ClickedEventArgs e)
-    {
-        DisableLeftBrochure();
-    }
-
-   public override void DisableRightBrochure()
-    {
-        if (RightBrochureEnabled)
-        {
-            RightBrochureEnabled = false;
-            DisableItem(ControllerHand.RightHand);
-        }
-    }
-    public override void DisableLeftBrochure()
-    {
-        if (LeftBrochureEnabled)
-        {
-            LeftBrochureEnabled = false;
-            DisableItem(ControllerHand.LeftHand);
-        }
     }
 
     public GrabbableItem EnableItem(ItemCodes code, GenericItem g, ControllerHand hand)
@@ -1841,27 +1708,6 @@ public class VRItemController : ItemController
             }
             else
                 StopPulse();
-        }
-    }
-
-    public override void ToggleBrochure(ControllerHand hand)
-    {
-        if (hand == ControllerHand.RightHand)
-        {
-            if (RightBrochureEnabled)
-                DisableRightBrochure();
-            else if (BrochureAvailable && !LeftBrochureEnabled && ItemRight == null)
-                EnableRightBrochure();
-            rightoperating = false;
-
-        }
-        else if (hand == ControllerHand.LeftHand)
-        {
-            if (LeftBrochureEnabled)
-                DisableLeftBrochure();
-            else if (BrochureAvailable && !RightBrochureEnabled && ItemLeft == null)
-                EnableLeftBrochure();
-            leftoperating = false;
         }
     }
 }
