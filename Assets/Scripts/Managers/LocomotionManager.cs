@@ -38,6 +38,7 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
     private Vector3 _lastPlayerPosition;
     private float _startingKATmultiply, _startingKATmultiplyback;
     private bool _isPlayerFreezed;
+    private float _initialMult, _initialBackMultKat;
 
     #endregion
 
@@ -134,10 +135,13 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
             case ControllerType.CVirtualizer:
                 var pcm = CurrentPlayerController.GetComponent<PlayerColliderManager>();
                 CameraEye = pcm.Head;
+                _initialMult = CurrentPlayerController.GetComponent<CVirtPlayerController>().movementSpeedMultiplier;
                 break;
             case ControllerType.KatWalk:
                 pcm = CurrentPlayerController.GetComponent<PlayerColliderManager>();
                 CameraEye = pcm.Head;
+                _initialMult = CurrentPlayerController.GetComponentInChildren<KATDevice>().multiply;
+                _initialBackMultKat = CurrentPlayerController.GetComponentInChildren<KATDevice>().multiplyBack;
                 break;
             case ControllerType.RealWalk:
                 var cvr= CurrentPlayerController.GetComponent<CharacterControllerVR>();
@@ -194,11 +198,11 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
                 CurrentPlayerController.GetComponentInChildren<FootSwinger>().FootSwingNavigation = true;
                 break;
             case ControllerType.CVirtualizer:
-                CurrentPlayerController.GetComponent<CVirtPlayerController>().movementSpeedMultiplier = 1.0f;
+                CurrentPlayerController.GetComponent<CVirtPlayerController>().movementSpeedMultiplier = _initialMult;
                 break;
             case ControllerType.KatWalk:
-                CurrentPlayerController.GetComponentInChildren<KATDevice>().multiply = 1.0f;
-                CurrentPlayerController.GetComponentInChildren<KATDevice>().multiplyBack = 0.4f;             
+                CurrentPlayerController.GetComponentInChildren<KATDevice>().multiply = _initialMult;
+                CurrentPlayerController.GetComponentInChildren<KATDevice>().multiplyBack = _initialBackMultKat;             
                 break;
             case ControllerType.RealWalk:
                 CurrentPlayerController.GetComponent<CharacterControllerVR>().Blocked = false;

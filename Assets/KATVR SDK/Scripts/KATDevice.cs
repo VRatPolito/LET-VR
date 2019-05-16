@@ -159,7 +159,7 @@ public class KATDevice : MonoBehaviour {
 
     void TargetTransform(MovementStyleList Type)
     {
-        vrCameraRig.position = targetRotateObject.position;
+        //vrCameraRig.position = targetRotateObject.position;       //a che serve?
         if (KWalk.Data.moveDirection > 0) KWalk.Data.moveSpeed *= multiply;
         else if (KWalk.Data.moveDirection < 0) KWalk.Data.moveSpeed *= multiplyBack;
         switch (Type)
