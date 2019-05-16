@@ -111,6 +111,7 @@ GameObject:
   - component: {fileID: 33161760865291100}
   - component: {fileID: 23419931540393174}
   - component: {fileID: 114200409222653354}
+  - component: {fileID: 338090840139381169}
   m_Layer: 8
   m_Name: K_PlayerBody
   m_TagString: Untagged
@@ -204,6 +205,27 @@ MonoBehaviour:
   CurrentState: 0
   CurrentSpeed: 0
   CurrentRotation: 0
+--- !u!114 &338090840139381169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1102386197387456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e16593f7614ec5042a45ad8cc1701138, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LogRawData: 0
+  Data:
+    bodyYaw: 0
+    meter: 0
+    moveSpeed: 0
+    displayedSpeed: 0
+    walkPower: 0
+    moveDirection: 0
+    isMoving: 0
 --- !u!1 &1108469439822310
 GameObject:
   m_ObjectHideFlags: 0
@@ -932,8 +954,6 @@ MonoBehaviour:
   Type: 0
   LeftController: {fileID: 4897540516168284}
   RightController: {fileID: 4434653383927750}
-  LeftBrochureEnabled: 0
-  RightBrochureEnabled: 0
   ItemLeft: {fileID: 0}
   ItemRight: {fileID: 0}
   ItemsLeft: []
