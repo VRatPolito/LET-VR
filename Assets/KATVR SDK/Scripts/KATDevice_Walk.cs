@@ -83,7 +83,8 @@ namespace KATVR
 
             Data.bodyYaw = _bodyRotation;
             Data.walkPower = _rawData.walkPower;
-            Data.moveSpeed = Data.displayedSpeed = _moveSpeed * Time.deltaTime; //Added deltaTime in last version
+            //Data.moveSpeed = Data.displayedSpeed = _moveSpeed * Time.deltaTime; //Added deltaTime in last version
+            Data.moveSpeed = Data.displayedSpeed = _moveSpeed * Time.fixedDeltaTime; //fixedDeltaTime should be the proper one
             Data.moveDirection = _rawData.moveDirection;
             Data.isMoving = _rawData.isMoving;
             Data.meter = _rawData.meter;

@@ -225,20 +225,19 @@ public class KATDevice : MonoBehaviour
             #endregion
             #region CharacterController
             case MovementStyleList.CharacterController:
-                /*Vector3 moveDirection = Vector3.zero;
-                if (target_Controller.isGrounded)
-                    moveDirection = targetRotateObject.forward / 100 * KWalk.Data.moveSpeed * KWalk.Data.moveDirection;
-                moveDirection.y -= 9.81f * Time.deltaTime;
-                target_Controller.Move(moveDirection);*/            //DA TESTARE
-                if (KATDevice_Walk.Instance.Data.moveSpeed != 0f)
-                {
-                    target_Controller.SimpleMove(targetRotateObject.forward / 100 * KATDevice_Walk.Instance.Data.moveSpeed * KATDevice_Walk.Instance.Data.moveDirection);
-                }
+                /*if (KATDevice_Walk.Instance.Data.moveSpeed != 0f)     //replaced by the next in v1.4 
+                    {
+                        target_Controller.SimpleMove(targetRotateObject.forward / 100 * KATDevice_Walk.Instance.Data.moveSpeed * KATDevice_Walk.Instance.Data.moveDirection);
+                    }
                 else
                 {
                     target_Controller.SimpleMove(Vector3.zero);
-                }
-
+                }*/
+                Vector3 moveDirection = Vector3.zero;
+                if (target_Controller.isGrounded)
+                    moveDirection = targetRotateObject.forward / 100 * KATDevice_Walk.Instance.Data.moveSpeed * KATDevice_Walk.Instance.Data.moveDirection;
+                moveDirection.y -= 9.81f * Time.deltaTime;
+                target_Controller.Move(moveDirection);
                 targetRotateObject.localEulerAngles = new Vector3(targetRotateObject.localEulerAngles.x, KATDevice_Walk.Instance.Data.bodyYaw, targetRotateObject.localEulerAngles.z);
                 break;
             #endregion
