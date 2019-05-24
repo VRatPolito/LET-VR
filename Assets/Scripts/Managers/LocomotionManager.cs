@@ -202,7 +202,7 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
                 break;
             case ControllerType.KatWalk:
                 CurrentPlayerController.GetComponentInChildren<KATDevice>().multiply = _initialMult;
-                CurrentPlayerController.GetComponentInChildren<KATDevice>().multiplyBack = _initialBackMultKat;             
+                CurrentPlayerController.GetComponentInChildren<KATDevice>().multiplyBack = _initialBackMultKat;
                 break;
             case ControllerType.RealWalk:
                 CurrentPlayerController.GetComponent<CharacterControllerVR>().Blocked = false;

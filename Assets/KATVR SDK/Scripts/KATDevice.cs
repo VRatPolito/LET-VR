@@ -1,20 +1,25 @@
-﻿using UnityEngine;
-using System.Collections;
-using KATVR;
-public class KATDevice : MonoBehaviour {
+﻿using KATVR;
+using UnityEngine;
 
-    #region Common Variable
+public class KATDevice : MonoBehaviour
+{
+
+    #region Enums 
     public enum DeviceTypeList { KAT_WALK, ComingSoon };
-    public DeviceTypeList device;
     public enum State { Standing, Forward, Backward };
-    public Transform targetMoveObject, targetRotateObject, vrCameraRig, vrHandset;
+    public enum MovementStyleList { Translate, Velocity, CharacterController, Auto }
     #endregion
-    [HideInInspector]
-    public KATDevice_Walk KWalk;
+
+    #region Shared Variables
+
+    public DeviceTypeList device;
+    public Transform targetMoveObject, targetRotateObject, vrCameraRig, vrHandset;
+
+    #endregion
 
     public float multiply, multiplyBack;
-    public enum MovementStyleList { Translate, Velocity, CharacterController, Auto }
     public MovementStyleList MovementStyle;
+
     [HideInInspector]
     public Rigidbody target_Rig;
     [HideInInspector]
@@ -28,17 +33,18 @@ public class KATDevice : MonoBehaviour {
     [Range(0, 360)]
     public float CurrentRotation = 0.0f;
 
-    void Awake()
+    private void Awake()
     {
         SetupDevice(device);
     }
 
-    void Start()
+    private void Start()
     {
         ActiveDevice(device);
     }
 
-    void Update () {
+    private void FixedUpdate()
+    { //FixedUpdate for v1.4
         DeviceUpdate(device);
     }
 
@@ -48,7 +54,7 @@ public class KATDevice : MonoBehaviour {
     {
 
     }
-    
+
     #endregion
 
     #region Start function
@@ -58,8 +64,11 @@ public class KATDevice : MonoBehaviour {
         switch (Type)
         {
             case DeviceTypeList.KAT_WALK:
-                KWalk = this.gameObject.AddComponent<KATDevice_Walk>();
-                KATVR_Global.KDevice_Walk = KWalk;
+                if (KATDevice_Walk.Instance)
+                {
+                    ; //workaround for their bad singleton implementation
+                }
+
                 break;
             case DeviceTypeList.ComingSoon:
                 break;
@@ -73,46 +82,67 @@ public class KATDevice : MonoBehaviour {
         switch (Type)
         {
             case DeviceTypeList.KAT_WALK:
-                KWalk.Initialize(1);
-                var lauched = KWalk.LaunchDevice();
+                KATDevice_Walk.Instance.Initialize(1);
+                KATDevice_Walk.Instance.LaunchDevice();
                 if (MovementStyle == MovementStyleList.Auto)
                 {
                     if (target_Rig == null)
+                    {
                         if (targetMoveObject.GetComponent<Rigidbody>())
+                        {
                             target_Rig = targetMoveObject.GetComponent<Rigidbody>();
+                        }
                         else
                         {
                             if (target_Controller == null)
+                            {
                                 if (targetMoveObject.GetComponent<CharacterController>())
+                                {
                                     target_Controller = targetMoveObject.GetComponent<CharacterController>();
+                                }
                                 else
+                                {
                                     MovementStyle = MovementStyleList.Translate;
+                                }
+                            }
                         }
+                    }
                 }
                 else if (MovementStyle == MovementStyleList.CharacterController)
                 {
                     if (target_Controller == null)
+                    {
                         if (targetMoveObject.GetComponent<CharacterController>())
+                        {
                             target_Controller = targetMoveObject.GetComponent<CharacterController>();
+                        }
                         else
                         {
                             MovementStyle = MovementStyleList.Translate;
                             Debug.LogWarning("Can not find CharacterController component in Movement Object, the Movement Style will be changed to Translate.");
                         }
+                    }
                 }
                 else if (MovementStyle == MovementStyleList.Velocity)
                 {
                     if (target_Rig == null)
+                    {
                         if (targetMoveObject.GetComponent<Rigidbody>())
+                        {
                             target_Rig = targetMoveObject.GetComponent<Rigidbody>();
+                        }
                         else
-                            {
-                                MovementStyle = MovementStyleList.Translate;
-                                Debug.LogWarning("Can not find Rigidbody component in Movement Object, the Movement Style will be changed to Translate.");
-                            }
+                        {
+                            MovementStyle = MovementStyleList.Translate;
+                            Debug.LogWarning("Can not find Rigidbody component in Movement Object, the Movement Style will be changed to Translate.");
+                        }
+                    }
                 }
                 else
+                {
                     MovementStyle = MovementStyleList.Translate;
+                }
+
                 break;
             case DeviceTypeList.ComingSoon:
                 break;
@@ -125,10 +155,13 @@ public class KATDevice : MonoBehaviour {
         switch (Type)
         {
             case DeviceTypeList.KAT_WALK:
-                KWalk.UpdateData();
+                KATDevice_Walk.Instance.UpdateData();
                 TargetTransform(MovementStyle);
                 if (Input.GetKeyDown(ResetCameraKey))
-                    KWalk.ResetCamera(vrHandset);
+                {
+                    KATDevice_Walk.Instance.ResetCamera(vrHandset);
+                }
+
                 break;
             case DeviceTypeList.ComingSoon:
                 break;
@@ -136,58 +169,76 @@ public class KATDevice : MonoBehaviour {
                 break;
         }
 
-        if (KATVR_Global.KDevice_Walk != null)
+        #region Update Status commodity //the following part in not included in the new v1.4
+
+        CurrentSpeed = KATDevice_Walk.Instance.Data.displayedSpeed;
+        CurrentRotation = KATDevice_Walk.Instance.Data.bodyYaw;
+        if (KATDevice_Walk.Instance.Data.isMoving == 1)
         {
-            CurrentSpeed = KATVR_Global.KDevice_Walk.Data.displayedSpeed;
-            CurrentRotation = KATVR_Global.KDevice_Walk.Data.bodyYaw;
-            if (KATVR_Global.KDevice_Walk.Data.isMoving == 1)
+            if (KATDevice_Walk.Instance.Data.moveDirection > 0)
             {
-                if (KATVR_Global.KDevice_Walk.Data.moveDirection > 0)
-                    CurrentState = State.Forward;
-                else if (KATVR_Global.KDevice_Walk.Data.moveDirection < 0)
-                    CurrentState = State.Backward;
+                CurrentState = State.Forward;
             }
-            else
+            else if (KATDevice_Walk.Instance.Data.moveDirection < 0)
             {
-                CurrentState = State.Standing;
+                CurrentState = State.Backward;
             }
         }
+        else
+        {
+            CurrentState = State.Standing;
+        }
+
+        #endregion 
+
     }
     #endregion
 
     #region Function For KAT WALK
 
-    void TargetTransform(MovementStyleList Type)
+    private void TargetTransform(MovementStyleList Type)
     {
-        //vrCameraRig.position = targetRotateObject.position;       //a che serve?
-        if (KWalk.Data.moveDirection > 0) KWalk.Data.moveSpeed *= multiply;
-        else if (KWalk.Data.moveDirection < 0) KWalk.Data.moveSpeed *= multiplyBack;
+        //vrCameraRig.position = targetRotateObject.position; ///Commented in v1.4
+        if (KATDevice_Walk.Instance.Data.moveDirection > 0)
+        {
+            KATDevice_Walk.Instance.Data.moveSpeed *= multiply;
+        }
+        else if (KATDevice_Walk.Instance.Data.moveDirection < 0)
+        {
+            KATDevice_Walk.Instance.Data.moveSpeed *= multiplyBack;
+        }
+
         switch (Type)
         {
             #region Translate
             case MovementStyleList.Translate:
-                targetMoveObject.Translate(targetRotateObject.forward / 100 * KWalk.Data.moveSpeed * KWalk.Data.moveDirection);
-                targetRotateObject.localEulerAngles = new Vector3(targetRotateObject.localEulerAngles.x, KWalk.Data.bodyYaw, targetRotateObject.localEulerAngles.z);
+                //targetMoveObject.Translate(targetRotateObject.forward / 100 * KATDevice_Walk.Instance.Data.moveSpeed * KATDevice_Walk.Instance.Data.moveDirection); //replaced by the next in v1.4 
+                targetMoveObject.position += (targetRotateObject.forward / 100 * KATDevice_Walk.Instance.Data.moveSpeed * KATDevice_Walk.Instance.Data.moveDirection);
+                targetRotateObject.localEulerAngles = new Vector3(targetRotateObject.localEulerAngles.x, KATDevice_Walk.Instance.Data.bodyYaw, targetRotateObject.localEulerAngles.z);
                 break;
             #endregion
             #region Velocity
             case MovementStyleList.Velocity:
-                target_Rig.velocity = targetRotateObject.forward * KWalk.Data.moveSpeed * KWalk.Data.moveDirection;
-                targetRotateObject.localEulerAngles = new Vector3(targetRotateObject.localEulerAngles.x, KWalk.Data.bodyYaw, targetRotateObject.localEulerAngles.z);
+                target_Rig.velocity = targetRotateObject.forward * KATDevice_Walk.Instance.Data.moveSpeed * KATDevice_Walk.Instance.Data.moveDirection;
+                targetRotateObject.localEulerAngles = new Vector3(targetRotateObject.localEulerAngles.x, KATDevice_Walk.Instance.Data.bodyYaw, targetRotateObject.localEulerAngles.z);
                 break;
             #endregion
             #region CharacterController
             case MovementStyleList.CharacterController:
-                /*Vector3 moveDirection = Vector3.zero;
-                if (target_Controller.isGrounded)
-                    moveDirection = targetRotateObject.forward / 100 * KWalk.Data.moveSpeed * KWalk.Data.moveDirection;
-                moveDirection.y -= 9.81f * Time.deltaTime;
-                target_Controller.Move(moveDirection);*/            //DA TESTARE
-                if (KWalk.Data.moveSpeed != 0f)
-                    target_Controller.SimpleMove(targetRotateObject.forward / 100 * KWalk.Data.moveSpeed * KWalk.Data.moveDirection);
+                /*if (KATDevice_Walk.Instance.Data.moveSpeed != 0f)     //replaced by the next in v1.4 
+                    {
+                        target_Controller.SimpleMove(targetRotateObject.forward / 100 * KATDevice_Walk.Instance.Data.moveSpeed * KATDevice_Walk.Instance.Data.moveDirection);
+                    }
                 else
+                {
                     target_Controller.SimpleMove(Vector3.zero);
-                targetRotateObject.localEulerAngles = new Vector3(targetRotateObject.localEulerAngles.x, KWalk.Data.bodyYaw, targetRotateObject.localEulerAngles.z);
+                }*/
+                Vector3 moveDirection = Vector3.zero;
+                if (target_Controller.isGrounded)
+                    moveDirection = targetRotateObject.forward / 100 * KATDevice_Walk.Instance.Data.moveSpeed * KATDevice_Walk.Instance.Data.moveDirection;
+                moveDirection.y -= 9.81f * Time.deltaTime;
+                target_Controller.Move(moveDirection);
+                targetRotateObject.localEulerAngles = new Vector3(targetRotateObject.localEulerAngles.x, KATDevice_Walk.Instance.Data.bodyYaw, targetRotateObject.localEulerAngles.z);
                 break;
             #endregion
             default:

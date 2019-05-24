@@ -67,10 +67,5 @@ namespace KATVR
         #endregion
     }
 
-    public class KATVR_Global
-    {
-        public static KATDevice_Walk KDevice_Walk;
-    }
-
 }
 

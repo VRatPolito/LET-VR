@@ -20,3 +20,11 @@ Update Mode: updateDependencies
 
 The following packages were updated:
   com.unity.package-manager-ui from version 2.0.3 to 2.0.7
+
+=== Fri May 24 13:49:01 2019
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.xr.openvr.standalone from version 1.0.3 to 1.0.5
