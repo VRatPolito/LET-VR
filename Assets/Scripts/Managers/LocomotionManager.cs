@@ -198,8 +198,6 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
                 CurrentPlayerController.GetComponentInChildren<FootSwinger>().FootSwingNavigation = true;
                 break;
             case ControllerType.CVirtualizer:
-
-            case ControllerType.CVirtualizer:
                 CurrentPlayerController.GetComponent<CVirtPlayerController>().movementSpeedMultiplier = _initialMult;
                 break;
             case ControllerType.KatWalk:
