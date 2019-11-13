@@ -9,9 +9,9 @@ public class JoystickMovement : MonoBehaviour
     [SerializeField]
     private InputMode _mode = InputMode.Click;
     [SerializeField]
-    private float _walkSpeed = 2;
+    private float _walkSpeed = 5;
     [SerializeField]
-    private float _runSpeed = 6;
+    private float _runSpeed = 8;
     public bool Blocked
     {
         get { return _blocked; }
@@ -39,7 +39,7 @@ public class JoystickMovement : MonoBehaviour
     float _factor = 0;
     float _smoothStep = 0.05f;
     float _lastSpeed = 0;
-
+    
     // Start is called before the first frame update
     void Awake()
     {
@@ -155,18 +155,13 @@ public class JoystickMovement : MonoBehaviour
             {
                 Vector2 tp = _leftController.touchPos;
                 float t = (tp.y + 1) / 2;
-                /*float t = 0;
-                if (tp.x != 0 && tp.y != 0)
-                    t = Mathf.Sqrt(Mathf.Pow(tp.x, 2) + Mathf.Pow(tp.y, 2));
-                else if (tp.x == 0 && tp.y != 0)
-                    t = Mathf.Abs(tp.y);
-                else if (tp.x != 0)
-                    t = Mathf.Abs(tp.x);*/
                 _lastSpeed = Mathf.Lerp(0, _walkSpeed, t);
             }
 
             movement = getForwardXZ(Time.deltaTime * _factor * _lastSpeed, _leftController.transform.rotation);
             _factor += _smoothStep;
+            if (_factor > 1)
+                _factor = 1;
         }
         else if (_rightPadDown)
         {
@@ -177,23 +172,20 @@ public class JoystickMovement : MonoBehaviour
             {
                 Vector2 tp = _rightController.touchPos;
                 float t = (tp.y + 1) / 2;
-                /*float t = 0;
-                if (tp.x != 0 && tp.y != 0)
-                    t = Mathf.Sqrt(Mathf.Pow(tp.x, 2) + Mathf.Pow(tp.y, 2));
-                else if (tp.x == 0 && tp.y != 0)
-                    t = Mathf.Abs(tp.y);
-                else if (tp.x != 0)
-                    t = Mathf.Abs(tp.x);*/
                 _lastSpeed = Mathf.Lerp(0, _walkSpeed, t);
             }
 
             movement = getForwardXZ(Time.deltaTime * _factor * _lastSpeed, _rightController.transform.rotation);
             _factor += _smoothStep;
+            if (_factor > 1)
+                _factor = 1;
         }
         else if (_factor > 0)
         {
             movement = getForwardXZ(Time.deltaTime * _factor * _lastSpeed, _rightController.transform.rotation);
             _factor -= _smoothStep;
+            if (_factor < 0)
+                _factor = 0;
         }
         else if (_lastSpeed > 0)
             _lastSpeed = 0;

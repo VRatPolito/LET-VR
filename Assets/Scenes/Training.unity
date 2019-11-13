@@ -186,7 +186,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _getLocomotionFromConfigFile: 1
-  _locomotion: 5
+  _locomotion: 0
   _playerControllers:
   - {fileID: 876039733}
   - {fileID: 149650742}
