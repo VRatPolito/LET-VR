@@ -16,13 +16,14 @@ GameObject:
   - component: {fileID: 1555481234438040509}
   - component: {fileID: 1555481234438040510}
   - component: {fileID: 4181579489689541170}
+  - component: {fileID: 7929282919994349208}
   m_Layer: 8
   m_Name: Joystick Controller
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1555481234969080821
 Transform:
   m_ObjectHideFlags: 0
@@ -260,6 +261,23 @@ MonoBehaviour:
   _walkSpeed: 2
   _runSpeed: 6
   _bigArrow: {fileID: 1449970218639487614}
+--- !u!114 &7929282919994349208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1555481234438040496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5734b2f91a30ba4b9ef0fb922cf2729, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Blocked: 0
+  CameraRig: {fileID: 1555481234553108784}
+  CameraEye: {fileID: 1555481236011214764}
+  _playerCollider: {fileID: 1555481234438040504}
+  _gravity: -9.81
 --- !u!1 &1555481234553108785
 GameObject:
   m_ObjectHideFlags: 0
