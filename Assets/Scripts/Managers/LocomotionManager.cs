@@ -10,7 +10,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-public enum ControllerType { ArmSwing, FootSwing, CVirtualizer, KatWalk, RealWalk };
+public enum ControllerType { ArmSwing, FootSwing, CVirtualizer, KatWalk, RealWalk, Joystick };
 
 
 public class LocomotionManager : UnitySingleton<LocomotionManager>
@@ -207,6 +207,9 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
             case ControllerType.RealWalk:
                 CurrentPlayerController.GetComponent<CharacterControllerVR>().Blocked = false;
                 break;
+            case ControllerType.Joystick:
+                CurrentPlayerController.GetComponent<JoystickMovement>().Blocked = false;
+                break;
         }
     }
     public void StopLocomotion()
@@ -229,6 +232,9 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
                 break;
             case ControllerType.RealWalk:
                 CurrentPlayerController.GetComponent<CharacterControllerVR>().Blocked = true;
+                break;
+            case ControllerType.Joystick:
+                CurrentPlayerController.GetComponent<JoystickMovement>().Blocked = true;
                 break;
         }
     }
