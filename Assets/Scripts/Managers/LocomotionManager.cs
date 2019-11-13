@@ -147,6 +147,10 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
                 var cvr= CurrentPlayerController.GetComponent<CharacterControllerVR>();
                 CameraEye = cvr.CameraEye;
                 break;
+            case ControllerType.Joystick:
+                cvr = CurrentPlayerController.GetComponent<CharacterControllerVR>();
+                CameraEye = cvr.CameraEye;
+                break;
         }
 
         UI_HUDController c = null;
