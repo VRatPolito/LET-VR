@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -21,7 +22,9 @@ public class PlayerColliderManager : MonoBehaviour
         GetComponent<CharacterController>().height = height;
         GetComponent<NavMeshObstacle>().height = height;
 
-        prevpos = Head.position;
+        var headpos = Head.position;
+        ManageCollider(Vector3.zero);
+        prevpos = headpos;
     }
 
     // Update is called once per frame
@@ -31,41 +34,45 @@ public class PlayerColliderManager : MonoBehaviour
         if (Head.position != prevpos)
         {
             var offset = Head.position - transform.position;
-
-            if (Head.localPosition.y >= height)
-            {
-
-                GetComponent<CharacterController>().height = height;
-                GetComponent<CharacterController>().center = new Vector3(offset.x, height / 2, offset.z);
-                GetComponent<NavMeshObstacle>().height = height;
-                GetComponent<NavMeshObstacle>().center = new Vector3(offset.x, height / 2, offset.z);
-
-                if (Posizione != Position.Standing)
-                    Posizione = Position.Standing;
-            }
-            else if (Head.localPosition.y >= 1 && Head.localPosition.y < height)
-            {
-
-                GetComponent<CharacterController>().height = Head.localPosition.y;
-                GetComponent<CharacterController>().center = new Vector3(offset.x, Head.localPosition.y / 2, offset.z);
-                GetComponent<NavMeshObstacle>().height = Head.localPosition.y;
-                GetComponent<NavMeshObstacle>().center = new Vector3(offset.x, Head.localPosition.y / 2, offset.z);
-
-                if (Posizione != Position.Standing)
-                    Posizione = Position.Standing;
-            }
-            else if (Head.localPosition.y < 1)
-            {
-
-                GetComponent<CharacterController>().height = 1;
-                GetComponent<CharacterController>().center = new Vector3(offset.x, 0.5f, offset.z);
-                GetComponent<NavMeshObstacle>().height = 1;
-                GetComponent<NavMeshObstacle>().center = new Vector3(offset.x, 0.5f, offset.z);
-
-                if (Posizione != Position.Crouched)
-                    Posizione = Position.Crouched;
-            }
+            ManageCollider(offset);
             prevpos = headpos;
+        }
+    }
+
+    private void ManageCollider(Vector3 offset)
+    {
+        if (Head.localPosition.y >= height)
+        {
+
+            GetComponent<CharacterController>().height = height;
+            GetComponent<CharacterController>().center = new Vector3(offset.x, height / 2, offset.z);
+            GetComponent<NavMeshObstacle>().height = height;
+            GetComponent<NavMeshObstacle>().center = new Vector3(offset.x, height / 2, offset.z);
+
+            if (Posizione != Position.Standing)
+                Posizione = Position.Standing;
+        }
+        else if (Head.localPosition.y >= 1 && Head.localPosition.y < height)
+        {
+
+            GetComponent<CharacterController>().height = Head.localPosition.y;
+            GetComponent<CharacterController>().center = new Vector3(offset.x, Head.localPosition.y / 2, offset.z);
+            GetComponent<NavMeshObstacle>().height = Head.localPosition.y;
+            GetComponent<NavMeshObstacle>().center = new Vector3(offset.x, Head.localPosition.y / 2, offset.z);
+
+            if (Posizione != Position.Standing)
+                Posizione = Position.Standing;
+        }
+        else if (Head.localPosition.y < 1)
+        {
+
+            GetComponent<CharacterController>().height = 1;
+            GetComponent<CharacterController>().center = new Vector3(offset.x, 0.5f, offset.z);
+            GetComponent<NavMeshObstacle>().height = 1;
+            GetComponent<NavMeshObstacle>().center = new Vector3(offset.x, 0.5f, offset.z);
+
+            if (Posizione != Position.Crouched)
+                Posizione = Position.Crouched;
         }
     }
 }
