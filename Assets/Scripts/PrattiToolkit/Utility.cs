@@ -617,7 +617,7 @@ namespace PrattiToolkit
             {
                 return true;
             }
-            else if (a == 0 || b == 0 || diff < float.Epsilon)
+            else if (a == 0 || b == 0 || diff < epsilon)
             {
                 // a or b is zero or both are extremely close to it
                 // relative error is less meaningful here
