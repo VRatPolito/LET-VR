@@ -84,7 +84,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
         return v / _angles.Count;
     }
 
-    public void StartLogPointWalking()
+    public void StartLogPointHandFarWalking()
     {
         StartMasterLog("PW");
         _timeStart = Time.time;
