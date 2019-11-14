@@ -274,8 +274,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mode: 1
-  _walkSpeed: 5
-  _runSpeed: 8
+  _walkSpeed: 3
+  _runSpeed: 7
   _bigArrow: {fileID: 1449970218639487614}
 --- !u!114 &7929282919994349208
 MonoBehaviour:

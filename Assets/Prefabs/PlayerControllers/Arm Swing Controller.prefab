@@ -990,7 +990,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   _FootSwingControllerSpeedForMaxSpeed: 3
-  _FootSwingMaxSpeed: 8
+  _FootSwingMaxSpeed: 7
   _FootSwingBothControllersCoefficient: 1
   FootSwingOnlyVerticalMovement: 0
   LeftLegDeviceColor: {r: 1, g: 0, b: 0, a: 1}
