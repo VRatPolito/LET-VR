@@ -28,7 +28,7 @@ public class PlayerColliderManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         var headpos = Head.position;
         if (Head.position != prevpos)

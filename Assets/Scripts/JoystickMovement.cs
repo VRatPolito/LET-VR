@@ -20,6 +20,7 @@ public class JoystickMovement : MonoBehaviour
             {
                 _bigArrow.gameObject.SetActive(false);
                 _lastSpeed = 0;
+                _lastDir = Quaternion.identity;
                 _factor = 0;
                 _rightPadDown = false;
                 _leftPadDown = false;
@@ -39,6 +40,7 @@ public class JoystickMovement : MonoBehaviour
     float _factor = 0;
     float _smoothStep = 0.05f;
     float _lastSpeed = 0;
+    Quaternion _lastDir = Quaternion.identity;
     
     // Start is called before the first frame update
     void Awake()
@@ -149,6 +151,7 @@ public class JoystickMovement : MonoBehaviour
 
         if (_leftPadDown)
         {
+            _lastDir = _leftController.transform.rotation;
             if (_input.IsLeftGripped)
                 _lastSpeed = _runSpeed;
             else
@@ -158,14 +161,14 @@ public class JoystickMovement : MonoBehaviour
                 _lastSpeed = Mathf.Lerp(0, _walkSpeed, t);
             }
 
-            movement = getForwardXZ(Time.deltaTime * _factor * _lastSpeed, _leftController.transform.rotation);
+            movement = getForwardXZ(Time.deltaTime * _factor * _lastSpeed, _lastDir);
             _factor += _smoothStep;
             if (_factor > 1)
                 _factor = 1;
         }
         else if (_rightPadDown)
         {
-
+            _lastDir = _rightController.transform.rotation;
             if (_input.IsRightGripped)
                 _lastSpeed = _runSpeed;
             else
@@ -175,20 +178,23 @@ public class JoystickMovement : MonoBehaviour
                 _lastSpeed = Mathf.Lerp(0, _walkSpeed, t);
             }
 
-            movement = getForwardXZ(Time.deltaTime * _factor * _lastSpeed, _rightController.transform.rotation);
+            movement = getForwardXZ(Time.deltaTime * _factor * _lastSpeed, _lastDir);
             _factor += _smoothStep;
             if (_factor > 1)
                 _factor = 1;
         }
         else if (_factor > 0)
         {
-            movement = getForwardXZ(Time.deltaTime * _factor * _lastSpeed, _rightController.transform.rotation);
+            movement = getForwardXZ(Time.deltaTime * _factor * _lastSpeed, _lastDir);
             _factor -= _smoothStep;
             if (_factor < 0)
                 _factor = 0;
         }
         else if (_lastSpeed > 0)
+        {
             _lastSpeed = 0;
+            _lastDir = Quaternion.identity;
+        }
 
         return movement;
     }
