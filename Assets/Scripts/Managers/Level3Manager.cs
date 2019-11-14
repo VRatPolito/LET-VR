@@ -54,9 +54,11 @@ public class Level3Manager : UnitySingleton<Level3Manager>
         EndUnc.OnDisabled += StatisticsLogger.StopLogUncoupledWalking;
         StartPointHandFar.OnDisabled += StatisticsLogger.StartLogPointHandFarWalking;
         StartPointHandFar.OnDisabled += StartRobotT2;
-        //TODO ??? EndPointHandFar.OnDisabled += LOGGER;
+        //TO CHECK
+        EndPointHandFar.OnDisabled += StatisticsLogger.StopLogPointWalking;
         EndPointHandFar.OnDisabled += StopRobotT2;
-        StartWavingHand.OnDisabled += StartDronesT3;
+        StartWavingHand.OnDisabled += StatisticsLogger.StartLogPointHandFarMoveWalking;
+        StartWavingHand.OnDisabled += StartDronesT3;       
         EndPointWavingHand.OnDisabled += EndGame;
 
         Task1ToTask2DoorController.OnOpenGate += () =>
@@ -66,8 +68,9 @@ public class Level3Manager : UnitySingleton<Level3Manager>
 
         T2ToT3DoorController.OnOpenGate += () =>
         {
-            //TODO
+            if (DronesCoinCollectorController != null) DronesCoinCollectorController.Introduce();
         };
+        // - - - - - - - - - 
     }
 
     private void StopRobotT2()
@@ -80,15 +83,17 @@ public class Level3Manager : UnitySingleton<Level3Manager>
         if (RobotsCoinCollectorController != null) RobotsCoinCollectorController.StartCollecting();
     }
 
+    // STUB
     private void StartDronesT3()
     {
         if(DronesCoinCollectorController!=null) DronesCoinCollectorController.StartCollecting();
     }
-
+    // STUB
     private void StopDronesT3()
     {
         if(DronesCoinCollectorController != null) DronesCoinCollectorController.Outro();
     }
+
 
     private void EndGame()
     {
@@ -98,7 +103,8 @@ public class Level3Manager : UnitySingleton<Level3Manager>
             if (ix == 0)
                 Invoke("Quit", 5);
         };
-        StatisticsLogger.StopLogPointWalking();
+        //StatisticsLogger.StopLogPointWalking();
+        StatisticsLogger.StopLogPointHandFarMoveWalking();
     }
 
     private void Quit()
