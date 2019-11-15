@@ -15,7 +15,7 @@ public class FPSPatternSystem : MonoBehaviour
 {
     #region Events
 
-    public event Action OnBulletFinished, OnLastBulletExpired;
+    public event Action OnBulletFinished, OnLastBulletExpired, OnShuttedDown;
 
     #endregion
 
@@ -42,7 +42,7 @@ public class FPSPatternSystem : MonoBehaviour
 
     [SerializeField] private int _bulletIdx = 0;
     private bool _shooterReady = false;
-    private Sequence _aimAndShootSequence;
+    private Sequence _aimAndShootSequence, _shutdownSequence;
     private int _hitsCounter = 0;
     private bool _bulletFinished = false;
     private  List<GameObject> _spawnedBullets = new List<GameObject>();
@@ -70,6 +70,7 @@ public class FPSPatternSystem : MonoBehaviour
     {
         _bulletFinished = false;
         _bulletIdx = _hitsCounter = 0;
+        _robot.gameObject.SetActive(true);
         var startup = DOTween.Sequence();
         startup.PrependInterval(1);
         startup.Append(_robot.transform.DOMoveY(1.7f, 4).SetEase(Ease.OutBack, 3));
@@ -89,6 +90,7 @@ public class FPSPatternSystem : MonoBehaviour
         DOTween.KillAll();
         _shooterReady = false;
         _aimRenderer.sharedMaterial.SetColor("_TintColor", _coolColor);
+        _robot.gameObject.SetActive(false);
     }
 
     void Awake()
@@ -97,6 +99,9 @@ public class FPSPatternSystem : MonoBehaviour
         _aimRenderer.sharedMaterial.SetColor("_TintColor", new Color32(10, 10, 10, 200));
         _spawnPoint = _robot.transform.GetChildRecursive("SpawnPoint");
         Assert.IsNotNull(_spawnPoint);
+        Assert.IsNotNull(_robot);
+        _robot.transform.localScale = Vector3.one;
+        _robot.gameObject.SetActive(false);
     }
 
     void Update()
@@ -117,7 +122,27 @@ public class FPSPatternSystem : MonoBehaviour
 
     #region Public Methods
 
-    public void DestroySpawnedBullets()
+    public void Shutdown()
+    {
+        _shutdownSequence = DOTween.Sequence();
+        _shutdownSequence.Append(_robot.transform.DOMoveY(_robot.transform.position.y + 10,6).SetEase(Ease.InCubic));
+        _shutdownSequence.Join(_robot.transform.DOScale(Vector3.zero, 8).SetEase(Ease.InCubic));
+        _shutdownSequence.OnComplete(() =>
+        {
+            DestroySpawnedBullets();
+            this.enabled = false;
+            _shooterReady = false;
+            OnShuttedDown.RaiseEvent();
+        });
+        _shutdownSequence.Play();
+        
+    }
+
+    #endregion
+
+    #region Helper Methods
+
+    private void DestroySpawnedBullets()
     {
         foreach (var bullet in _spawnedBullets)
         {
@@ -125,10 +150,6 @@ public class FPSPatternSystem : MonoBehaviour
         }
         _spawnedBullets.Clear();
     }
-
-    #endregion
-
-    #region Helper Methods
 
     private void FollowPlayer()
     {
@@ -192,9 +213,10 @@ public class FPSPatternSystem : MonoBehaviour
         bgo.GetComponent<Rigidbody>().velocity =
             (bullet.GetTarget(_referenceTransform) - _spawnPoint.position).normalized * bullet.Speed;
         //bgo.GetComponent<Rigidbody>().AddForce((bullet.GetTarget(_referenceTransform) - _spawnPoint.position).normalized * bullet.Speed, ForceMode.VelocityChange);
-        _bulletIdx++; //TODO Maybe Find Better Position
         // Destroy the bullet after 2 seconds
         //Destroy(b, 2.0f);
+
+        _bulletIdx++;
     }
 
     private void OnBulletCollisionHit(CollisionDetect collisionDetect, HitType hitType)
@@ -209,9 +231,8 @@ public class FPSPatternSystem : MonoBehaviour
                 break;
         }
         collisionDetect.ResetHitEventListener();
-        if (_bulletFinished) OnLastBulletExpired.RaiseEvent();
+        if (_bulletFinished || _bulletIdx == _bulletPattern.Bullets.Count+1) OnLastBulletExpired.RaiseEvent();
     }
-
 
     #endregion
 

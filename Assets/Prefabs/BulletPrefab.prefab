@@ -119,8 +119,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6eea6edb7d7e8540857c78ba0092e2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TagToHit:
+  _playerTag:
   - MainCamera
+  _itemTag: Item
   _isBullet: 1
 --- !u!135 &135709193128038420
 SphereCollider:

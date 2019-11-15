@@ -164,7 +164,7 @@ MonoBehaviour:
   _headShooterStart: {fileID: 1789295888}
   _bodyShooterStart: {fileID: 532062348}
   _pOPSystem: {fileID: 1483937681}
-  _jailBalcony: {fileID: 0}
+  _jailBalcony: {fileID: 441055924}
   _headShooter: {fileID: 210363904}
   _bodyShooter: {fileID: 80744839}
   _popSystemSafeStop: 104
@@ -746,7 +746,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 127
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!64 &441055925
 MeshCollider:
@@ -2054,17 +2054,9 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_IsSelectable: 1
-  m_SelectedFaces: 03000000
-  m_SelectedEdges:
-  - a: 12
-    b: 13
-  - a: 14
-    b: 12
-  - a: 13
-    b: 15
-  - a: 15
-    b: 14
-  m_SelectedVertices: 0c0000000d0000000e0000000f000000
+  m_SelectedFaces: 
+  m_SelectedEdges: []
+  m_SelectedVertices: 
 --- !u!33 &441055927
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3013,7 +3005,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1743247547364726, guid: a5b4a34f6cb01374e91ea03d44a0e136, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4493272465457844, guid: a5b4a34f6cb01374e91ea03d44a0e136, type: 3}
       propertyPath: m_LocalPosition.x
