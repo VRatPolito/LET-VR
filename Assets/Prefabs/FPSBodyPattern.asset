@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b73f6d48d5a2aed449172a2165dcfa3a, type: 3}
+  m_Name: FPSBodyPattern
+  m_EditorClassIdentifier: 
+  _defaultMaterial: {fileID: 2100000, guid: 8d2be6be18148e04dbee90fa570951cc, type: 2}
+  _bulletPrefab: {fileID: 6022939573515627832, guid: 2af6d802d4561e54489ee20a401c9ae8,
+    type: 3}
+  _bullets:
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 2
+    LoadingTime: 1.79
+    AimingTime: 0.19
+    CoolDownTime: 0.26
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 2.8
+    LoadingTime: 1.58
+    AimingTime: 0.3
+    CoolDownTime: 0.33
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 5.2
+    LoadingTime: 2.75
+    AimingTime: 0.52
+    CoolDownTime: 0.66
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 5.9
+    LoadingTime: 2.14
+    AimingTime: 0.51
+    CoolDownTime: 0.33
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 3.4
+    LoadingTime: 1.74
+    AimingTime: 0.28
+    CoolDownTime: 0.17

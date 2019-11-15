@@ -25,6 +25,11 @@ public struct Bullet
     [Range(0, 2)] public float CoolDownTime;
     //public Color Color;
 
+    /// <summary>
+    /// Get Target based on the Setted TargetType
+    /// </summary>
+    /// <param name="_referenceTransform"></param>
+    /// <returns></returns>
     public Vector3 GetTarget(Transform _referenceTransform)
     {
         var r = Vector3.zero;

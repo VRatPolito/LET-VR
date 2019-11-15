@@ -14,9 +14,9 @@ public class CollisionDetect : MonoBehaviour
         NotPlayer
     }
 
-    public event Action<CollisionDetect,HitType> OnHit;
+    public event Action<CollisionDetect, HitType> OnHit;
 
-    [SerializeField] private string TagToHit = "Player";
+    [SerializeField] private string[] TagToHit = new[]{"Player"};
     [SerializeField] private bool _isBullet = false;
 
     private ColliderEventsListener _colliderEventsListener;
@@ -27,14 +27,18 @@ public class CollisionDetect : MonoBehaviour
         Assert.IsNotNull(_colliderEventsListener);
         _colliderEventsListener.OnTriggerEnterAction += c =>
         {
-            if (c.CompareTag(TagToHit))
+            foreach (var tag in TagToHit)
             {
-                OnHit.RaiseEvent(this,HitType.Player);
-                FindObjectOfType<StatisticsLoggerBase>().LogCollisions();
-            }
-            else
-            {
-                OnHit.RaiseEvent(this,HitType.NotPlayer);
+                if (c.CompareTag(tag))
+                {
+                    OnHit.RaiseEvent(this, HitType.Player);
+                    FindObjectOfType<StatisticsLoggerBase>().LogCollisions();
+                    break; //TODO just onces
+                }
+                else
+                {
+                    OnHit.RaiseEvent(this, HitType.NotPlayer);
+                }
             }
         };
         if (_isBullet)

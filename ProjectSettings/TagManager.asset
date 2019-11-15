@@ -23,7 +23,7 @@ TagManager:
   - 
   - PlayerLayer
   - ControllerLayer
-  - Fire
+  - AntiFalling
   - MovingItem
   - Collectable
   - 

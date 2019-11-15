@@ -4,6 +4,7 @@
  */
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using PrattiToolkit;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -19,9 +20,9 @@ public class Level4Manager : UnitySingleton<Level4Manager>
 
     #region Editor Visible
     public float TimeToStop = .5f;
-    public WalkingDestination AgilityStart, AgilityEnd, PieStart;
+    [SerializeField] private WalkingDestination _agilityStart, _agilityEnd, _headShooterStart, _bodyShooterStart;
 
-    [SerializeField] private GameObject _pOPSystem;
+    [SerializeField] private GameObject _pOPSystem, _jailBalcony;
     [SerializeField] private FPSPatternSystem _headShooter, _bodyShooter;
 
     [Header("In combo with CTRL")] [SerializeField]
@@ -52,16 +53,17 @@ public class Level4Manager : UnitySingleton<Level4Manager>
         Assert.IsNotNull(StatisticsLogger);
 
 
-        AgilityStart.OnDisabled += () => {StatisticsLogger.StartLogAgility(); };
-        AgilityEnd.OnDisabled += () =>
+        _agilityStart.OnDisabled += () => {StatisticsLogger.StartLogAgility(); };
+        _agilityEnd.OnDisabled += () =>
         {
             _pOPSystem.GetComponent<ProceduralObstacleSpawnerSystem>().DestroyRenderedElements();
             _pOPSystem.SetActive(false);
             StatisticsLogger.StopLogAgility();
         };
-        PieStart.OnDisabled += OnPieStartOnDisabled;
+        _headShooterStart.OnDisabled += OnHeadShooterStartOnDisabled;
 
         _headShooter.OnLastBulletExpired += OnLastBulletHeadShooterBulletExpired;
+        _bodyShooterStart.OnDisabled += OnBodyShooterStart;
     }
 
     private void Update()
@@ -85,7 +87,7 @@ public class Level4Manager : UnitySingleton<Level4Manager>
 
     #region Events Callbacks
 
-    private void OnPieStartOnDisabled()
+    private void OnHeadShooterStartOnDisabled()
     {
         _headShooter.enabled = true;
         LocomotionManager.Instance.StopLocomotion();
@@ -98,11 +100,13 @@ public class Level4Manager : UnitySingleton<Level4Manager>
 
     private void OnLastBulletHeadShooterBulletExpired()
     {
+        _headShooter.DestroySpawnedBullets();
         _headShooter.enabled = false;
         StatisticsLogger.StopLogHeadShooter();
         LocomotionManager.Instance.RightController.GetComponent<Collider>().enabled = true;
         LocomotionManager.Instance.LeftController.GetComponent<Collider>().enabled = true;
 
+        _jailBalcony.transform.DOMoveY(_jailBalcony.transform.position.y - 2, 5);
     }
 
     private void OnBodyShooterStart()
