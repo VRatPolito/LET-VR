@@ -11,13 +11,13 @@ public enum HitType : byte
     Item,
     Other
 }
+
 [RequireComponent(typeof(ColliderEventsListener))]
 public class CollisionDetect : MonoBehaviour
 {
+    public event Action<CollisionDetect, HitType> OnHit;
 
-    public event Action<CollisionDetect,HitType> OnHit;
-
-    [SerializeField] private string _playerTag = "Player";
+    [SerializeField] private string[] _playerTag = new[] {"Player"};
     [SerializeField] private string _itemTag = "Item";
     [SerializeField] private bool _isBullet = false;
 
@@ -40,13 +40,12 @@ public class CollisionDetect : MonoBehaviour
 
     private HitType HitAnyThing(string tag)
     {
+        foreach (var ptag in _playerTag)
+            if (tag == ptag)
+                return HitType.Player;
 
-        if (tag == _playerTag)
-            return HitType.Player;
-        else if (tag == _itemTag)
-            return HitType.Item;
-        else
-            return HitType.Other;
+
+        return tag == _itemTag ? HitType.Item : HitType.Other;
     }
 
     public void ResetHitEventListener()

@@ -1,7 +1,7 @@
-﻿
-/*
+﻿/*
  * Custom template by Gabriele P.
  */
+
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -11,14 +11,16 @@ using UnityEngine.Assertions;
 
 public class Level4Manager : UnitySingleton<Level4Manager>
 {
-
-    protected Level4Manager() { }
+    protected Level4Manager()
+    {
+    }
 
     #region Events
 
     #endregion
 
     #region Editor Visible
+
     public float TimeToStop = .5f;
     [SerializeField] private WalkingDestination _agilityStart, _agilityEnd, _headShooterStart, _bodyShooterStart;
 
@@ -53,7 +55,7 @@ public class Level4Manager : UnitySingleton<Level4Manager>
         Assert.IsNotNull(StatisticsLogger);
 
 
-        _agilityStart.OnDisabled += () => {StatisticsLogger.StartLogAgility(); };
+        _agilityStart.OnDisabled += () => { StatisticsLogger.StartLogAgility(); };
         _agilityEnd.OnDisabled += () =>
         {
             _pOPSystem.GetComponent<ProceduralObstacleSpawnerSystem>().DestroyRenderedElements();
@@ -61,14 +63,16 @@ public class Level4Manager : UnitySingleton<Level4Manager>
             StatisticsLogger.StopLogAgility();
         };
         _headShooterStart.OnDisabled += OnHeadShooterStartOnDisabled;
-
         _headShooter.OnLastBulletExpired += OnLastBulletHeadShooterBulletExpired;
+        _headShooter.OnShuttedDown += HeadShooterOnShuttedDown;
+
         _bodyShooterStart.OnDisabled += OnBodyShooterStart;
     }
 
     private void Update()
     {
-        if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(_popSystemSafeStop))
+        if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) &&
+            Input.GetKeyDown(_popSystemSafeStop))
         {
             _pOPSystem.GetComponent<ProceduralObstacleSpawnerSystem>().DestroyRenderedElements();
             _pOPSystem.SetActive(false);
@@ -100,13 +104,18 @@ public class Level4Manager : UnitySingleton<Level4Manager>
 
     private void OnLastBulletHeadShooterBulletExpired()
     {
-        _headShooter.DestroySpawnedBullets();
-        _headShooter.enabled = false;
+        _headShooter.Shutdown();
         StatisticsLogger.StopLogHeadShooter();
+    }
+
+    private void HeadShooterOnShuttedDown()
+    {
         LocomotionManager.Instance.RightController.GetComponent<Collider>().enabled = true;
         LocomotionManager.Instance.LeftController.GetComponent<Collider>().enabled = true;
 
+        _jailBalcony.GetComponent<Collider>().enabled = false;
         _jailBalcony.transform.DOMoveY(_jailBalcony.transform.position.y - 2, 5);
+
     }
 
     private void OnBodyShooterStart()
@@ -119,11 +128,11 @@ public class Level4Manager : UnitySingleton<Level4Manager>
         LocomotionManager.Instance.LeftController.GetComponent<Collider>().enabled = true;
 
         StatisticsLogger.StartLogBodyShooter();
-
     }
 
     private void OnLastBulletBodyShooterBulletExpired()
     {
+        _bodyShooter.Shutdown();
         _bodyShooter.enabled = false;
 
         StatisticsLogger.OnLogFinalized += (ix) =>

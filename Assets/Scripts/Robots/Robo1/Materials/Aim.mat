@@ -102,4 +102,4 @@ Material:
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 1, g: 1, b: 1, a: 1}
-    - _TintColor: {r: 0.039215688, g: 0.039215688, b: 0.039215688, a: 0.78431374}
+    - _TintColor: {r: 0, g: 1, b: 1, a: 1}
