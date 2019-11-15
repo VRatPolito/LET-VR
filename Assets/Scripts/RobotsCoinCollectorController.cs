@@ -26,9 +26,9 @@ public class RobotsCoinCollectorController : MonoBehaviour
     [SerializeField] private Transform _from, _to;
     [SerializeField] private Transform _leftCoinRow, _rightCoinRow;
     [SerializeField] private Rigidbody _leftRobot, _rightRobot;
+    [SerializeField] private TextMeshPro _coinsCollectedVisualizerText;
     [SerializeField] [Range(0, 3)] private float _aheadOfPlayer = 1;
     [SerializeField] [Range(0, 1)] private float _robotMoveSmoothing = 0.3f;
-
 
     #endregion
 
@@ -36,7 +36,6 @@ public class RobotsCoinCollectorController : MonoBehaviour
 
     private int _score = 0;
     private float _calibratedControllerDistance = 2;
-    private TextMeshPro _coinsCollectedVisualizerText;
     private Vector3 _movingDirection;
     private Vector3 _lastLeftRobotPosition;
     private Vector3 _lastRightRobotPosition;
@@ -80,9 +79,8 @@ public class RobotsCoinCollectorController : MonoBehaviour
         Assert.IsNotNull(_leftCoinRow);
         Assert.IsNotNull(_rightCoinRow);
         Assert.IsNotNull(_to);
-        _calibratedControllerDistance = LocomotionManager.Instance.CalibrationData.ControllerDistance;
-        _coinsCollectedVisualizerText = GameObject.Find("ScoreVisualizer").GetComponent<TextMeshPro>();
         Assert.IsNotNull(_coinsCollectedVisualizerText);
+        _calibratedControllerDistance = LocomotionManager.Instance.CalibrationData.ControllerDistance;
         foreach (var cel in GetComponentsInChildren<ColliderEventsListener>())
             cel.OnTriggerEnterAction += Collect;
 
@@ -200,28 +198,31 @@ public class RobotsCoinCollectorController : MonoBehaviour
         _robotPositionLimit = new Tuple<Vector3, Vector3>(hitL.point, hitR.point);
         Debug.Log(_robotPositionLimit);
 
+        Vector3 currPos, p, lp, rp;
+        float leftControllerDistance, rightControllerDistance, fromD, dzL, dzR;
+
         while (IsCollecting)
         {
-            var currPos = LocomotionManager.Instance.CurrentPlayerController.transform.position;
-            var leftControllerDistance = Mathf.Abs(LocomotionManager.Instance.LeftController.localPosition.x -
+            currPos = LocomotionManager.Instance.CurrentPlayerController.transform.position;
+            leftControllerDistance = Mathf.Abs(LocomotionManager.Instance.LeftController.localPosition.x -
                                                    LocomotionManager.Instance.CameraEye.localPosition.x);
-            var rightControllerDistance = Mathf.Abs(LocomotionManager.Instance.RightController.localPosition.x -
+            rightControllerDistance = Mathf.Abs(LocomotionManager.Instance.RightController.localPosition.x -
                                                     LocomotionManager.Instance.CameraEye.localPosition.x);
 
             if (Vector3.Dot(currPos - _lastPlayerPosition, _movingDirection) >= 0)
                 _lastPlayerPosition = LocomotionManager.Instance.CurrentPlayerController.transform.position;
 
             //robot can only move forward
-            var p = _lastPlayerPosition;
+            p = _lastPlayerPosition;
             p += _movingDirection * _aheadOfPlayer;
-            var fromD = Vector3.Dot(_from.position - p, _movingDirection);
+            fromD = Vector3.Dot(_from.position - p, _movingDirection);
             if (fromD > 0)
                 p = _from.position + _aheadOfPlayer * _movingDirection;
-            var lp = p;
-            var rp = p;
-            var dzL = Mathf.Lerp(.75f, _leftCoinRow.position.z - _from.position.z,
+            lp = p;
+            rp = p;
+            dzL = Mathf.Lerp(.75f, _leftCoinRow.position.z - _from.position.z,
                 Mathf.InverseLerp(0, _calibratedControllerDistance / 2, leftControllerDistance));
-            var dzR = Mathf.Lerp(.75f, _from.position.z - _rightCoinRow.position.z,
+            dzR = Mathf.Lerp(.75f, _from.position.z - _rightCoinRow.position.z,
                 Mathf.InverseLerp(0, _calibratedControllerDistance / 2, rightControllerDistance));
 
             if (Vector3.Dot(lp - _lastLeftRobotPosition, _movingDirection) < 0)

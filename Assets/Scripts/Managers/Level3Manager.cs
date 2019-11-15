@@ -54,7 +54,7 @@ public class Level3Manager : UnitySingleton<Level3Manager>
         EndUnc.OnDisabled += StatisticsLogger.StopLogUncoupledWalking;
         StartPointHandFar.OnDisabled += StatisticsLogger.StartLogPointHandFarWalking;
         StartPointHandFar.OnDisabled += StartRobotT2;
-        //TO CHECK
+        //TODO TO CHECK
         EndPointHandFar.OnDisabled += StatisticsLogger.StopLogPointWalking;
         EndPointHandFar.OnDisabled += StopRobotT2;
         StartWavingHand.OnDisabled += StatisticsLogger.StartLogPointHandFarMoveWalking;
@@ -70,12 +70,6 @@ public class Level3Manager : UnitySingleton<Level3Manager>
         {
             if (DronesCoinCollectorController != null) DronesCoinCollectorController.Introduce();
         };
-        // - - - - - - - - - 
-    }
-
-    private void StopRobotT2()
-    {
-        if (RobotsCoinCollectorController != null) RobotsCoinCollectorController.Outro();
     }
 
     private void StartRobotT2()
@@ -83,12 +77,15 @@ public class Level3Manager : UnitySingleton<Level3Manager>
         if (RobotsCoinCollectorController != null) RobotsCoinCollectorController.StartCollecting();
     }
 
-    // STUB
+    private void StopRobotT2()
+    {
+        if (RobotsCoinCollectorController != null) RobotsCoinCollectorController.Outro();
+    }
+
     private void StartDronesT3()
     {
         if(DronesCoinCollectorController!=null) DronesCoinCollectorController.StartCollecting();
     }
-    // STUB
     private void StopDronesT3()
     {
         if(DronesCoinCollectorController != null) DronesCoinCollectorController.Outro();
@@ -104,7 +101,7 @@ public class Level3Manager : UnitySingleton<Level3Manager>
                 Invoke("Quit", 5);
         };
         //StatisticsLogger.StopLogPointWalking();
-        StatisticsLogger.StopLogPointHandFarMoveWalking();
+        StatisticsLogger.StopLogPointHandFarMoveWalking(); //TODO SURE??
     }
 
     private void Quit()

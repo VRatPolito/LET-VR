@@ -23,10 +23,10 @@ public class DronesCoinCollectorController : MonoBehaviour
 
     [SerializeField] private Transform _from, _to;
     [SerializeField] private Transform _leftCoinRow, _rightCoinRow;
-    [SerializeField] private Rigidbody _leftRobot, _rightRobot;
+    [SerializeField] private Rigidbody _leftDrone, _rightDrone;
+    [SerializeField] private TextMeshPro _coinsCollectedVisualizerText;
     [SerializeField] [Range(0, 3)] private float _aheadOfPlayer = 1;
     [SerializeField] [Range(0, 1)] private float _robotMoveSmoothing = 0.3f;
-
 
     #endregion
 
@@ -34,7 +34,6 @@ public class DronesCoinCollectorController : MonoBehaviour
 
     private int _score = 0;
     private float _calibratedControllerDistance = 2;
-    private TextMeshPro _coinsCollectedVisualizerText;
     private Vector3 _movingDirection;
     private Vector3 _lastLeftRobotPosition;
     private Vector3 _lastRightRobotPosition;
@@ -71,32 +70,32 @@ public class DronesCoinCollectorController : MonoBehaviour
 
     private void Awake()
     {
-        Assert.IsNotNull(_leftRobot);
-        Assert.IsNotNull(_rightRobot);
+        Assert.IsNotNull(_leftDrone);
+        Assert.IsNotNull(_rightDrone);
         Assert.IsNotNull(_from);
         Assert.IsNotNull(_to);
         Assert.IsNotNull(_leftCoinRow);
         Assert.IsNotNull(_rightCoinRow);
         Assert.IsNotNull(_to);
+        Assert.IsNotNull(_coinsCollectedVisualizerText);
         _calibratedControllerDistance = LocomotionManager.Instance.CalibrationData.ControllerDistance;
-        _coinsCollectedVisualizerText = GameObject.Find("ScoreVisualizer").GetComponent<TextMeshPro>();
         Assert.IsNotNull(_coinsCollectedVisualizerText);
         foreach (var cel in GetComponentsInChildren<ColliderEventsListener>())
             cel.OnTriggerEnterAction += Collect;
 
         _movingDirection = (_to.position - _from.position).normalized;
 
-        _lastLeftRobotPosition = _leftRobot.position;
-        _lastRightRobotPosition = _rightRobot.position;
+        _lastLeftRobotPosition = _leftDrone.position;
+        _lastRightRobotPosition = _rightDrone.position;
 
         _coinAudioSource = new List<AudioSource>();
         _idleAudioSource = new List<AudioSource>();
 
-        var audioS = _leftRobot.GetComponents<AudioSource>();
+        var audioS = _leftDrone.GetComponents<AudioSource>();
         _coinAudioSource.Add(audioS[0]);
         _idleAudioSource.Add(audioS[1]);
 
-        audioS = _rightRobot.GetComponents<AudioSource>();
+        audioS = _rightDrone.GetComponents<AudioSource>();
         _coinAudioSource.Add(audioS[0]);
         _idleAudioSource.Add(audioS[1]);
 
@@ -136,22 +135,22 @@ public class DronesCoinCollectorController : MonoBehaviour
         _introducingSequence = DOTween.Sequence();
         _introducingSequence.AppendCallback(() => _idleAudioSource.ForEach(source => source.Play()));
         _introducingSequence.AppendInterval(.5f);
-        _introducingSequence.Append(_leftRobot.transform.DOShakeRotation(2));
-        _introducingSequence.Join(_rightRobot.transform.DOShakeRotation(2));
-        _introducingSequence.Append(_leftRobot.transform.DOLocalRotate(new Vector3(0, -90, 0), 1.5f));
-        _introducingSequence.Join(_rightRobot.transform.DOLocalRotate(new Vector3(0, -90, 0), 1.5f));
+        _introducingSequence.Append(_leftDrone.transform.DOShakeRotation(2));
+        _introducingSequence.Join(_rightDrone.transform.DOShakeRotation(2));
+        _introducingSequence.Append(_leftDrone.transform.DOLocalRotate(new Vector3(0, -90, 0), 1.5f));
+        _introducingSequence.Join(_rightDrone.transform.DOLocalRotate(new Vector3(0, -90, 0), 1.5f));
         _introducingSequence.AppendInterval(1.5f);
-        _introducingSequence.Append(_leftRobot.transform.DOLocalRotate(new Vector3(0, 90, 0), .8f));
-        _introducingSequence.Join(_rightRobot.transform.DOLocalRotate(new Vector3(0, 90, 0), .8f));
+        _introducingSequence.Append(_leftDrone.transform.DOLocalRotate(new Vector3(0, 90, 0), .8f));
+        _introducingSequence.Join(_rightDrone.transform.DOLocalRotate(new Vector3(0, 90, 0), .8f));
         _introducingSequence.AppendCallback(StartCollecting);
         _introducingSequence.Pause();
 
         _outroSequence = DOTween.Sequence();
         _outroSequence.AppendInterval(.5f);
-        _outroSequence.Append(_leftRobot.DOMoveZ(22, 2));
-        _outroSequence.Join(_rightRobot.DOMoveZ(17, 2));
-        _outroSequence.Append(_leftRobot.transform.DOLocalRotate(new Vector3(0, 180, 0), 1));
-        _outroSequence.Join(_rightRobot.transform.DOLocalRotate(new Vector3(0, 0, 0), 1));
+        _outroSequence.Append(_leftDrone.DOMoveZ(22, 2));
+        _outroSequence.Join(_rightDrone.DOMoveZ(17, 2));
+        _outroSequence.Append(_leftDrone.transform.DOLocalRotate(new Vector3(0, 180, 0), 1));
+        _outroSequence.Join(_rightDrone.transform.DOLocalRotate(new Vector3(0, 0, 0), 1));
         _outroSequence.AppendCallback(() => _idleAudioSource.ForEach(source => source.Stop()));
         _outroSequence.Pause();
     }
@@ -182,44 +181,47 @@ public class DronesCoinCollectorController : MonoBehaviour
     {
         yield return new WaitForFixedUpdate();
         //yield return new WaitForSeconds(2);
-        _leftRobot.rotation = _rightRobot.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
+        _leftDrone.rotation = _rightDrone.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
 
         float rayLength = 30;
         int layerMask = LayerMask.GetMask(new[] { "Default" });
         RaycastHit hitL, hitR;
 
-        var ray = new Ray(_leftRobot.transform.position, _leftRobot.transform.right * -1);
+        var ray = new Ray(_leftDrone.transform.position, _leftDrone.transform.right * -1);
         Physics.Raycast(ray, out hitL, rayLength, layerMask);
-        Debug.DrawRay(ray.origin, ray.direction, Color.red);
+        Debug.DrawRay(ray.origin, ray.direction, Color.red,5);
 
-        ray = new Ray(_rightRobot.transform.position, _rightRobot.transform.right);
+        ray = new Ray(_rightDrone.transform.position, _rightDrone.transform.right);
         Physics.Raycast(ray, out hitR, rayLength, layerMask);
-        Debug.DrawRay(ray.origin, ray.direction, Color.blue);
+        Debug.DrawRay(ray.origin, ray.direction, Color.blue, 5);
         _robotPositionLimit = new Tuple<Vector3, Vector3>(hitL.point, hitR.point);
         Debug.Log(_robotPositionLimit);
 
+        Vector3 currPos, p, lp, rp;
+        float leftControllerDistance, rightControllerDistance, fromD, dzL, dzR;
+
         while (IsCollecting)
         {
-            var currPos = LocomotionManager.Instance.CurrentPlayerController.transform.position;
-            var leftControllerDistance = Mathf.Abs(LocomotionManager.Instance.LeftController.localPosition.x -
+            currPos = LocomotionManager.Instance.CurrentPlayerController.transform.position;
+            leftControllerDistance = Mathf.Abs(LocomotionManager.Instance.LeftController.localPosition.x -
                                                    LocomotionManager.Instance.CameraEye.localPosition.x);
-            var rightControllerDistance = Mathf.Abs(LocomotionManager.Instance.RightController.localPosition.x -
+            rightControllerDistance = Mathf.Abs(LocomotionManager.Instance.RightController.localPosition.x -
                                                     LocomotionManager.Instance.CameraEye.localPosition.x);
 
             if (Vector3.Dot(currPos - _lastPlayerPosition, _movingDirection) >= 0)
                 _lastPlayerPosition = LocomotionManager.Instance.CurrentPlayerController.transform.position;
 
             //robot can only move forward
-            var p = _lastPlayerPosition;
+            p = _lastPlayerPosition;
             p += _movingDirection * _aheadOfPlayer;
-            var fromD = Vector3.Dot(_from.position - p, _movingDirection);
-            if (fromD > 0)
+            fromD = Vector3.Dot(_from.position - p, _movingDirection);
+            if (fromD > 0) //Only Forward
                 p = _from.position + _aheadOfPlayer * _movingDirection;
-            var lp = p;
-            var rp = p;
-            var dzL = Mathf.Lerp(.75f, _leftCoinRow.position.z - _from.position.z,
+            lp = p;
+            rp = p;
+            dzL = Mathf.Lerp(.75f, _leftCoinRow.position.z - _from.position.z,
                 Mathf.InverseLerp(0, _calibratedControllerDistance / 2, leftControllerDistance));
-            var dzR = Mathf.Lerp(.75f, _from.position.z - _rightCoinRow.position.z,
+            dzR = Mathf.Lerp(.75f, _from.position.z - _rightCoinRow.position.z,
                 Mathf.InverseLerp(0, _calibratedControllerDistance / 2, rightControllerDistance));
 
             if (Vector3.Dot(lp - _lastLeftRobotPosition, _movingDirection) < 0)
@@ -227,14 +229,17 @@ public class DronesCoinCollectorController : MonoBehaviour
             if (Vector3.Dot(rp - _lastRightRobotPosition, _movingDirection) < 0)
                 rp = p;
 
+            lp.y = LocomotionManager.Instance.LeftController.position.y;
+            rp.y = LocomotionManager.Instance.RightController.position.y;
+
             lp.z = Mathf.Min(lp.z + dzL, _robotPositionLimit.Item1.z - 0.65f);
             rp.z = Mathf.Max(rp.z - dzR, _robotPositionLimit.Item2.z + 0.65f);
 
-            _leftRobot.DOMove(lp, _robotMoveSmoothing);
-            _rightRobot.DOMove(rp, _robotMoveSmoothing);
+            _leftDrone.DOMove(lp, _robotMoveSmoothing);
+            _rightDrone.DOMove(rp, _robotMoveSmoothing);
 
-            _lastLeftRobotPosition = _leftRobot.position;
-            _lastRightRobotPosition = _rightRobot.position;
+            _lastLeftRobotPosition = _leftDrone.position;
+            _lastRightRobotPosition = _rightDrone.position;
 
             yield return null;
         }
