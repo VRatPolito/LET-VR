@@ -24,9 +24,10 @@ public class Level3Manager : UnitySingleton<Level3Manager>
     #region Editor Visible
 
     public float TimeToStop = .5f;
-    public WalkingDestination StartUnc, EndUnc, StartPoint, EndPoint;
+    public WalkingDestination StartUnc, EndUnc, StartPointHandFar, EndPointHandFar, StartWavingHand, EndPointWavingHand;
     public RobotsCoinCollectorController RobotsCoinCollectorController;
-    public DoorController Task1ToTask2DoorController;
+    public DronesCoinCollectorController DronesCoinCollectorController;
+    public DoorController Task1ToTask2DoorController, T2ToT3DoorController;
 
     #endregion
 
@@ -51,34 +52,56 @@ public class Level3Manager : UnitySingleton<Level3Manager>
 
         StartUnc.OnDisabled += StatisticsLogger.StartLogUncoupledWalking;
         EndUnc.OnDisabled += StatisticsLogger.StopLogUncoupledWalking;
-        StartPoint.OnDisabled += StatisticsLogger.StartLogPointWalking;
-        StartPoint.OnDisabled += ShowPanel;
-        EndPoint.OnDisabled += EndGame;
+        StartPointHandFar.OnDisabled += StatisticsLogger.StartLogPointHandFarWalking;
+        StartPointHandFar.OnDisabled += StartRobotT2;
+        //TODO TO CHECK
+        EndPointHandFar.OnDisabled += StatisticsLogger.StopLogPointWalking;
+        EndPointHandFar.OnDisabled += StopRobotT2;
+        StartWavingHand.OnDisabled += StatisticsLogger.StartLogPointHandFarMoveWalking;
+        StartWavingHand.OnDisabled += StartDronesT3;       
+        EndPointWavingHand.OnDisabled += EndGame;
+
         Task1ToTask2DoorController.OnOpenGate += () =>
         {
             if (RobotsCoinCollectorController != null) RobotsCoinCollectorController.Introduce();
         };
+
+        T2ToT3DoorController.OnOpenGate += () =>
+        {
+            if (DronesCoinCollectorController != null) DronesCoinCollectorController.Introduce();
+        };
     }
 
-    private void HidePanel()
-    {
-        if (RobotsCoinCollectorController != null) RobotsCoinCollectorController.Outro();
-    }
-
-    private void ShowPanel()
+    private void StartRobotT2()
     {
         if (RobotsCoinCollectorController != null) RobotsCoinCollectorController.StartCollecting();
     }
 
+    private void StopRobotT2()
+    {
+        if (RobotsCoinCollectorController != null) RobotsCoinCollectorController.Outro();
+    }
+
+    private void StartDronesT3()
+    {
+        if(DronesCoinCollectorController!=null) DronesCoinCollectorController.StartCollecting();
+    }
+    private void StopDronesT3()
+    {
+        if(DronesCoinCollectorController != null) DronesCoinCollectorController.Outro();
+    }
+
+
     private void EndGame()
     {
-        HidePanel();
+        StopDronesT3();
         StatisticsLogger.OnLogFinalized += (ix) =>
         {
             if (ix == 0)
                 Invoke("Quit", 5);
         };
-        StatisticsLogger.StopLogPointWalking();
+        //StatisticsLogger.StopLogPointWalking();
+        StatisticsLogger.StopLogPointHandFarMoveWalking(); //TODO SURE??
     }
 
     private void Quit()

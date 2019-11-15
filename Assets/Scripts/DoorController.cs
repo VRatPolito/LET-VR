@@ -32,7 +32,6 @@ public class DoorController : MonoBehaviour
 
     #endregion
 
-
     #region Properties
 
     protected virtual bool PlayerInRange

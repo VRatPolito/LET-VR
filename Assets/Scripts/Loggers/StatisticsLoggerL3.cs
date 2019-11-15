@@ -84,7 +84,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
         return v / _angles.Count;
     }
 
-    public void StartLogPointWalking()
+    public void StartLogPointHandFarWalking()
     {
         StartMasterLog("PW");
         _timeStart = Time.time;
@@ -117,7 +117,42 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
         WriteToCSV("PW", values, 2);
         StopMasterLog();
     }
-    
+
+
+
+    public void StartLogPointHandFarMoveWalking()
+    {
+        StartMasterLog("PM");
+        _timeStart = Time.time;
+        _uncoupledWalking = false;
+        _pointWalking = true;
+        _timeStop = float.MinValue;
+        _stopPos = Vector3.negativeInfinity;
+        _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
+        _speeds.Clear();
+        _angles.Clear();
+        _count = 0;
+        _errors = 0;
+    }
+    public void StopLogPointHandFarMoveWalking()
+    {
+        _pointWalking = false;
+        _timeStop = Time.time - _timeStart;
+        var values = new List<string>
+        {
+            "" + _timeStop,
+            "" + GetAverageSpeed(),
+            "" + _maxwalkdist,
+            "" + _minwalkdist,
+            "" + _diffsum,
+            "" + _errors,
+            "" + ((float)_count / (float)_angles.Count * 100),
+            "" + GetAvgGazeWalkAngle() * 100,
+            "" + Level3Manager.Instance.RobotsCoinCollectorController.Score
+        };
+        WriteToCSV("PM", values, 2);
+        StopMasterLog();
+    }
 
     #endregion
 
