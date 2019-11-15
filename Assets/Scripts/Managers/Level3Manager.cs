@@ -52,12 +52,12 @@ public class Level3Manager : UnitySingleton<Level3Manager>
 
         StartUnc.OnDisabled += StatisticsLogger.StartLogUncoupledWalking;
         EndUnc.OnDisabled += StatisticsLogger.StopLogUncoupledWalking;
-        StartPointHandFar.OnDisabled += StatisticsLogger.StartLogPointHandFarWalking;
+        StartPointHandFar.OnDisabled += StatisticsLogger.StartLogPointWalking;
         StartPointHandFar.OnDisabled += StartRobotT2;
         //TODO TO CHECK
         EndPointHandFar.OnDisabled += StatisticsLogger.StopLogPointWalking;
         EndPointHandFar.OnDisabled += StopRobotT2;
-        StartWavingHand.OnDisabled += StatisticsLogger.StartLogPointHandFarMoveWalking;
+        StartWavingHand.OnDisabled += StatisticsLogger.StartLogWaveHandWalking;
         StartWavingHand.OnDisabled += StartDronesT3;       
         EndPointWavingHand.OnDisabled += EndGame;
 
@@ -97,11 +97,12 @@ public class Level3Manager : UnitySingleton<Level3Manager>
         StopDronesT3();
         StatisticsLogger.OnLogFinalized += (ix) =>
         {
+            Debug.Log($"Log {ix} finalized!");
             if (ix == 0)
                 Invoke("Quit", 5);
         };
         //StatisticsLogger.StopLogPointWalking();
-        StatisticsLogger.StopLogPointHandFarMoveWalking(); //TODO SURE??
+        StatisticsLogger.StopLogWaveHandWalking(); //TODO SURE??
     }
 
     private void Quit()
