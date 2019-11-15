@@ -20,7 +20,7 @@ public class StatisticsLoggerL4 : StatisticsLoggerBase
 
     #region Private Members and Constants
     private float _timeStart, _timeStop;
-    private bool _agility = false, _pieGame = false;
+    private bool _agility = false, _headShooter = false, _bodyShooter = false;
     private Vector3 _stopPos = Vector3.negativeInfinity;
     #endregion
 
@@ -53,19 +53,37 @@ public class StatisticsLoggerL4 : StatisticsLoggerBase
         StopMasterLog();        
     }
 
-    public void StartLogPieGame()
+    public void StartLogHeadShooter()
     {
-        StartMasterLog("PG");
-        _pieGame = true;
+        StartMasterLog("HS");
+        _headShooter = true;
     }
-    public void StopLogPieGame()
+
+    public void StopLogHeadShooter()
     {
-        _pieGame = false;
+        _headShooter = false;
         var values = new List<string>
         { 
-            "" + Level4Manager.Instance.FPSHits
+            "" + Level4Manager.Instance.HeadShooterHits
         };
-        WriteToCSV("PG", values, 2);
+        WriteToCSV("HS", values, 2);
+        StopMasterLog();
+    }
+
+    public void StartLogBodyShooter()
+    {
+        StartMasterLog("BS");
+        _bodyShooter = true;
+    }
+
+    public void StopLogBodyShooter()
+    {
+        _bodyShooter = false;
+        var values = new List<string>
+        {
+            "" + Level4Manager.Instance.BodyShooterHits
+        };
+        WriteToCSV("BS", values, 3);
         StopMasterLog();
     }
 
@@ -75,7 +93,6 @@ public class StatisticsLoggerL4 : StatisticsLoggerBase
         LocomotionManager.Instance.LeftController.GetComponent<VibrationController>().ShortVibration(.7f);
         LocomotionManager.Instance.RightController.GetComponent<VibrationController>().ShortVibration(.7f);
     }
-
 
     #endregion
 
@@ -123,7 +140,6 @@ public class StatisticsLoggerL4 : StatisticsLoggerBase
 
     }
 
-
     #endregion
 
     #region Events Callbacks
@@ -133,5 +149,4 @@ public class StatisticsLoggerL4 : StatisticsLoggerBase
     #region Coroutines
 
     #endregion
-
 }
