@@ -69,7 +69,7 @@ public class StatisticsLoggerL4 : StatisticsLoggerBase
         StopMasterLog();
     }
 
-    public override void LogCollisions()
+    public override void LogCollisions(HitType type)
     {
         Collisions++;
         LocomotionManager.Instance.LeftController.GetComponent<VibrationController>().ShortVibration(.7f);

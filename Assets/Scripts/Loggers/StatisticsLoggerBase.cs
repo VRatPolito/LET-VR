@@ -339,7 +339,7 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
         }
     }
 
-    public virtual void LogCollisions()
+    public virtual void LogCollisions(HitType type)
     {
     }
 

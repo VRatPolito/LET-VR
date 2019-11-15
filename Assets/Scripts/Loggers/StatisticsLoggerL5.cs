@@ -22,6 +22,7 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
     private float _timeStart, _timeStop;
     private uint  _grabtask;
     private bool _grabbing, _manipulation;
+    private int _itemCollisions;
     #endregion
 
     #region Properties
@@ -46,6 +47,7 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
 
         _timeStart = Time.time;
         Collisions = 0;
+        _itemCollisions = 0;
         switch (_grabtask)
         {
             case 0:
@@ -75,10 +77,15 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
         if (_grabbing)
             _errors++;
     }
-    public override void LogCollisions()
+    public override void LogCollisions(HitType type)
     {
         if (_grabbing)
-            Collisions++;
+        {
+            if (type == HitType.Player)
+                Collisions++;
+            else if (type == HitType.Item)
+                _itemCollisions++;
+        }
         LocomotionManager.Instance.LeftController.GetComponent<VibrationController>().ShortVibration(.5f);
         LocomotionManager.Instance.RightController.GetComponent<VibrationController>().ShortVibration(.5f);
     }
@@ -91,7 +98,8 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
             "" + _timeStop,
             "" + GetAverageSpeed(),
             "" + _errors,
-            "" + Collisions
+            "" + Collisions,
+            "" + _itemCollisions
         };
         WriteToCSV("G"+_grabtask, values, 1);
         if (_grabtask == 3)
