@@ -34,6 +34,7 @@ public class RobotsCoinCollectorController : MonoBehaviour
 
     #region Private Members and Constants
 
+    private int _maxCoins = 0;
     private int _score = 0;
     private float _calibratedControllerDistance = 2;
     private Vector3 _movingDirection;
@@ -58,7 +59,7 @@ public class RobotsCoinCollectorController : MonoBehaviour
         private set
         {
             _score = value;
-            _coinsCollectedVisualizerText.text = $"Coins Collected\n{_score:###0}";
+            _coinsCollectedVisualizerText.text = $"Coins Collected\n{_score:###0}/{_maxCoins:###0}";
         }
     }
 
@@ -100,6 +101,8 @@ public class RobotsCoinCollectorController : MonoBehaviour
         _coinAudioSource.Add(audioS[0]);
         _idleAudioSource.Add(audioS[1]);
 
+        _maxCoins = _leftCoinRow.transform.childCount + _rightCoinRow.transform.childCount;
+        Score = 0;
         SetupCoreo();
     }
 
