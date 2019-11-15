@@ -148,8 +148,8 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
                 CameraEye = cvr.CameraEye;
                 break;
             case ControllerType.Joystick:
-                cvr = CurrentPlayerController.GetComponent<CharacterControllerVR>();
-                CameraEye = cvr.CameraEye;
+                l = CurrentPlayerController.GetComponent<CircularLimitTracking>();
+                CameraEye = l.CameraEye;
                 break;
         }
 

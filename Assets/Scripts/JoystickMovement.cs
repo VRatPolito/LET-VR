@@ -33,7 +33,7 @@ public class JoystickMovement : MonoBehaviour
     SteamVR_TrackedController _leftController, _rightController;
     [SerializeField]
     Transform _bigArrow;
-    CharacterControllerVR _target;
+    CharacterController _target;
     InputManagement _input;
     bool _leftPadDown = false;
     bool _rightPadDown = false;
@@ -46,7 +46,7 @@ public class JoystickMovement : MonoBehaviour
     void Awake()
     {
         _input = GetComponent<InputManagement>();
-        _target = GetComponent<CharacterControllerVR>();
+        _target = GetComponent<CharacterController>();
         switch (_mode)
         {
             case InputMode.Click:
