@@ -16,7 +16,7 @@ public class FPSPatternSystem : MonoBehaviour
 {
     #region Events
 
-    public event Action OnBulletFinished, OnLastHit;
+    public event Action OnBulletFinished, OnLastBulletExpired;
 
     #endregion
 
@@ -169,14 +169,13 @@ public class FPSPatternSystem : MonoBehaviour
         {
             case CollisionDetect.HitType.Player:
                 HitsCounter++;
-                if(_bulletFinished) OnLastHit.RaiseEvent();
                 break;
             case CollisionDetect.HitType.NotPlayer:
                 //
                 break;
         }
         collisionDetect.ResetHitEventListener();
-        
+        if (_bulletFinished) OnLastBulletExpired.RaiseEvent();
     }
 
     #endregion

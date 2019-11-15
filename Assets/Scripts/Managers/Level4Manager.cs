@@ -22,7 +22,7 @@ public class Level4Manager : UnitySingleton<Level4Manager>
     public WalkingDestination AgilityStart, AgilityEnd, PieStart;
 
     [SerializeField] private GameObject _pOPSystem;
-    [SerializeField] private FPSPatternSystem _robot;
+    [SerializeField] private FPSPatternSystem _headShooter, _bodyShooter;
 
     [Header("In combo with CTRL")] [SerializeField]
     private KeyCode _popSystemSafeStop = KeyCode.H;
@@ -37,7 +37,8 @@ public class Level4Manager : UnitySingleton<Level4Manager>
 
     public StatisticsLoggerL4 StatisticsLogger { get; private set; }
 
-    public int FPSHits => _robot.HitsCounter;
+    public int HeadShooterHits => _headShooter.HitsCounter;
+    public int BodyShooterHits => _bodyShooter.HitsCounter;
 
     private Transform _player => LocomotionManager.Instance.CurrentPlayerController;
 
@@ -60,7 +61,7 @@ public class Level4Manager : UnitySingleton<Level4Manager>
         };
         PieStart.OnDisabled += OnPieStartOnDisabled;
 
-        _robot.OnLastHit += OnLastBulletHit;
+        _headShooter.OnLastBulletExpired += OnLastBulletHeadShooterBulletExpired;
     }
 
     private void Update()
@@ -86,26 +87,48 @@ public class Level4Manager : UnitySingleton<Level4Manager>
 
     private void OnPieStartOnDisabled()
     {
-        _robot.enabled = true;
+        _headShooter.enabled = true;
         LocomotionManager.Instance.StopLocomotion();
         LocomotionManager.Instance.CurrentPlayerController.GetComponent<CharacterController>().enabled = false;
         LocomotionManager.Instance.CameraEye.GetComponent<SphereCollider>().enabled = true;
         LocomotionManager.Instance.RightController.GetComponent<Collider>().enabled = false;
         LocomotionManager.Instance.LeftController.GetComponent<Collider>().enabled = false;
-        StatisticsLogger.StartLogPieGame();
+        StatisticsLogger.StartLogHeadShooter();
     }
 
-    private void OnLastBulletHit()
+    private void OnLastBulletHeadShooterBulletExpired()
     {
-        _robot.enabled = false;
+        _headShooter.enabled = false;
+        StatisticsLogger.StopLogHeadShooter();
+        LocomotionManager.Instance.RightController.GetComponent<Collider>().enabled = true;
+        LocomotionManager.Instance.LeftController.GetComponent<Collider>().enabled = true;
+
+    }
+
+    private void OnBodyShooterStart()
+    {
+        _bodyShooter.enabled = true;
+        LocomotionManager.Instance.StartLocomotion();
+        LocomotionManager.Instance.CurrentPlayerController.GetComponent<CharacterController>().enabled = true;
+        LocomotionManager.Instance.CameraEye.GetComponent<SphereCollider>().enabled = true;
+        LocomotionManager.Instance.RightController.GetComponent<Collider>().enabled = true;
+        LocomotionManager.Instance.LeftController.GetComponent<Collider>().enabled = true;
+
+        StatisticsLogger.StartLogBodyShooter();
+
+    }
+
+    private void OnLastBulletBodyShooterBulletExpired()
+    {
+        _bodyShooter.enabled = false;
 
         StatisticsLogger.OnLogFinalized += (ix) =>
         {
             Debug.Log($"Log {ix} finalized!");
-            if(ix== 0)
+            if (ix == 0)
                 Invoke("Quit", 5);
         };
-        StatisticsLogger.StopLogPieGame();
+        StatisticsLogger.StopLogBodyShooter();
         LocomotionManager.Instance.RightController.GetComponent<Collider>().enabled = true;
         LocomotionManager.Instance.LeftController.GetComponent<Collider>().enabled = true;
     }
