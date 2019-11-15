@@ -141,7 +141,12 @@ public class JoystickMovement : MonoBehaviour
             else if (_rightPadDown)
                 _bigArrow.localEulerAngles = new Vector3(0, _rightController.transform.localEulerAngles.y, 0);
             
-            _target.Move(CalculateMotion());
+			
+			Vector3 moveDirection = new Vector3();
+			if (_target.isGrounded)
+				moveDirection = CalculateMotion();
+			moveDirection.y -= 9.81f * Time.deltaTime;
+			_target.Move(moveDirection);
         }
     }
 
