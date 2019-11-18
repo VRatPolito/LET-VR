@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 public enum ItemControllerType { VR, FPS };
-public enum ControllerHand { LeftLeg, RightLeg, LeftHand, RightHand };
+public enum ControllerHand { LeftLeg, RightLeg, LeftHand, RightHand, Invalid };
 
 public class ItemController : MonoBehaviour
 {

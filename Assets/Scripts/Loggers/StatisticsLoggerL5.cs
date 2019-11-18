@@ -72,7 +72,7 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
         _manipulation = true;
     }
 
-    private void LogDrop()
+    private void LogDrop(GenericItem i)
     {
         if (_grabbing)
             _errors++;

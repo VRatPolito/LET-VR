@@ -10,15 +10,29 @@ public class RealWalkToolset : MonoBehaviour
     private InputManagement _input;
     private CharacterControllerVR _cVR;
     private int _currPoint = 0;
+    private CharacterController _charc;
+    [SerializeField]
+    private CapsuleCollider _coll;
 
     private void Awake()
     {
         _input = GetComponent<InputManagement>();
+        _charc = GetComponent<CharacterController>();
         _cVR = GetComponent<CharacterControllerVR>();
         _input.OnLeftPadPressed += LeftPadPressed;
         _input.OnRightPadPressed += RightPadPressed;
         _input.OnLeftPadTouched += LeftPadTouched;
         _input.OnRightPadTouched += RightPadTouched;
+    }
+
+    private void LateUpdate()
+    {
+    if(_coll != null && _charc != null)
+        {
+            _coll.enabled = _charc.enabled;
+            _coll.height = _charc.height;
+            _coll.center = _charc.center;
+        }
     }
 
 
