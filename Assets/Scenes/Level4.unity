@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.25329244, g: 0.21699427, b: 0.23319966, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -238,11 +238,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _followPlayer: 1
+  _destroyBulletsOnHit: 1
   _robotMoveSmoothing: 0.15
   _hitsVisualizer: {fileID: 859139065}
   _referenceTransform: {fileID: 1054351007}
   _bulletPattern: {fileID: 11400000, guid: 7e3aaf196d0001a4e970f7f31c52f07a, type: 2}
   _robot: {fileID: 1459567056}
+  _robotFollowPlayer: {fileID: 1495332207}
   _coolColor: {r: 0, g: 1, b: 1, a: 1}
   _hotColor: {r: 1, g: 0, b: 0, a: 1}
   _bulletIdx: 0
@@ -258,7 +260,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1054351007}
-  - {fileID: 1459567057}
+  - {fileID: 1495332208}
   m_Father: {fileID: 0}
   m_RootOrder: 20
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -361,11 +363,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _followPlayer: 0
+  _destroyBulletsOnHit: 0
   _robotMoveSmoothing: 0.15
   _hitsVisualizer: {fileID: 859139065}
   _referenceTransform: {fileID: 1679747046}
   _bulletPattern: {fileID: 11400000, guid: b199987c36c31e34aaa0f79849698e2a, type: 2}
   _robot: {fileID: 1691459649}
+  _robotFollowPlayer: {fileID: 0}
   _coolColor: {r: 0, g: 1, b: 1, a: 1}
   _hotColor: {r: 1, g: 0, b: 0, a: 1}
   _bulletIdx: 0
@@ -446,7 +450,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh38102
+  m_Name: pb_Mesh36238
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -3365,7 +3369,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh38060
+  m_Name: pb_Mesh36190
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -4410,7 +4414,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh38148
+  m_Name: pb_Mesh36296
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -4826,13 +4830,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1459567056}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0.3000002, y: -2.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1796506373}
-  m_Father: {fileID: 80744840}
-  m_RootOrder: 1
+  m_Father: {fileID: 1495332208}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &1483937681
 GameObject:
@@ -4882,6 +4886,37 @@ Transform:
   - {fileID: 1742577413}
   m_Father: {fileID: 0}
   m_RootOrder: 17
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1495332207
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1495332208}
+  m_Layer: 0
+  m_Name: FollowPlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1495332208
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1495332207}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1459567057}
+  m_Father: {fileID: 80744840}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1507789952
 PrefabInstance:
@@ -7588,7 +7623,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh38046
+  m_Name: pb_Mesh36176
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -11903,7 +11938,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh38188
+  m_Name: pb_Mesh36340
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2

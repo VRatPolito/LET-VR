@@ -1,9 +1,10 @@
-﻿
-/*
+﻿/*
  * Custom template by Gabriele P.
  */
+
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using PrattiToolkit;
 using UnityEditor;
 using UnityEngine;
@@ -12,8 +13,9 @@ using UnityEngine.Assertions;
 [RequireComponent(typeof(StatisticsLoggerL5))]
 public class Level5Manager : UnitySingleton<Level5Manager>
 {
-
-    protected Level5Manager() { }
+    protected Level5Manager()
+    {
+    }
 
     #region Events
 
@@ -28,10 +30,13 @@ public class Level5Manager : UnitySingleton<Level5Manager>
         StartGrab3,
         EndGrab3,
         StartManipulation,
-        EndManipulation;
+        EndManipulation,
+        StartMovingInteraction;
 
     public GrabDestination Red, Green, Blue;
     public Destination Cyan;
+    public GameObject Link;
+
     #endregion
 
     #region Private Members and Constants
@@ -42,7 +47,6 @@ public class Level5Manager : UnitySingleton<Level5Manager>
     #endregion
 
     #region Properties
-
 
     public StatisticsLoggerL5 StatisticsLogger { get; private set; }
 
@@ -70,34 +74,8 @@ public class Level5Manager : UnitySingleton<Level5Manager>
         Green.OnDisabled += CountSnap;
         Blue.OnDisabled += CountSnap;
         StartManipulation.OnDisabled += StatisticsLogger.StartLogManipulation;
-        EndManipulation.OnDisabled += EndLevel;
-    }
-
-    private void EndLevel()
-    {
-        StatisticsLogger.OnLogFinalized += (ix) =>
-        {
-            if (ix == 0)
-                Application.Quit();
-        };
-       StatisticsLogger.StopLogManipulation();
-    }
-
-    private void CountSnap()
-    {
-        _snaps++;
-        if (_snaps == 3)
-        {
-            foreach (var g in ManipulationStuff)
-                g.CanInteract(true, LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>());
-            Cyan.gameObject.SetActive(true);
-            EndManipulation.gameObject.SetActive(true);
-        }
-    }
-
-    void Start()
-    {
-
+        StartMovingInteraction.OnDisabled += StartMovingInteractionLevel;
+        //StartMovingInteraction.OnDisabled += EndLevel;
     }
 
     #endregion
@@ -112,10 +90,38 @@ public class Level5Manager : UnitySingleton<Level5Manager>
 
     #region Events Callbacks
 
+    private void CountSnap()
+    {
+        _snaps++;
+        if (_snaps == 3)
+        {
+            foreach (var g in ManipulationStuff)
+                g.CanInteract(true,
+                    LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>());
+            Cyan.gameObject.SetActive(true);
+            EndManipulation.gameObject.SetActive(true);
+        }
+    }
+
+    private void StartMovingInteractionLevel()
+    {
+        Link.transform.DOMoveY(-18, 5).SetEase(Ease.InCubic).OnComplete(() => { Destroy(Link); });
+        //TODO ROBOT
+    }
+
+    private void EndLevel()
+    {
+        StatisticsLogger.OnLogFinalized += (ix) =>
+        {
+            if (ix == 0)
+                Application.Quit();
+        };
+        StatisticsLogger.StopLogManipulation();
+    }
+
     #endregion
 
     #region Coroutines
 
     #endregion
-
 }

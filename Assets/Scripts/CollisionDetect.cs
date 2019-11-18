@@ -23,6 +23,11 @@ public class CollisionDetect : MonoBehaviour
 
     private ColliderEventsListener _colliderEventsListener;
 
+    public bool IsBullet
+    {
+        get { return _isBullet; }
+    }
+
     private void Start()
     {
         _colliderEventsListener = gameObject.GetOrAddComponent<ColliderEventsListener>();
@@ -34,7 +39,7 @@ public class CollisionDetect : MonoBehaviour
                 FindObjectOfType<StatisticsLoggerBase>().LogCollisions(type);
             OnHit.RaiseEvent(this, type);
         };
-        if (_isBullet)
+        if (IsBullet)
             _colliderEventsListener.OnColliderEnterAction += c => { GetComponent<Rigidbody>().useGravity = true; };
     }
 
