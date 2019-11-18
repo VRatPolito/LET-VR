@@ -21,14 +21,14 @@ public class FPSPatternSystem : MonoBehaviour
 
     #region Editor Visible
 
-
     [SerializeField] private bool _followPlayer = false;
+    [SerializeField] private bool _destroyBulletsOnHit = false;
     [SerializeField] [Range(0, 1)] private float _robotMoveSmoothing = 0.5f;
 
     [SerializeField] private TextMeshPro _hitsVisualizer;
     [SerializeField] private Transform _referenceTransform;
     [Expandable] [SerializeField] private FPSPatternSO _bulletPattern;
-    [SerializeField] private GameObject _robot;
+    [SerializeField] private GameObject _robot, _robotFollowPlayer;
     [SerializeField] private Color _coolColor = Color.cyan, _hotColor = Color.red;
 
     #endregion
@@ -45,7 +45,7 @@ public class FPSPatternSystem : MonoBehaviour
     private Sequence _aimAndShootSequence, _shutdownSequence;
     private int _hitsCounter = 0;
     private bool _bulletFinished = false;
-    private  List<GameObject> _spawnedBullets = new List<GameObject>();
+    private List<GameObject> _spawnedBullets = new List<GameObject>();
 
     #endregion
 
@@ -80,6 +80,8 @@ public class FPSPatternSystem : MonoBehaviour
         {
             _shooterReady = true;
             _rp = _robot.transform.position;
+            if (_followPlayer)
+                StartCoroutine(FollowPlayer());
         });
         startup.Play();
     }
@@ -107,8 +109,6 @@ public class FPSPatternSystem : MonoBehaviour
     void Update()
     {
         LoadNextBullet();
-        if (_shooterReady && _followPlayer)
-            FollowPlayer();
         //_coolDownTimer += Time.deltaTime;
         //if (_coolDownTimer > 10)
         //{
@@ -125,37 +125,45 @@ public class FPSPatternSystem : MonoBehaviour
     public void Shutdown()
     {
         _shutdownSequence = DOTween.Sequence();
-        _shutdownSequence.Append(_robot.transform.DOMoveY(_robot.transform.position.y + 10,6).SetEase(Ease.InCubic));
+        _shutdownSequence.Append(_robot.transform.DOMoveY(_robot.transform.position.y + 10, 6).SetEase(Ease.InCubic));
         _shutdownSequence.Join(_robot.transform.DOScale(Vector3.zero, 8).SetEase(Ease.InCubic));
         _shutdownSequence.OnComplete(() =>
         {
-            DestroySpawnedBullets();
+            DestroyAllSpawnedBullets();
             this.enabled = false;
             _shooterReady = false;
             OnShuttedDown.RaiseEvent();
         });
         _shutdownSequence.Play();
-        
     }
 
     #endregion
 
     #region Helper Methods
 
-    private void DestroySpawnedBullets()
+    private void DestroyAllSpawnedBullets()
     {
         foreach (var bullet in _spawnedBullets)
         {
             Destroy(bullet);
         }
+
         _spawnedBullets.Clear();
     }
 
-    private void FollowPlayer()
+    private IEnumerator FollowPlayer()
     {
-        _rp.y = LocomotionManager.Instance.CameraEye.position.y;
-        _rp.z = LocomotionManager.Instance.CameraEye.position.z;
-        _robot.transform.DOMove(_rp, _robotMoveSmoothing);
+        var fp = _followPlayer;
+        while (_followPlayer)
+        {
+            _rp.y = LocomotionManager.Instance.CameraEye.position.y;
+            _rp.z = LocomotionManager.Instance.CameraEye.position.z;
+            _robotFollowPlayer.transform.DOBlendableMoveBy(_rp-_robot.transform.position, _robotMoveSmoothing);
+            //_robot.transform.DOBlendableMoveBy(_rp - _robot.transform.position, _robotMoveSmoothing);
+            yield return null;
+        }
+
+        _followPlayer = fp;
     }
 
     private void LoadNextBullet()
@@ -178,10 +186,10 @@ public class FPSPatternSystem : MonoBehaviour
 
         _shooterReady = false;
 
+
         _aimAndShootSequence = DOTween.Sequence();
         _aimAndShootSequence.Append(_robot.transform.DOPunchRotation(new Vector3(5, 0, 0), bullet.LoadingTime, 20));
-        _aimAndShootSequence.Append(_robot.transform.DOLookAt(bullet.GetTarget(_referenceTransform),
-            bullet.AimingTime));
+        _aimAndShootSequence.AppendInterval(bullet.AimingTime);
         _aimAndShootSequence.Join(DOTween.To(() => _aimRenderer.sharedMaterial.GetColor("_TintColor"),
             x => _aimRenderer.sharedMaterial.SetColor("_TintColor", x), _hotColor, bullet.AimingTime));
         _aimAndShootSequence.AppendCallback(Shoot);
@@ -230,8 +238,21 @@ public class FPSPatternSystem : MonoBehaviour
                 //
                 break;
         }
+
+        if (_destroyBulletsOnHit && collisionDetect.IsBullet)
+        {
+            var destroy = DOTween.Sequence();
+            destroy.Append(collisionDetect.transform.DOBlendableScaleBy(-collisionDetect.transform.localScale, 2.0f));
+            destroy.AppendCallback(() => Destroy(collisionDetect.gameObject, 0.5f));
+            destroy.Play();
+        }
+
         collisionDetect.ResetHitEventListener();
-        if (_bulletFinished || _bulletIdx == _bulletPattern.Bullets.Count+1) OnLastBulletExpired.RaiseEvent();
+        if (_bulletFinished || _bulletIdx == _bulletPattern.Bullets.Count + 1)
+        {
+            _followPlayer = false;
+            OnLastBulletExpired.RaiseEvent();
+        }
     }
 
     #endregion

@@ -46,3 +46,93 @@ MonoBehaviour:
     LoadingTime: 1.74
     AimingTime: 0.28
     CoolDownTime: 0.17
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 3.4
+    LoadingTime: 1.74
+    AimingTime: 0.28
+    CoolDownTime: 0.17
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 3.4
+    LoadingTime: 1.74
+    AimingTime: 0.28
+    CoolDownTime: 0.17
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 3.4
+    LoadingTime: 1.74
+    AimingTime: 0.28
+    CoolDownTime: 0.17
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 3.4
+    LoadingTime: 1.74
+    AimingTime: 0.28
+    CoolDownTime: 0.17
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 3.4
+    LoadingTime: 1.74
+    AimingTime: 0.28
+    CoolDownTime: 0.17
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 3.4
+    LoadingTime: 1.74
+    AimingTime: 0.28
+    CoolDownTime: 0.17
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 3.4
+    LoadingTime: 1.74
+    AimingTime: 0.28
+    CoolDownTime: 0.17
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 3.4
+    LoadingTime: 1.74
+    AimingTime: 0.28
+    CoolDownTime: 0.17
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 3.4
+    LoadingTime: 1.74
+    AimingTime: 0.28
+    CoolDownTime: 0.17
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 3.4
+    LoadingTime: 1.74
+    AimingTime: 0.28
+    CoolDownTime: 0.17
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 3.4
+    LoadingTime: 1.74
+    AimingTime: 0.28
+    CoolDownTime: 0.17
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 3.4
+    LoadingTime: 1.74
+    AimingTime: 0.28
+    CoolDownTime: 0.17
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 3.4
+    LoadingTime: 1.74
+    AimingTime: 0.28
+    CoolDownTime: 0.17
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 3.4
+    LoadingTime: 1.74
+    AimingTime: 0.28
+    CoolDownTime: 0.17
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 3.4
+    LoadingTime: 1.74
+    AimingTime: 0.28
+    CoolDownTime: 0.17
