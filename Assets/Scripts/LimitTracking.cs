@@ -57,6 +57,9 @@ public class LimitTracking : MonoBehaviour
     [SerializeField]
     [Tooltip("The NavMeshObstacle component attached to the Player, in order to manage the Collider height")]
     NavMeshObstacle PlayerNavMeshObstacle;
+    [SerializeField]
+    [Tooltip("The Capsule Collider component attached to the Player, in order to manage the Collider height")]
+    CapsuleCollider PlayerCapsule;
 
     //Initial position of the user's head at the script initialization. It will be applied as negative displacement to the CameraRig Transform to keep the user aligned with the CharacterController attached to the playerController in local Vector3.zero.
     [HideInInspector]
@@ -140,6 +143,12 @@ public class LimitTracking : MonoBehaviour
                         PlayerNavMeshObstacle.center = new Vector3(0, _playerheight / 2, 0);
                     }
 
+                    if(PlayerCapsule != null)
+                    {
+                        PlayerCapsule.height = _playerheight;
+                        PlayerCapsule.center = new Vector3(0, _playerheight / 2, 0);
+                    }
+
                     if (Posizione != Position.Standing)
                         Posizione = Position.Standing;
                 }
@@ -153,6 +162,11 @@ public class LimitTracking : MonoBehaviour
                     {
                         PlayerNavMeshObstacle.height = CameraEye.localPosition.y;
                         PlayerNavMeshObstacle.center = new Vector3(0, heady / 2, 0);
+                    }
+                    if (PlayerCapsule != null)
+                    {
+                        PlayerCapsule.height = CameraEye.localPosition.y;
+                        PlayerCapsule.center = new Vector3(0, heady / 2, 0);
                     }
 
                     if (Posizione != Position.Standing)
@@ -168,6 +182,11 @@ public class LimitTracking : MonoBehaviour
                     {
                         PlayerNavMeshObstacle.height = _playerheight / 2;
                         PlayerNavMeshObstacle.center = new Vector3(0, _playerheight / 4, 0);
+                    }
+                    if (PlayerCapsule != null)
+                    {
+                        PlayerCapsule.height = _playerheight / 2;
+                        PlayerCapsule.center = new Vector3(0, _playerheight / 4, 0);
                     }
 
                     if (Posizione != Position.Crouched)
@@ -280,6 +299,11 @@ public class LimitTracking : MonoBehaviour
                         PlayerNavMeshObstacle.height = _playerheight;
                         PlayerNavMeshObstacle.center = new Vector3(0, _playerheight / 2, 0);
                     }
+                    if(PlayerCapsule != null)
+                    {
+                        PlayerCapsule.height = _playerheight;
+                        PlayerCapsule.center = new Vector3(0, _playerheight / 2, 0);
+                    }
 
                     if (Posizione != Position.Standing)
                         Posizione = Position.Standing;
@@ -295,6 +319,11 @@ public class LimitTracking : MonoBehaviour
                         PlayerNavMeshObstacle.height = HeadY;
                         PlayerNavMeshObstacle.center = new Vector3(0, HeadY / 2, 0);
                     }
+                    if (PlayerCapsule != null)
+                    {
+                        PlayerCapsule.height = HeadY;
+                        PlayerCapsule.center = new Vector3(0, HeadY / 2, 0);
+                    }
 
                     if (Posizione != Position.Standing)
                         Posizione = Position.Standing;
@@ -309,6 +338,11 @@ public class LimitTracking : MonoBehaviour
                     {
                         PlayerNavMeshObstacle.height = _playerheight / 2;
                         PlayerNavMeshObstacle.center = new Vector3(0, _playerheight / 4, 0);
+                    }
+                    if (PlayerCapsule != null)
+                    {
+                        PlayerCapsule.height = _playerheight / 2;
+                        PlayerCapsule.center = new Vector3(0, _playerheight / 4, 0);
                     }
 
                     if (Posizione != Position.Crouched)

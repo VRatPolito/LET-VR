@@ -967,6 +967,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Head: {fileID: 3007497751127323627}
   height: 0
+  _capsule: {fileID: 4979836871202836706}
 --- !u!114 &3007497752238505977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -998,7 +999,6 @@ MonoBehaviour:
   - {x: 4.5, y: 0, z: 14}
   - {x: 4.5, y: 0, z: 28}
   - {x: 4.5, y: 0, z: 43}
-  _coll: {fileID: 4979836871202836706}
 --- !u!1 &3007497752377188281
 GameObject:
   m_ObjectHideFlags: 0

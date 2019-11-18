@@ -95,7 +95,7 @@ public class Level4Manager : UnitySingleton<Level4Manager>
     {
         _headShooter.enabled = true;
         LocomotionManager.Instance.StopLocomotion();
-        LocomotionManager.Instance.CurrentPlayerController.GetComponent<CharacterController>().enabled = false;
+        LocomotionManager.Instance.CurrentPlayerController.GetComponent<PlayerColliderManager>().DisableCollider();
         LocomotionManager.Instance.CurrentPlayerController.position = new Vector3(LocomotionManager.Instance.CurrentPlayerController.position.x, 0, LocomotionManager.Instance.CurrentPlayerController.position.z);
         LocomotionManager.Instance.CameraEye.GetComponent<SphereCollider>().enabled = true;
         LocomotionManager.Instance.RightController.GetComponent<Collider>().enabled = false;
@@ -117,7 +117,7 @@ public class Level4Manager : UnitySingleton<Level4Manager>
         _jailBalcony.GetComponent<Collider>().enabled = false;
         _jailBalcony.transform.DOMoveY(_jailBalcony.transform.position.y - 2, 5);
         LocomotionManager.Instance.StartLocomotion();
-        LocomotionManager.Instance.CurrentPlayerController.GetComponent<CharacterController>().enabled = true;
+        LocomotionManager.Instance.CurrentPlayerController.GetComponent<PlayerColliderManager>().EnableCollider();
         LocomotionManager.Instance.CameraEye.GetComponent<SphereCollider>().enabled = true;
         LocomotionManager.Instance.RightController.GetComponent<Collider>().enabled = true;
         LocomotionManager.Instance.LeftController.GetComponent<Collider>().enabled = true;
