@@ -30,6 +30,7 @@ public class ConditionedDoorController : DoorController {
 
     [SerializeField] protected MeshRenderer _batteryHolder;
     [SerializeField] protected GameObject _batteryTarget;
+    [SerializeField] protected GameObject _battery;
     [SerializeField] protected ColliderEventsListener _batteryTrigger;
     [SerializeField] protected bool _needBattery = false;
 
@@ -42,29 +43,60 @@ public class ConditionedDoorController : DoorController {
         Assert.IsNotNull(_batteryTarget);
         Assert.IsNotNull(_batteryTrigger);
         base.Awake();
-        if(NeedBattery)
+        if (NeedBattery)
             StartPulse();
-         _batteryTrigger.OnTriggerEnterAction += c =>
+        _batteryTrigger.OnTriggerEnterAction += c =>
+       {
+           if (!NeedBattery || !PlayerInRange || c.tag != "Item") return;
+
+           if (c.gameObject == _battery)
+           {
+               var g = c.GetComponent<GenericItem>();
+
+               if (g._hand == ControllerHand.Invalid)
+                   return;
+               if (g._hand == ControllerHand.LeftHand)
+                   g.Player.LeftController.GetComponent<VibrationController>().ShortVibration();
+               else if (g._hand == ControllerHand.RightHand)
+                   g.Player.RightController.GetComponent<VibrationController>().ShortVibration();
+
+               ((VRItemController)g.Player).OnDrop += ItemDropped;
+
+               var m1 = _batteryHolder.materials[0];
+               var col = m1.GetColor("_OutlineColor");
+               m1.SetColor("_OutlineColor", new Color(col.r, col.g, col.b, 1));
+               var m = new Material[1];
+               m[0] = m1;
+               _batteryHolder.materials = m;
+               _pulseEnabled = false;
+           }
+       };
+
+        _batteryTrigger.OnTriggerExitAction += c =>
         {
             if (!NeedBattery || !PlayerInRange || c.tag != "Item") return;
-            OpenGate(PlayerInRange);
-            var battery = c.GetComponent<GenericItem>();
-			battery.IsKinematic = true;
-			var p = battery.Player;
-            if(p != null)
-			    p.DropItem(c.transform, true);
-            else
-                battery.GetComponent<Rigidbody>().isKinematic = true;
-            battery.CanInteract(false, LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>());
-            c.transform.parent = _batteryTarget.transform;
-            c.transform.position = _batteryTarget.transform.position;
-            c.transform.rotation = _batteryTarget.transform.rotation;
-            StopPulse();
-            NeedBattery = false;
-            //c.GetComponent<Rigidbody>().isKinematic = true;
-            BatteryInserted.RaiseEvent();
+            (LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>()).OnDrop -= ItemDropped;
+            StartPulse();
         };
 
+    }
+
+    private void ItemDropped(GenericItem gi)
+    {
+        if (NeedBattery)
+        {
+            OpenGate(PlayerInRange);
+            var g = _battery.GetComponent<GenericItem>();
+            g.GetComponent<Rigidbody>().isKinematic = true;
+            g.CanInteract(false, LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>());
+            (LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>()).OnDrop -= ItemDropped;
+            _battery.transform.parent = _batteryTarget.transform;
+            _battery.transform.position = _batteryTarget.transform.position;
+            _battery.transform.rotation = _batteryTarget.transform.rotation;
+            StopPulse();
+            NeedBattery = false;
+            BatteryInserted.RaiseEvent();
+        }
     }
 
     protected override void Update()

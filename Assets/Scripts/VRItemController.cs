@@ -10,7 +10,7 @@ public enum GrabMode { HoldButton, ClickButton };
 
 public class VRItemController : ItemController
 {
-    public event Action OnGrab, OnDrop;
+    public event Action<GenericItem> OnGrab, OnDrop;
     [HideInInspector]
     public SteamVR_TrackedController LeftVRController, RightVRController;
     Material oldmat;
@@ -35,7 +35,8 @@ public class VRItemController : ItemController
     public Color TriggerColor = Color.magenta;
     public Color GripColor = Color.cyan;
     [HideInInspector]
-    public VibrationController LeftVibrationController, RightVibrationController;
+    public VibrationController LeftVibrationController, RightVibrationController;   
+
 
 
     private void Awake()
@@ -1146,6 +1147,7 @@ public class VRItemController : ItemController
         if (g.ItemCode != ItemCodes.Generic)
         {
             g.Player = this;
+            g._hand = hand;
             g.DisablePhysics();
             if (hand == ControllerHand.LeftHand)
             {
@@ -1175,6 +1177,7 @@ public class VRItemController : ItemController
             if (g.Player != null)
                 g.Player.DropItem(g.transform, true);
             g.Player = this;
+            g._hand = hand;
             g.DisablePhysics();
             g.DisableOutline(this);
             if (hand == ControllerHand.LeftHand)
@@ -1199,7 +1202,7 @@ public class VRItemController : ItemController
             }
         }
         if(OnGrab != null)
-            OnGrab.Invoke();
+            OnGrab.Invoke(g);
     }
 
 
@@ -1252,6 +1255,7 @@ public class VRItemController : ItemController
                 if (i != null)
                 {
                     i.Player = null;
+                    i._hand = ControllerHand.Invalid;
                     if (i.ItemCode == ItemCodes.Generic)
                     {
                         i.DisableOutline(this);
@@ -1285,7 +1289,7 @@ public class VRItemController : ItemController
                 LeftVibrationController.ShortVibration();
 
                 if (OnDrop != null)
-                    OnDrop.Invoke();
+                    OnDrop.Invoke(i);
             }
             LeftInteracting = false;
             leftoperating = false;
@@ -1303,6 +1307,7 @@ public class VRItemController : ItemController
                 if (i != null)
                 {
                     i.Player = null;
+                    i._hand = ControllerHand.Invalid;
                     if (i.ItemCode == ItemCodes.Generic)
                     {
                         i.DisableOutline(this);
@@ -1335,7 +1340,7 @@ public class VRItemController : ItemController
                 ItemRight = null;
                 RightVibrationController.ShortVibration();
                 if (OnDrop != null)
-                    OnDrop.Invoke();
+                    OnDrop.Invoke(i);
             }
             RightInteracting = false;
             rightoperating = false;

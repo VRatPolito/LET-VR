@@ -58,6 +58,7 @@ public class GenericItem : MonoBehaviour {
     public Transform SeekTarget;
     public GenericItemSlave Slave;
     public ItemController Player;
+    internal ControllerHand _hand = ControllerHand.Invalid;
 
     [HideInInspector]
     public Vector3 startParentPosition;
