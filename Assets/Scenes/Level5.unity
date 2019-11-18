@@ -1528,7 +1528,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 423509642}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 4.6, y: 2, z: 1.1}
@@ -4412,7 +4412,7 @@ PrefabInstance:
         type: 3}
       propertyPath: Next
       value: 
-      objectReference: {fileID: 1067470403}
+      objectReference: {fileID: 2045098911}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a5b4a34f6cb01374e91ea03d44a0e136, type: 3}
 --- !u!4 &818117903 stripped
@@ -4527,7 +4527,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 870457375}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 4.6, y: 2, z: 1.1}
@@ -5168,7 +5168,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh143430
+  m_Name: pb_Mesh53210
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -5673,7 +5673,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 996496939}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 3.1, y: 2, z: 1.1}
@@ -7242,7 +7242,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh143858
+  m_Name: pb_Mesh53640
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -7734,11 +7734,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3007497752238505983, guid: b5945f92f8ca93e498154bf031c30317,
-        type: 3}
-      propertyPath: m_Radius
-      value: 0.02
-      objectReference: {fileID: 0}
     - target: {fileID: 3007497752387251578, guid: b5945f92f8ca93e498154bf031c30317,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -7749,6 +7744,16 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 982130873}
+    - target: {fileID: 3007497752238505983, guid: b5945f92f8ca93e498154bf031c30317,
+        type: 3}
+      propertyPath: m_Radius
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 9085998704565069559, guid: b5945f92f8ca93e498154bf031c30317,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3007497750966608937, guid: b5945f92f8ca93e498154bf031c30317,
         type: 3}
       propertyPath: m_Enabled
@@ -7757,11 +7762,6 @@ PrefabInstance:
     - target: {fileID: 3007497752377188286, guid: b5945f92f8ca93e498154bf031c30317,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9085998704565069559, guid: b5945f92f8ca93e498154bf031c30317,
-        type: 3}
-      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -17162,7 +17162,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1957330886}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1.6, y: 2, z: 1.1}
@@ -18686,6 +18686,21 @@ PrefabInstance:
     - target: {fileID: 4747679086044089639, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5079891787557560421, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5079891787557560423, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5079891787557560423, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
