@@ -2,8 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public enum ItemCodes { Brochure, Extinguisher, Keys, Niche, NicheDoor, Arrows, CarHandle, SOSCall, ShelterInternalDoors, ShelterExternalDoors, ShelterDoor, Bench, ExtSecure, SOSTelephone, Locker, LockerDoor, Generic };
+public enum ItemCodes { Generic };
 
 public class GenericItem : MonoBehaviour {
 
@@ -57,7 +58,7 @@ public class GenericItem : MonoBehaviour {
     [HideInInspector]
     public Transform SeekTarget;
     public GenericItemSlave Slave;
-    public ItemController Player;
+    internal ItemController Player;
     internal ControllerHand _hand = ControllerHand.Invalid;
 
     [HideInInspector]
@@ -68,6 +69,11 @@ public class GenericItem : MonoBehaviour {
     public Vector3 startChildPosition;
     [HideInInspector]
     public Quaternion startChildRotationQ;
+
+    [Serializable]
+    public class InteractEvent : UnityEvent<ItemController, ControllerHand> { }
+
+    public InteractEvent OnInteract, OnGrab, OnDrop;
 
     // Use this for initialization
     public virtual void Start()
@@ -224,7 +230,7 @@ public class GenericItem : MonoBehaviour {
 
     public virtual void UnClickButton(object sender, ClickedEventArgs e) { }
 
-    public virtual void Interact(ItemController c) { }
+    public virtual void Interact(ItemController c) { OnInteract?.Invoke(c, ControllerHand.Invalid); }
 
     public void DisableItem(Transform controller)
     {
@@ -345,5 +351,30 @@ public class GenericItem : MonoBehaviour {
         else
             CanInteract(false, null);
         DisableOutline(null);
+    }
+
+    internal void Grab(ItemController player, ControllerHand hand)
+    {
+        if (Player != null)
+            Player.DropItem(transform, true);
+        Player = player;
+        _hand = hand;
+        DisablePhysics();
+    }
+
+    internal void SignalGrab()
+    {
+        OnGrab?.Invoke(Player, _hand);
+    }
+
+    internal void Drop()
+    {
+        Player = null;
+        _hand = ControllerHand.Invalid;
+    }
+
+    internal void SignalDrop(ItemController player, ControllerHand hand)
+    {
+        OnDrop?.Invoke(player, hand);
     }
 }

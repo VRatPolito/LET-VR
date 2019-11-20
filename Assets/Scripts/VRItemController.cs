@@ -10,7 +10,7 @@ public enum GrabMode { HoldButton, ClickButton };
 
 public class VRItemController : ItemController
 {
-    public event Action<GenericItem> OnGrab, OnDrop;
+    public event Action<GenericItem> OnGrab, OnDrop, OnInteract;
     [HideInInspector]
     public SteamVR_TrackedController LeftVRController, RightVRController;
     Material oldmat;
@@ -1144,11 +1144,9 @@ public class VRItemController : ItemController
     {
         g.Interact(this);
         StopPulse(hand);
+        g.Grab(this, hand);
         if (g.ItemCode != ItemCodes.Generic)
         {
-            g.Player = this;
-            g._hand = hand;
-            g.DisablePhysics();
             if (hand == ControllerHand.LeftHand)
             {
                 g.DisableItem(LeftController);
@@ -1174,11 +1172,6 @@ public class VRItemController : ItemController
         }
         else
         {
-            if (g.Player != null)
-                g.Player.DropItem(g.transform, true);
-            g.Player = this;
-            g._hand = hand;
-            g.DisablePhysics();
             g.DisableOutline(this);
             if (hand == ControllerHand.LeftHand)
             {
@@ -1201,6 +1194,7 @@ public class VRItemController : ItemController
                 RightVibrationController.ShortVibration();
             }
         }
+        g.SignalGrab();
         if(OnGrab != null)
             OnGrab.Invoke(g);
     }
@@ -1215,6 +1209,8 @@ public class VRItemController : ItemController
             LeftVibrationController.ShortVibration();
         else if (hand == ControllerHand.RightHand)
             RightVibrationController.ShortVibration();
+        if (OnInteract != null)
+            OnInteract.Invoke(i);
     }
 
     /*private void ClickItem(NPCController i, ControllerHand hand)
@@ -1254,8 +1250,7 @@ public class VRItemController : ItemController
                 var i = ItemLeft.GetComponent<GenericItem>();
                 if (i != null)
                 {
-                    i.Player = null;
-                    i._hand = ControllerHand.Invalid;
+                    i.Drop();
                     if (i.ItemCode == ItemCodes.Generic)
                     {
                         i.DisableOutline(this);
@@ -1288,6 +1283,7 @@ public class VRItemController : ItemController
                 ItemLeft = null;
                 LeftVibrationController.ShortVibration();
 
+                i.SignalDrop(this, ControllerHand.LeftHand);
                 if (OnDrop != null)
                     OnDrop.Invoke(i);
             }
@@ -1306,8 +1302,7 @@ public class VRItemController : ItemController
                 var i = ItemRight.GetComponent<GenericItem>();
                 if (i != null)
                 {
-                    i.Player = null;
-                    i._hand = ControllerHand.Invalid;
+                    i.Drop();
                     if (i.ItemCode == ItemCodes.Generic)
                     {
                         i.DisableOutline(this);
@@ -1339,6 +1334,8 @@ public class VRItemController : ItemController
                 StopPulse(ControllerHand.RightHand);
                 ItemRight = null;
                 RightVibrationController.ShortVibration();
+
+                i.SignalDrop(this, ControllerHand.RightHand);
                 if (OnDrop != null)
                     OnDrop.Invoke(i);
             }
@@ -1366,9 +1363,7 @@ public class VRItemController : ItemController
                 var item = ItemsLeft[i].GetComponent<GrabbableItem>();
                 if (item != null && item.Code == code)
                 {
-                    if (code == ItemCodes.Brochure)
-                        return EnableItem(i, null, hand);
-                    else if (g.Slave != null)
+                    if (g.Slave != null)
                         return EnableItem(i, g.Slave.transform, hand);
                     else
                         return EnableItem(i, g.transform, hand);
@@ -1382,9 +1377,7 @@ public class VRItemController : ItemController
                 var item = ItemsRight[i].GetComponent<GrabbableItem>();
                 if (item != null && item.Code == code)
                 {
-                    if (code == ItemCodes.Brochure)
-                        return EnableItem(i, null, hand);
-                    else if (g.Slave != null)
+                    if (g.Slave != null)
                         return EnableItem(i, g.Slave.transform, hand);
                     else
                         return EnableItem(i, g.transform, hand);
