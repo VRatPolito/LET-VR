@@ -3,11 +3,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class BillBoardManager : MonoBehaviour
 {
     [SerializeField]
-    LeverManager _levaManager;
+    LeverManager _leverManager;
     [SerializeField]
     GenericItem _button0;
     [SerializeField]
@@ -22,31 +23,51 @@ public class BillBoardManager : MonoBehaviour
     public void ButtonPressed(int id)
     {
         if (id == 0)
+        {
             CheckOrder(_button0.transform);
+            _button0.GetComponent<AudioSource>().Play();
+            var seq = DOTween.Sequence();
+            seq.Append(_button0.transform.Find("Button").DOLocalMoveY(-0.2f, .2f));
+            seq.Append(_button0.transform.Find("Button").DOLocalMoveY(-0.1f, .2f));
+            seq.Play();
+        }
         else if (id == 1)
+        {
             CheckOrder(_button1.transform);
+            _button1.GetComponent<AudioSource>().Play();
+            var seq = DOTween.Sequence();
+            seq.Append(_button1.transform.Find("Button").DOLocalMoveY(-0.2f, .2f));
+            seq.Append(_button1.transform.Find("Button").DOLocalMoveY(-0.1f, .2f));
+            seq.Play();
+        }
     }
 
     public void LeverPushed()
     {
-        CheckOrder(_levaManager.transform);
+        if (!CheckOrder(_leverManager.transform))
+            _leverManager.ResetPush();
     }
 
     public void OnBatteryInserted()
     {
-        CheckOrder(_batteryHolder.transform);
+        if (!CheckOrder(_batteryHolder.transform))
+            _batteryHolder.UnplugBattery();
     }
 
-    private void CheckOrder(Transform item)
+    private bool CheckOrder(Transform item)
     {
         if(_interactOrder[index]== item)
         {
             index++;
+            Debug.Log(item.name + " inserted correctly!");
             /*if(index == _interactOrder.Length)
                 signalvictory*/
+            return true;
         }
-        /*else
-           signalerror*/
+
+        Debug.Log(item.name + " inserted incorrectly!");
+        //signalerror 
+        return false;
     }
 
     // Update is called once per frame

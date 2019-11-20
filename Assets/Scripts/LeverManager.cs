@@ -23,6 +23,7 @@ public class LeverManager : MonoBehaviour
     float _restAngle = -160;
     [SerializeField]
     float _pushAngle = -40;
+    Quaternion _startRot;
     Collider _leftHandInArea, _rightHandInArea;
     bool _pushed;
     public UnityEvent OnLeverPushed;
@@ -36,6 +37,7 @@ public class LeverManager : MonoBehaviour
         _collider.OnTriggerExitAction += LevaTriggerExit;
         //_arm.transform.localEulerAngles = _restAngle * _armAxis;
         _arm.transform.localRotation = Quaternion.AngleAxis(_restAngle, _armAxis);
+        _startRot = _arm.transform.localRotation;
     }
 
     private void LevaTriggerExit(Collider c)
@@ -48,11 +50,15 @@ public class LeverManager : MonoBehaviour
 
     public void OnTargetGrabbed(ItemController i, ControllerHand hand)
     {
+        _leverTarget.transform.parent = null;
         _targetGrabbedByHand = hand;
     }
     public void OnTargetDropped(ItemController i, ControllerHand hand)
     {
         _targetGrabbedByHand = ControllerHand.Invalid;
+        _leverTarget.transform.parent = _arm.transform;
+        _leverTarget.transform.localPosition = _leverTargetPos;
+        _leverTarget.transform.localRotation = _leverTargetRot;
     }
     private void LevaTriggerEnter(Collider c)
     {
@@ -66,32 +72,37 @@ public class LeverManager : MonoBehaviour
         }
     }
 
+    public void ResetPush()
+    {
+        _pushed = false;
+    }
+
     private void Update()
     {
         if (!_pushed)
         {
+            Vector3 axis;
+            float angle;
             if ((_targetGrabbedByHand == ControllerHand.LeftHand && !_leftHandInArea)
             || (_targetGrabbedByHand == ControllerHand.RightHand && !_rightHandInArea))
             {
                 LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>().DropItem(_leverTarget.transform, true);
-
-                _leverTarget.transform.localPosition = _leverTargetPos;
-                _leverTarget.transform.localRotation = _leverTargetRot;
             }
+            var targetRot = _startRot;
+            if (_targetGrabbedByHand != ControllerHand.Invalid)
+            {
+                var dirToTarget = _arm.position - _leverTarget.transform.position;
 
-            var dirToTarget = _arm.position - _leverTarget.transform.position;
+                var rot = Quaternion.FromToRotation(_arm.forward, dirToTarget);
+                targetRot = rot * _arm.localRotation;
+                targetRot.ToAngleAxis(out angle, out axis);
+                angle = CheckLimits(angle);
+                targetRot = Quaternion.AngleAxis(angle, _armAxis);
 
-            var rot = Quaternion.FromToRotation(_arm.forward, dirToTarget);
-            var targetRot = rot * _arm.localRotation;
-            Vector3 axis;
-            float angle;
-            targetRot.ToAngleAxis(out angle, out axis);
-            angle = CheckLimits(angle);
-            targetRot = Quaternion.AngleAxis(angle, axis);
-
+            }
             _arm.localRotation = Quaternion.Slerp(_arm.localRotation, targetRot, .5f);
-
             _arm.localRotation.ToAngleAxis(out angle, out axis);
+
             if (angle == _pushAngle)
             {
                 _pushed = true;
