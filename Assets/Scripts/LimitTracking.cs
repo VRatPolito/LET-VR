@@ -421,6 +421,28 @@ public class LimitTracking : MonoBehaviour
         }
     }
 
+
+    public void EnableCollider()
+    {
+        if (PlayerCollider != null)
+            PlayerCollider.enabled = true;
+        if (PlayerNavMeshObstacle != null)
+            PlayerNavMeshObstacle.enabled = true;
+        if (PlayerCapsule != null)
+            PlayerCapsule.enabled = true;
+    }
+
+    public void DisableCollider()
+    {
+
+        if (PlayerCollider != null)
+            PlayerCollider.enabled = false;
+        if (PlayerNavMeshObstacle != null)
+            PlayerNavMeshObstacle.enabled = false;
+        if (PlayerCapsule != null)
+            PlayerCapsule.enabled = false;
+    }
+
     internal virtual void CopyConstraints(LimitTracking l)
     {
         throw new NotImplementedException();

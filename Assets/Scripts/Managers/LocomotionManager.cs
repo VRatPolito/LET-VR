@@ -107,11 +107,11 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
         _startingKATmultiply = _playerControllers[(int)ControllerType.KatWalk].GetComponentInChildren<KATDevice>().multiply;
         _startingKATmultiplyback = _playerControllers[(int)ControllerType.KatWalk].GetComponentInChildren<KATDevice>().multiplyBack;
         IsPlayerFreezed = false;
+        CurrentPlayerController = _playerControllers[(int)Locomotion];
     }
 
     void Start()
     {
-        CurrentPlayerController = _playerControllers[(int)Locomotion];
         CurrentPlayerController.gameObject.SetActive((true));
         var ic = CurrentPlayerController.GetComponent<VRItemController>();
         LeftController = ic.LeftController;
