@@ -15,7 +15,6 @@ public class BillBoardManager : MonoBehaviour
     ButtonManager _button1;
     [SerializeField]
     BatteryHolder _batteryHolder;
-
     [SerializeField]
     Transform[] _interactOrder;
     int index = 0;
@@ -24,42 +23,16 @@ public class BillBoardManager : MonoBehaviour
     {
         if (id == 0)
         {
-            CheckOrder(_button0.transform);
-            /*Invoke("PlayButtonSound0", .03f);
-            var seq = DOTween.Sequence();
-            seq.Append(_button0.transform.Find("Button").DOLocalMoveY(-0.2f, .1f));
-            seq.Append(_button0.transform.Find("Button").DOLocalMoveY(-0.1f, .1f));
-            seq.Play();*/
+            if (!CheckOrder(_button0.transform))
+                _button0.ResetPush();
         }
         else if (id == 1)
         {
-            CheckOrder(_button1.transform);
-            /*Invoke("PlayButtonSound1", .03f);
-            var seq = DOTween.Sequence();
-            seq.Append(_button1.transform.Find("Button").DOLocalMoveY(-0.2f, .1f));
-            seq.Append(_button1.transform.Find("Button").DOLocalMoveY(-0.1f, .1f));
-            seq.Play();*/
+            if (!CheckOrder(_button1.transform))
+                _button0.ResetPush();
         }
     }
-
-   /* private void PlayButtonSound0()
-    {
-        PlayButtonSound(0);
-    }
-    private void PlayButtonSound1()
-    {
-        PlayButtonSound(1);
-    }
-
-    private void PlayButtonSound(int id)
-    {
-        if(id == 0)
-            _button0.GetComponent<AudioSource>().Play();
-        else if (id == 1)
-            _button1.GetComponent<AudioSource>().Play();
-
-    }*/
-
+    
     public void LeverPushed()
     {
         if (!CheckOrder(_leverManager.transform))

@@ -36,7 +36,6 @@ public class ButtonManager : MonoBehaviour
         _buttonTargetRot = _buttonTarget.transform.localRotation;
         _collider.OnTriggerEnterAction += ButtonTriggerEnter;
         _collider.OnTriggerExitAction += ButtonTriggerExit;
-        //_arm.transform.localEulerAngles = _restAngle * _armAxis;
         _button.transform.localPosition = MoveButtonOnAxis(_button.transform.localPosition, _restPos, _buttonAxis);
         _startPos = _button.transform.localPosition;
     }
