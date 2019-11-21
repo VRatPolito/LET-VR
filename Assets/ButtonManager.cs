@@ -18,11 +18,11 @@ public class ButtonManager : MonoBehaviour
     [SerializeField]
     Transform _button;
     [SerializeField]
-    Vector3 _buttonAxis = Vector3.forward;
+    Vector3 _buttonAxis = Vector3.up;
     [SerializeField]
-    float _restPos = -0.1f;
+    float _restPos = .5f;
     [SerializeField]
-    float _pushPos = -0.3f;
+    float _pushPos = .3f;
     Vector3 _startPos;
     Collider _leftHandInArea, _rightHandInArea;
     bool _pushed;
@@ -80,13 +80,11 @@ public class ButtonManager : MonoBehaviour
 
     public void OnTargetGrabbed(ItemController i, ControllerHand hand)
     {
-        _buttonTarget.transform.parent = null;
         _targetPressedByHand = hand;
     }
     public void OnTargetDropped(ItemController i, ControllerHand hand)
     {
         _targetPressedByHand = ControllerHand.Invalid;
-        _buttonTarget.transform.parent = transform;
         _buttonTarget.transform.localPosition = _buttonTargetPos;
         _buttonTarget.transform.localRotation = _buttonTargetRot;
     }
@@ -99,13 +97,13 @@ public class ButtonManager : MonoBehaviour
             {
                 _leftHandInArea = c;
                 if (LocomotionManager.Instance.CurrentPlayerController.GetComponent<InputManagement>().IsLeftTriggerClicked)
-                    LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>().GrabItem(_buttonTarget, m.Hand, false);
+                    LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>().GrabItem(_buttonTarget, m.Hand);
             }
             else if (m.Hand == ControllerHand.RightHand)
             {
                 _rightHandInArea = c;
                 if (LocomotionManager.Instance.CurrentPlayerController.GetComponent<InputManagement>().IsRightTriggerClicked)
-                    LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>().GrabItem(_buttonTarget, m.Hand, false);
+                    LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>().GrabItem(_buttonTarget, m.Hand);
             }
         }
     }
@@ -123,14 +121,14 @@ public class ButtonManager : MonoBehaviour
             if ((_targetPressedByHand == ControllerHand.LeftHand && !_leftHandInArea)
             || (_targetPressedByHand == ControllerHand.RightHand && !_rightHandInArea))
             {
-                LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>().DropItem(_buttonTarget.transform, true, false);
+                LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>().DropItem(_buttonTarget.transform, true);
             }
             Vector3 targetPos = _startPos;
             if (_targetPressedByHand != ControllerHand.Invalid)
             {
                 targetPos = CheckLimits(_buttonTarget.transform.localPosition) ;
-                /*if (_buttonTargetPos != _button.localPosition)
-                    VibrateHand(_targetPressedByHand);*/
+                if (targetPos != _button.localPosition)
+                    VibrateHand(_targetPressedByHand);
             }
             _button.localPosition = Vector3.Lerp(_button.localPosition, targetPos, .5f);
             targetPos = CheckLimits(_button.localPosition);
@@ -139,7 +137,7 @@ public class ButtonManager : MonoBehaviour
             {
                 _pushed = true;
                 _source.Play();
-                LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>().DropItem(_buttonTarget.transform, true, false);
+                LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>().DropItem(_buttonTarget.transform, true);
                 _buttonTarget.CanInteract(false, LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>());
                 OnButtonPushed?.Invoke();
             }
@@ -163,11 +161,22 @@ public class ButtonManager : MonoBehaviour
     private Vector3 CheckLimits(Vector3 pos)
     {
         float newpos = GetSingleComponent(pos);
-        if (newpos < _restPos)
-            newpos = _restPos;
-        else if (newpos > _pushPos)
-            newpos = _pushPos;
 
-        return (newpos * _buttonAxis) + MultiplyVectors(pos, FlipVector(_buttonAxis));
+        if (_restPos <= _pushPos)
+        {
+            if (newpos < _restPos)
+                newpos = _restPos;
+            else if (newpos > _pushPos)
+                newpos = _pushPos;
+        }
+        else
+        {
+            if (newpos > _restPos)
+                newpos = _restPos;
+            else if (newpos < _pushPos)
+                newpos = _pushPos;
+        }
+
+        return (newpos * _buttonAxis) + MultiplyVectors(_button.transform.localPosition, FlipVector(_buttonAxis));
     }
 }

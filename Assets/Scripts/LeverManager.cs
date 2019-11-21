@@ -103,7 +103,7 @@ public class LeverManager : MonoBehaviour
                 targetRot.ToAngleAxis(out angle, out axis);
                 angle = CheckLimits(angle, axis);
                 targetRot = Quaternion.AngleAxis(angle, _armAxis);
-                if (!UnityExtender.NearlyEqual(_leverTargetRot.eulerAngles, _arm.localRotation.eulerAngles, 0.01f))
+                if (!UnityExtender.NearlyEqual(targetRot.eulerAngles, _arm.localRotation.eulerAngles, 0.1f))
                     VibrateHand(_targetGrabbedByHand);
             }
             _arm.localRotation = Quaternion.Slerp(_arm.localRotation, targetRot, .5f);

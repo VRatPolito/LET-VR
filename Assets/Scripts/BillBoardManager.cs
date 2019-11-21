@@ -10,9 +10,9 @@ public class BillBoardManager : MonoBehaviour
     [SerializeField]
     LeverManager _leverManager;
     [SerializeField]
-    GenericItem _button0;
+    ButtonManager _button0;
     [SerializeField]
-    GenericItem _button1;
+    ButtonManager _button1;
     [SerializeField]
     BatteryHolder _batteryHolder;
 
