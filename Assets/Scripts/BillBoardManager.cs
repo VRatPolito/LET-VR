@@ -25,24 +25,24 @@ public class BillBoardManager : MonoBehaviour
         if (id == 0)
         {
             CheckOrder(_button0.transform);
-            Invoke("PlayButtonSound0", .03f);
+            /*Invoke("PlayButtonSound0", .03f);
             var seq = DOTween.Sequence();
             seq.Append(_button0.transform.Find("Button").DOLocalMoveY(-0.2f, .1f));
             seq.Append(_button0.transform.Find("Button").DOLocalMoveY(-0.1f, .1f));
-            seq.Play();
+            seq.Play();*/
         }
         else if (id == 1)
         {
             CheckOrder(_button1.transform);
-            Invoke("PlayButtonSound1", .03f);
+            /*Invoke("PlayButtonSound1", .03f);
             var seq = DOTween.Sequence();
             seq.Append(_button1.transform.Find("Button").DOLocalMoveY(-0.2f, .1f));
             seq.Append(_button1.transform.Find("Button").DOLocalMoveY(-0.1f, .1f));
-            seq.Play();
+            seq.Play();*/
         }
     }
 
-    private void PlayButtonSound0()
+   /* private void PlayButtonSound0()
     {
         PlayButtonSound(0);
     }
@@ -58,7 +58,7 @@ public class BillBoardManager : MonoBehaviour
         else if (id == 1)
             _button1.GetComponent<AudioSource>().Play();
 
-    }
+    }*/
 
     public void LeverPushed()
     {
