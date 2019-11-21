@@ -99,6 +99,7 @@ public class Level4Manager : UnitySingleton<Level4Manager>
         {
             case ControllerType.ArmSwing:
             case ControllerType.FootSwing:
+            case ControllerType.Joystick:
                 LocomotionManager.Instance.CurrentPlayerController.GetComponent<CircularLimitTracking>().DisableCollider();
                 break;
             default:
@@ -130,6 +131,7 @@ public class Level4Manager : UnitySingleton<Level4Manager>
         {
             case ControllerType.ArmSwing:
             case ControllerType.FootSwing:
+            case ControllerType.Joystick:
                 LocomotionManager.Instance.CurrentPlayerController.GetComponent<CircularLimitTracking>().EnableCollider();
                 break;
             default:
