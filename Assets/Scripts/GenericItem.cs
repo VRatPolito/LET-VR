@@ -60,6 +60,8 @@ public class GenericItem : MonoBehaviour {
     public GenericItemSlave Slave;
     internal ItemController Player;
     internal ControllerHand _hand = ControllerHand.Invalid;
+    [SerializeField]
+    internal bool _grabSound = true;
 
     [HideInInspector]
     public Vector3 startParentPosition;

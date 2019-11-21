@@ -1140,7 +1140,7 @@ public class VRItemController : ItemController
             toucheditemright = g.transform;
         GrabItem(g, hand);
     }
-    public override void GrabItem(GenericItem g, ControllerHand hand, bool nosound = false)
+    public override void GrabItem(GenericItem g, ControllerHand hand)
     {
         g.Interact(this);
         StopPulse(hand);
@@ -1153,7 +1153,7 @@ public class VRItemController : ItemController
                 GrabbableItem gb = null;
                 gb = EnableItem(g.ItemCode, g, hand);
                 g.ForceParent(gb.Slave.transform.GetChild(0), false);
-                if (!nosound)
+                if (g._grabSound)
                 {
                     LeftItemSource.clip = gb.Grab;
                     LeftItemSource.volume = gb.GrabVolume;
@@ -1167,7 +1167,7 @@ public class VRItemController : ItemController
                 GrabbableItem gb = null;
                 gb = EnableItem(g.ItemCode, g, hand);
                 g.ForceParent(gb.Slave.transform.GetChild(0), false);
-                if (!nosound)
+                if (g._grabSound)
                 {
                     RightItemSource.clip = gb.Grab;
                     RightItemSource.volume = gb.GrabVolume;
@@ -1183,7 +1183,7 @@ public class VRItemController : ItemController
             {
                 g.ForceParent(LeftController, true);
                 ItemLeft = g.transform;
-                if (!nosound)
+                if (g._grabSound)
                 {
                     LeftItemSource.clip = DefaultGrabSound;
                     LeftItemSource.volume = DefaultGrabSoundVolume;
@@ -1196,7 +1196,7 @@ public class VRItemController : ItemController
             {
                 g.ForceParent(RightController, true);
                 ItemRight = g.transform;
-                if (!nosound)
+                if (g._grabSound)
                 {
                     RightItemSource.clip = DefaultGrabSound;
                     RightItemSource.volume = DefaultGrabSoundVolume;
@@ -1244,15 +1244,15 @@ public class VRItemController : ItemController
             RightVibrationController.ShortVibration();
     }
 
-    public override void DropItem(ControllerHand hand, bool forced, bool nosound = false)
+    public override void DropItem(ControllerHand hand, bool forced)
     {
         if (hand == ControllerHand.LeftHand)
-            DropLeftItem(forced, nosound);
+            DropLeftItem(forced);
         else if (hand == ControllerHand.RightHand)
-            DropRightItem(forced, nosound);
+            DropRightItem(forced);
     }
 
-    private void DropLeftItem(bool force, bool nosound = false)
+    private void DropLeftItem(bool force)
     {
         if (!leftoperating)
         {
@@ -1269,7 +1269,7 @@ public class VRItemController : ItemController
                         i.DropParent();
                         i.EnablePhysics();
                         ItemLeft = null;
-                        if (!nosound)
+                        if (i._grabSound)
                         {
                             LeftItemSource.clip = DefaultDropSound;
                             LeftItemSource.volume = DefaultDropSoundVolume;
@@ -1282,7 +1282,7 @@ public class VRItemController : ItemController
                         i.EnableItem(transform);
                         i.EnablePhysics();
                         var g = DisableItem(ControllerHand.LeftHand);
-                        if (!nosound)
+                        if (i._grabSound)
                         {
                             LeftItemSource.clip = g.Drop;
                             LeftItemSource.volume = g.DropVolume;
@@ -1310,7 +1310,7 @@ public class VRItemController : ItemController
         }
     }
 
-    private void DropRightItem(bool force, bool nosound = false)
+    private void DropRightItem(bool force)
     {
         if (!rightoperating)
         {
@@ -1327,7 +1327,7 @@ public class VRItemController : ItemController
                         i.DropParent();
                         i.EnablePhysics();
                         ItemRight = null;
-                        if (!nosound)
+                        if (i._grabSound)
                         {
                             RightItemSource.clip = DefaultDropSound;
                             RightItemSource.volume = DefaultDropSoundVolume;
@@ -1340,7 +1340,7 @@ public class VRItemController : ItemController
                         i.EnableItem(transform);
                         i.EnablePhysics();
                         var g = DisableItem(ControllerHand.RightHand);
-                        if (!nosound)
+                        if (i._grabSound)
                         {
                             RightItemSource.clip = g.Drop;
                             RightItemSource.volume = g.DropVolume;
@@ -1368,14 +1368,14 @@ public class VRItemController : ItemController
         }
     }
 
-    void DropLeftItem(object sender, ClickedEventArgs e, bool nosound = false)
+    void DropLeftItem(object sender, ClickedEventArgs e)
     {
-        DropLeftItem(false, nosound);
+        DropLeftItem(false);
     }
 
-    void DropRightItem(object sender, ClickedEventArgs e, bool nosound = false)
+    void DropRightItem(object sender, ClickedEventArgs e)
     {
-        DropRightItem(false, nosound);
+        DropRightItem(false);
     }
 
     public GrabbableItem EnableItem(ItemCodes code, GenericItem g, ControllerHand hand)

@@ -127,27 +127,27 @@ public class ItemController : MonoBehaviour
         return g;
     }
 
-    public virtual void GrabItem(GenericItem i, ControllerHand hand, bool nosound = false)
+    public virtual void GrabItem(GenericItem i, ControllerHand hand)
     {
         throw new NotImplementedException();
     }
-    public virtual void DropItem(ControllerHand hand, bool forced, bool nosound = false)
+    public virtual void DropItem(ControllerHand hand, bool forced)
     {
         throw new NotImplementedException();
     }
-    public void DropItem(Transform item, bool forced, bool nosound = false)
+    public void DropItem(Transform item, bool forced)
     {
         if (ItemRight == item)
-            DropItem(ControllerHand.RightHand, forced, nosound);
+            DropItem(ControllerHand.RightHand, forced);
         else if (ItemLeft == item)
-            DropItem(ControllerHand.LeftHand, forced, nosound);
+            DropItem(ControllerHand.LeftHand, forced);
     }
 
 
-    public void ForceDrop(bool nosound = false)
+    public void ForceDrop()
     {
-        DropItem(ControllerHand.LeftHand, true, nosound);
-        DropItem(ControllerHand.RightHand, true, nosound);
+        DropItem(ControllerHand.LeftHand, true);
+        DropItem(ControllerHand.RightHand, true);
     }
 
 
