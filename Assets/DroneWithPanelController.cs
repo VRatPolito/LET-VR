@@ -90,6 +90,11 @@ public class DroneWithPanelController : MonoBehaviour
         return (actualPlayer.position - transform.position).magnitude < _warningRadius;
     }
 
+    private bool PlayerInCloseRange()
+    {
+        return (actualPlayer.position - transform.position).magnitude < _aheadOfPlayer;
+    }
+
     public Transform actualPlayer
     {
         get => _dummyPlayer.transform;
@@ -138,8 +143,10 @@ public class DroneWithPanelController : MonoBehaviour
             case DroneStatus.IDLE:
                 break;
             case DroneStatus.WANDER:
+                transform.DOKill();
                 break;
             case DroneStatus.ESCAPE:
+                transform.DOKill();
                 break;
         }
     }
@@ -193,7 +200,7 @@ public class DroneWithPanelController : MonoBehaviour
                 var floor = Mathf.Clamp(heading - _maxWanderingAngleVariation, 0, 360);
                 var ceil = Mathf.Clamp(heading + _maxWanderingAngleVariation, 0, 360);
                 heading = Random.Range(floor, ceil);
-                wanderSpeed = Random.Range(0.01f, wanderSpeed);
+                wanderSpeed = Random.Range(wanderSpeed/3, wanderSpeed);
                 targetRotation = new Vector3(0, heading, 0);
 
                 headingTimeout = Time.time + Random.Range(0.5f, 4f);
@@ -205,9 +212,9 @@ public class DroneWithPanelController : MonoBehaviour
 
             //transform.eulerAngles = Vector3.Slerp(transform.eulerAngles, targetRotation,
             //    Time.deltaTime * _robotMoveSmoothing);
-            var forward = transform.TransformDirection(Vector3.forward);
-            transform.DOBlendableMoveBy(forward * _wanderingSpeed, _robotMoveSmoothing);
-            yield return null;
+            //var forward = transform.TransformDirection(Vector3.forward);
+            transform.DOBlendableMoveBy(transform.forward * wanderSpeed * Time.fixedDeltaTime, _robotMoveSmoothing);
+            yield return new WaitForFixedUpdate();
         }
 
         yield return null;
@@ -215,51 +222,61 @@ public class DroneWithPanelController : MonoBehaviour
 
     private IEnumerator Escape()
     {
-        var tPos = Vector3.zero;
-        var tRot = Vector3.zero;
-        var pDir = Vector3.zero;
-        bool inRange = PlayerInRange();
+        var tPos = transform.position;
+        var tRot = transform.eulerAngles;
+        var pDir = transform.forward;
         var lastPlayerPos = actualPlayer.position;
 
         while (_currentState == DroneStatus.ESCAPE)
         {
-            inRange = PlayerInRange();
-            if ((actualPlayer.position - lastPlayerPos).magnitude > 0.05f)
+ 
+            if ((actualPlayer.position - lastPlayerPos).magnitude > _playerMovementThreshold / 2)
             {
                 pDir = (actualPlayer.position - lastPlayerPos);
                 pDir.y = 0;
                 pDir.Normalize();
                 lastPlayerPos = actualPlayer.position;
             }
-            if (Mathf.Acos(Vector3.Dot(pDir, transform.forward)) > Mathf.Deg2Rad * 50 || (actualPlayer.position - lastPlayerPos).magnitude < _playerMovementThreshold)
-            {
-                lastPlayerPos = actualPlayer.position;
-                yield return new WaitForFixedUpdate();
-            }
-
-            //if (inRange && Vector3.Dot(actualPlayer.position + pDir * _aheadOfPlayer - transform.position, transform.forward) <= 0)
-            //{
-            //    yield return new WaitForFixedUpdate();
-            //}
-            else if(inRange)
-            {
-                tPos = actualPlayer.position + pDir * _aheadOfPlayer;
-                tPos.y = transform.position.y;
-                tRot = transform.eulerAngles;
-                tRot.y = Vector3.SignedAngle(transform.forward, pDir, Vector3.up);
-                if (Vector3.Dot(tPos - transform.position, pDir) > 0)
-                    //transform.DOMove(tPos, _robotMoveSmoothing);
-                    transform.position = Vector3.Lerp(transform.position, tPos, _robotMoveSmoothing);
-                transform.rotation = Quaternion.Slerp(transform.rotation,Quaternion.LookRotation(pDir, Vector3.up), 0.15f);
-                //transform.DOBlendableMoveBy(tPos - transform.position, _robotMoveSmoothing).SetEase(Ease.InOutSine);
-                //transform.DOBlendableRotateBy(tRot - transform.eulerAngles, _robotMoveSmoothing).SetEase(Ease.InQuad);
-               yield return new WaitForFixedUpdate();
-
-            }
             else
             {
-                yield return new WaitForFixedUpdate();
+                lastPlayerPos = actualPlayer.position;
+                tPos = transform.position + transform.forward * 2 * _wanderingSpeed * Time.fixedDeltaTime;
+                tPos.y = transform.position.y;
             }
+
+            //if (Mathf.Acos(Vector3.Dot(pDir, transform.forward)) > Mathf.Deg2Rad * 50 ||
+            //    (actualPlayer.position - lastPlayerPos).magnitude < _playerMovementThreshold)
+            //{
+            //    lastPlayerPos = actualPlayer.position;
+            //    tPos = transform.position + pDir * _playerMovementThreshold;
+            //    tPos.y = transform.position.y;
+            //    //yield return new WaitForFixedUpdate();
+            //}
+
+            //if (inRange && Vector3.Dot(actualPlayer.position + pDir * _aheadOfPlayer - transform.position, transform.forward) <= 0)
+
+            //else
+            if (PlayerInCloseRange())
+            {
+                if (Vector3.Dot(tPos - transform.position, pDir) > 0)
+                {
+                    tPos = actualPlayer.position + pDir * _aheadOfPlayer;
+                    tPos.y = transform.position.y;
+                }
+
+                tRot = transform.eulerAngles;
+                tRot.y = Vector3.SignedAngle(transform.forward, pDir, Vector3.up);
+                //transform.DOMove(tPos, _robotMoveSmoothing);
+                //transform.DOBlendableMoveBy(tPos - transform.position, _robotMoveSmoothing).SetEase(Ease.InOutSine);
+                //transform.DOBlendableRotateBy(tRot - transform.eulerAngles, _robotMoveSmoothing).SetEase(Ease.InQuad);
+                //yield return new WaitForFixedUpdate();
+            }
+
+            transform.position = Vector3.Lerp(transform.position, tPos, _robotMoveSmoothing);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(pDir, Vector3.up), 0.15f);
+
+
+            yield return new WaitForFixedUpdate();
         }
 
         yield return null;
