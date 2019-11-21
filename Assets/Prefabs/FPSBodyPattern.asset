@@ -18,121 +18,121 @@ MonoBehaviour:
   _bullets:
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 3
+    LoadingTime: 0.5
+    AimingTime: 0.5
+    CoolDownTime: 0.3
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 3
+    LoadingTime: 0.5
+    AimingTime: 2
+    CoolDownTime: 0.3
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 3
+    LoadingTime: 0.5
+    AimingTime: 0.5
+    CoolDownTime: 2
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
     Speed: 2
-    LoadingTime: 1.79
-    AimingTime: 0.19
-    CoolDownTime: 0.26
+    LoadingTime: 0.5
+    AimingTime: 0.5
+    CoolDownTime: 0.4
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 2.8
-    LoadingTime: 1.58
-    AimingTime: 0.3
-    CoolDownTime: 0.33
+    Speed: 5
+    LoadingTime: 0.3
+    AimingTime: 0.5
+    CoolDownTime: 0.3
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 5.2
-    LoadingTime: 2.75
-    AimingTime: 0.52
-    CoolDownTime: 0.66
+    Speed: 7
+    LoadingTime: 0.6
+    AimingTime: 0.5
+    CoolDownTime: 0.3
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 5.9
-    LoadingTime: 2.14
-    AimingTime: 0.51
-    CoolDownTime: 0.33
+    Speed: 4
+    LoadingTime: 0.5
+    AimingTime: 0.5
+    CoolDownTime: 0.3
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 3.4
-    LoadingTime: 1.74
-    AimingTime: 0.28
-    CoolDownTime: 0.17
+    Speed: 3
+    LoadingTime: 0.5
+    AimingTime: 0.5
+    CoolDownTime: 0.3
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 3.4
-    LoadingTime: 1.74
-    AimingTime: 0.28
-    CoolDownTime: 0.17
+    Speed: 2
+    LoadingTime: 0.5
+    AimingTime: 0.5
+    CoolDownTime: 0.3
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 3.4
-    LoadingTime: 1.74
-    AimingTime: 0.28
-    CoolDownTime: 0.17
+    Speed: 3
+    LoadingTime: 0.5
+    AimingTime: 0.5
+    CoolDownTime: 0.3
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 3.4
-    LoadingTime: 1.74
-    AimingTime: 0.28
-    CoolDownTime: 0.17
+    Speed: 4
+    LoadingTime: 0.5
+    AimingTime: 0.5
+    CoolDownTime: 0.4
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 3.4
-    LoadingTime: 1.74
-    AimingTime: 0.28
-    CoolDownTime: 0.17
+    Speed: 3
+    LoadingTime: 0.5
+    AimingTime: 0.5
+    CoolDownTime: 0.4
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 3.4
-    LoadingTime: 1.74
-    AimingTime: 0.28
-    CoolDownTime: 0.17
+    Speed: 5
+    LoadingTime: 0.3
+    AimingTime: 0.5
+    CoolDownTime: 0.4
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 3.4
-    LoadingTime: 1.74
-    AimingTime: 0.28
-    CoolDownTime: 0.17
+    Speed: 3
+    LoadingTime: 0.5
+    AimingTime: 0.5
+    CoolDownTime: 0.3
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 3.4
-    LoadingTime: 1.74
-    AimingTime: 0.28
-    CoolDownTime: 0.17
+    Speed: 5
+    LoadingTime: 0.5
+    AimingTime: 0.5
+    CoolDownTime: 0.3
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 3.4
-    LoadingTime: 1.74
-    AimingTime: 0.28
-    CoolDownTime: 0.17
+    Speed: 3
+    LoadingTime: 0.5
+    AimingTime: 0.5
+    CoolDownTime: 0.3
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 3.4
-    LoadingTime: 1.74
-    AimingTime: 0.28
-    CoolDownTime: 0.17
+    Speed: 4
+    LoadingTime: 0.6
+    AimingTime: 0.5
+    CoolDownTime: 0.3
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 3.4
-    LoadingTime: 1.74
-    AimingTime: 0.28
-    CoolDownTime: 0.17
+    Speed: 2
+    LoadingTime: 0.5
+    AimingTime: 0.5
+    CoolDownTime: 0.4
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 3.4
-    LoadingTime: 1.74
-    AimingTime: 0.28
-    CoolDownTime: 0.17
+    Speed: 2
+    LoadingTime: 0.5
+    AimingTime: 0.5
+    CoolDownTime: 0.4
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 3.4
-    LoadingTime: 1.74
-    AimingTime: 0.28
-    CoolDownTime: 0.17
-  - TargetType: 0
-    TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 3.4
-    LoadingTime: 1.74
-    AimingTime: 0.28
-    CoolDownTime: 0.17
-  - TargetType: 0
-    TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 3.4
-    LoadingTime: 1.74
-    AimingTime: 0.28
-    CoolDownTime: 0.17
-  - TargetType: 0
-    TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 3.4
-    LoadingTime: 1.74
-    AimingTime: 0.28
-    CoolDownTime: 0.17
+    Speed: 7
+    LoadingTime: 0.3
+    AimingTime: 0.5
+    CoolDownTime: 0.3
