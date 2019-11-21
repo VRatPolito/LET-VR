@@ -27,10 +27,12 @@ public class LeverManager : MonoBehaviour
     Collider _leftHandInArea, _rightHandInArea;
     bool _pushed;
     public UnityEvent OnLeverPushed;
+    AudioSource _source;
 
     // Start is called before the first frame update
     void Awake()
     {
+        _source = GetComponent<AudioSource>();
         _leverTargetPos = _leverTarget.transform.localPosition;
         _leverTargetRot = _leverTarget.transform.localRotation;
         _collider.OnTriggerEnterAction += LevaTriggerEnter;
@@ -100,7 +102,8 @@ public class LeverManager : MonoBehaviour
                 targetRot.ToAngleAxis(out angle, out axis);
                 angle = CheckLimits(angle);
                 targetRot = Quaternion.AngleAxis(angle, _armAxis);
-
+                if (_leverTargetRot != _arm.localRotation)
+                    VibrateHand(_targetGrabbedByHand);
             }
             _arm.localRotation = Quaternion.Slerp(_arm.localRotation, targetRot, .5f);
             _arm.localRotation.ToAngleAxis(out angle, out axis);
@@ -108,9 +111,19 @@ public class LeverManager : MonoBehaviour
             if (angle == _pushAngle)
             {
                 _pushed = true;
+                _source.Play();
                 OnLeverPushed?.Invoke();
             }
         }
+    }
+
+    private void VibrateHand(ControllerHand hand)
+    {
+        var c = LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>();
+        if (hand == ControllerHand.LeftHand)
+            c.LeftController.GetComponent<VibrationController>().ShortVibration();
+        else if (hand == ControllerHand.RightHand)
+            c.RightController.GetComponent<VibrationController>().ShortVibration();
     }
 
     private float CheckLimits(float angle)
