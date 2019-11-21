@@ -18,6 +18,7 @@ public class BatteryHolder : MonoBehaviour
     [SerializeField] protected GameObject _batteryTarget;
     [SerializeField] protected GameObject _battery;
     ColliderEventsListener _batteryTrigger;
+    [SerializeField] protected bool _pulseWhenUnplugged = false;
     
     private bool _pulseEnabled = false;
     private float _t;
@@ -30,7 +31,7 @@ public class BatteryHolder : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if(_needBattery)
+        if(_needBattery && _pulseWhenUnplugged)
             StartPulse();
         _batteryTrigger.OnTriggerEnterAction += c =>
         {
@@ -62,7 +63,8 @@ public class BatteryHolder : MonoBehaviour
         {
             if (!NeedBattery || c.tag != "Item") return;
             (LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>()).OnDrop -= ItemDropped;
-            StartPulse();
+            if(_pulseWhenUnplugged)
+                StartPulse();
         };
     }
 
@@ -90,7 +92,8 @@ public class BatteryHolder : MonoBehaviour
         g.CanInteract(true, LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>());
         (LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>()).OnDrop += ItemDropped;
         _battery.transform.parent = null;
-        StartPulse();
+        if(_pulseWhenUnplugged)
+            StartPulse();
         NeedBattery = true;
         BatteryUnplugged.Invoke();
     }

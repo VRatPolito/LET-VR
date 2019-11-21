@@ -91,10 +91,12 @@ public class LeverManager : MonoBehaviour
             var targetRot = _startRot;
             if (_targetGrabbedByHand != ControllerHand.Invalid)
             {
-                var dirToTarget = _arm.position - _leverTarget.transform.position;
+                var dirToTarget = _leverTarget.transform.position - _arm.position;
 
                 var rot = Quaternion.FromToRotation(_arm.forward, dirToTarget);
-                targetRot = rot * _arm.localRotation;
+                targetRot = rot * _arm.rotation;
+                targetRot = Quaternion.Inverse(_arm.parent.rotation) * targetRot;
+
                 targetRot.ToAngleAxis(out angle, out axis);
                 angle = CheckLimits(angle);
                 targetRot = Quaternion.AngleAxis(angle, _armAxis);

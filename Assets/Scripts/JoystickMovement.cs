@@ -207,8 +207,7 @@ public class JoystickMovement : MonoBehaviour
     // Returns a forward vector given the distance and direction
     public static Vector3 getForwardXZ(float forwardDistance, Quaternion direction)
     {
-        Vector3 forwardMovement = direction * Vector3.forward * forwardDistance;
-        return vector3XZOnly(forwardMovement);
+        return Vector3.Normalize(vector3XZOnly(direction * Vector3.forward)) * forwardDistance;
     }
 
     // Returns a Vector3 with only the X and Z components (Y is 0'd)
