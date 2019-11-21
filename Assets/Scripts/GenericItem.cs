@@ -158,21 +158,21 @@ public class GenericItem : MonoBehaviour {
                 col.a = 255;
                 m.SetColor("_OutlineColor", col);
             }
+        }
 
-            foreach (Transform t in Pieces)
+        foreach (Transform t in Pieces)
+        {
+            var mat = t.GetComponent<MeshRenderer>();
+            if (mat != null)
+                mts = mat.materials;
+            foreach (Material m in mts)
             {
-                var mat = t.GetComponent<MeshRenderer>();
-                if (mat != null)
-                    mts = mat.materials;
-                foreach (Material m in mts)
-                {
-                    if (Grabbable)
-                        col = Color.yellow;
-                    else
-                        col = Color.white;
-                    col.a = 255;
-                    m.SetColor("_OutlineColor", col);
-                }
+                if (Grabbable)
+                    col = Color.yellow;
+                else
+                    col = Color.white;
+                col.a = 255;
+                m.SetColor("_OutlineColor", col);
             }
         }
         outlined = true;
@@ -207,20 +207,20 @@ public class GenericItem : MonoBehaviour {
                 col.a = 0;
                 m.SetColor("_OutlineColor", col);
             }
-            foreach (Transform t in Pieces)
+        }
+        foreach (Transform t in Pieces)
+        {
+            var mat = t.GetComponent<MeshRenderer>();
+            if (mat != null)
+                mts = mat.materials;
+            foreach (Material m in mts)
             {
-                var mat = t.GetComponent<MeshRenderer>();
-                if (mat != null)
-                    mts = mat.materials;
-                foreach (Material m in mts)
-                {
-                    if (Grabbable)
-                        col = Color.yellow;
-                    else
-                        col = Color.white;
-                    col.a = 0;
-                    m.SetColor("_OutlineColor", col);
-                }
+                if (Grabbable)
+                    col = Color.yellow;
+                else
+                    col = Color.white;
+                col.a = 0;
+                m.SetColor("_OutlineColor", col);
             }
         }
         outlined = false;

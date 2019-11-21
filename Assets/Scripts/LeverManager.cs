@@ -69,7 +69,7 @@ public class LeverManager : MonoBehaviour
             var m = c.GetComponent<ControllerManager>();
             if (m.Hand == ControllerHand.LeftHand)
                 _leftHandInArea = c;
-            if (m.Hand == ControllerHand.RightHand)
+            else if (m.Hand == ControllerHand.RightHand)
                 _rightHandInArea = c;
         }
     }
@@ -77,6 +77,7 @@ public class LeverManager : MonoBehaviour
     public void ResetPush()
     {
         _pushed = false;
+        _leverTarget.CanInteract(true, LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>());
     }
 
     private void Update()
@@ -100,18 +101,21 @@ public class LeverManager : MonoBehaviour
                 targetRot = Quaternion.Inverse(_arm.parent.rotation) * targetRot;
 
                 targetRot.ToAngleAxis(out angle, out axis);
-                angle = CheckLimits(angle);
+                angle = CheckLimits(angle, axis);
                 targetRot = Quaternion.AngleAxis(angle, _armAxis);
-                if (_leverTargetRot != _arm.localRotation)
+                if (!UnityExtender.NearlyEqual(_leverTargetRot.eulerAngles, _arm.localRotation.eulerAngles, 0.01f))
                     VibrateHand(_targetGrabbedByHand);
             }
             _arm.localRotation = Quaternion.Slerp(_arm.localRotation, targetRot, .5f);
             _arm.localRotation.ToAngleAxis(out angle, out axis);
+            angle = CheckLimits(angle, axis);
 
-            if (angle == _pushAngle)
+            if (UnityExtender.NearlyEqual(angle,_pushAngle,0.01f))
             {
                 _pushed = true;
                 _source.Play();
+                LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>().DropItem(_leverTarget.transform, true);
+                _leverTarget.CanInteract(false, LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>());
                 OnLeverPushed?.Invoke();
             }
         }
@@ -126,21 +130,21 @@ public class LeverManager : MonoBehaviour
             c.RightController.GetComponent<VibrationController>().ShortVibration();
     }
 
-    private float CheckLimits(float angle)
+    private float CheckLimits(float angle, Vector3 axis)
     {
-        float newangle = angle;
+        float newangle = angle * (axis.x + axis.y + axis.z);
         if(_restAngle <= _pushAngle)
         {
-            if (angle < _restAngle)
+            if (newangle < _restAngle)
                 newangle = _restAngle;
-            else if (angle > _pushAngle)
+            else if (newangle > _pushAngle)
                 newangle = _pushAngle;
         }
         else
         {
-            if (angle > _restAngle)
+            if (newangle > _restAngle)
                 newangle = _restAngle;
-            else if (angle < _pushAngle)
+            else if (newangle < _pushAngle)
                 newangle = _pushAngle;
         }
         return newangle;

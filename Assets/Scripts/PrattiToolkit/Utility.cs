@@ -601,7 +601,10 @@ namespace PrattiToolkit
         {
             return NearlyEqual(a.x, b.x, epsilon) && NearlyEqual(a.y, b.y, epsilon) && NearlyEqual(a.z, b.z, epsilon);
         }
-
+        public static bool NearlyEqual(Quaternion a, Quaternion b, float epsilon = float.Epsilon)
+        {
+            return NearlyEqual(a.x, b.x, epsilon) && NearlyEqual(a.y, b.y, epsilon) && NearlyEqual(a.z, b.z, epsilon) && NearlyEqual(a.w, b.w, epsilon);
+        }
         public static float[] GetFloatArray(this Color c)
         {
             return new[] {c.r, c.g, c.b, c.a};

@@ -611,7 +611,8 @@ MonoBehaviour:
   prevpos: {x: 0, y: 0, z: 0}
   currvelocity: {x: 0, y: 0, z: 0}
   direction: {x: 0, y: 0, z: 0}
-  Pieces: []
+  Pieces:
+  - {fileID: 4802282504213441412}
   ItemActive: 0
   SeekTarget: {fileID: 0}
   Slave: {fileID: 0}
@@ -680,38 +681,6 @@ CapsuleCollider:
   m_Height: 1.5
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7663259878537561882
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4802282504213018530}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bab90b0659f17de4a8953492c2badd58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _collider: {fileID: 2179927477141335846}
-  _leverTarget: {fileID: 496959196702461947}
-  _arm: {fileID: 4802282504213441412}
-  _armAxis: {x: 1, y: 0, z: 0}
-  _restAngle: -160
-  _pushAngle: -40
-  OnLeverPushed:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2530787496978285854}
-        m_MethodName: LeverPushed
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!82 &7823149536477174955
 AudioSource:
   m_ObjectHideFlags: 0
@@ -808,6 +777,38 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7663259878537561882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4802282504213018530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bab90b0659f17de4a8953492c2badd58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _collider: {fileID: 2179927477141335846}
+  _leverTarget: {fileID: 496959196702461947}
+  _arm: {fileID: 4802282504213441412}
+  _armAxis: {x: 1, y: 0, z: 0}
+  _restAngle: -160
+  _pushAngle: -40
+  OnLeverPushed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2530787496978285854}
+        m_MethodName: LeverPushed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!135 &2921414067251810942
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3042,6 +3043,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.x
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 2300002, guid: b687864613874f54f95b24dc1c9db256, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a035db380cb1aad408124c8b1c317cbc, type: 2}
+    - target: {fileID: 2300002, guid: b687864613874f54f95b24dc1c9db256, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8c1134c314c54684ca2a972c0afaab22, type: 2}
+    - target: {fileID: 2300002, guid: b687864613874f54f95b24dc1c9db256, type: 3}
+      propertyPath: m_Materials.Array.data[2]
+      value: 
+      objectReference: {fileID: 2100000, guid: 23ba51b24b0327744840b95d0654bef5, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b687864613874f54f95b24dc1c9db256, type: 3}
 --- !u!4 &4802282504213441412 stripped
