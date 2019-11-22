@@ -67,6 +67,7 @@ public class Level4Manager : UnitySingleton<Level4Manager>
         _headShooter.OnShuttedDown += HeadShooterOnShuttedDown;
 
         _bodyShooterStart.OnDisabled += OnBodyShooterStart;
+        _headShooter.OnLastBulletExpired += OnLastBulletBodyShooterBulletExpired;
     }
 
     private void Update()
@@ -117,6 +118,7 @@ public class Level4Manager : UnitySingleton<Level4Manager>
     {
         _headShooter.Shutdown();
         StatisticsLogger.StopLogHeadShooter();
+        LocomotionManager.Instance.CameraEye.GetComponent<SphereCollider>().enabled = false;
     }
 
     private void HeadShooterOnShuttedDown()
