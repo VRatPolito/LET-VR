@@ -32,8 +32,9 @@ public class DroneWithPanelController : MonoBehaviour
     #region Private Members and Constants
     
     private CharacterController _controller;
-    private Vector3 _lastDir;
-    private float _currSpeed = 0;
+    private Vector3 _lastDir, _dir, _pDir, _rDir;
+    private Quaternion _rot;
+    private float _currSpeed = 0, _targetSpeed = 0, _boost = 1, _pGap;
 
     #endregion
 
@@ -46,31 +47,53 @@ public class DroneWithPanelController : MonoBehaviour
     void Awake()
     {
         _controller = GetComponent<CharacterController>();
-      
+        Assert.IsNotNull(_controller);
+        Assert.IsTrue(_aheadOfPlayer<_warningRadius);
+        _lastDir = transform.forward;
+        _rot = transform.rotation;
+        _targetSpeed = _escapeSpeed;
     }
 
     void FixedUpdate()
     {
         if (_dummyPlayer != null && _target != null)
         {
-            var dir = (_target.transform.position - _dummyPlayer.transform.position);
-            _dummyPlayer.GetComponent<CharacterController>().SimpleMove(dir);
+            _dir = (_target.transform.position - _dummyPlayer.transform.position);
+            _dummyPlayer.GetComponent<CharacterController>().SimpleMove(_dir);
         }
 
-        if(PlayerInRange())
         {
-            var pDir = (transform.position - actualPlayer.position).normalized;
-            pDir = new Vector3(pDir.x, 0, pDir.z);
-            Debug.DrawRay(transform.position, pDir, Color.red, 2f);
-            _currSpeed = Mathf.Lerp(_currSpeed, _escapeSpeed, .5f);
-            transform.Translate(pDir * _currSpeed * Time.fixedDeltaTime, Space.World);
-            _lastDir = pDir;
+            _pGap = Vector3.Distance(actualPlayer.position.vector3XZOnly(), transform.position.vector3XZOnly());   
+            _pDir = (transform.position - actualPlayer.position).normalized;
+            _pDir.y = 0;
+            //_rDir = (actualPlayer.position - transform.position).normalized;
+            //_rDir.y = 0;
+        }
 
-            var rDir = (actualPlayer.position - transform.position).normalized;
-            rDir = new Vector3(rDir.x, 0, rDir.z);
-            Debug.DrawRay(transform.position, rDir, Color.green, 2f);
-            var rot = Quaternion.LookRotation(pDir, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.fixedDeltaTime * _rotateSpeed);
+        //_targetSpeed = Mathf.Lerp(_currSpeed, _escapeSpeed, Mathf.InverseLerp(_aheadOfPlayer, _warningRadius, _currSpeed));
+        if (_pGap < _aheadOfPlayer) //InCloseRange
+        {
+            _boost = (1+Mathf.InverseLerp(_aheadOfPlayer, 0, _pGap)).Remap(1,2, 1, _escapeSpeed);
+            _currSpeed = Mathf.Lerp(_currSpeed, _targetSpeed, .5f);
+            transform.Translate(_pDir * _boost * _currSpeed * Time.fixedDeltaTime, Space.World);
+            _lastDir = _pDir;
+
+            _rot = Quaternion.LookRotation(_lastDir, Vector3.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, _rot, Time.fixedDeltaTime * _rotateSpeed);
+
+        }
+        else if (_pGap < _warningRadius) //InRange
+        {
+           
+            //Debug.DrawRay(transform.position, _pDir, Color.red, 2f);
+            _currSpeed = Mathf.Lerp(_currSpeed, _targetSpeed, .5f);
+            transform.Translate(_lastDir * _currSpeed * Time.fixedDeltaTime, Space.World);
+            //_lastDir = _pDir;
+
+
+            //Debug.DrawRay(transform.position, _rDir, Color.green, 2f);
+            //_rot = Quaternion.LookRotation(_lastDir, Vector3.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, _rot, Time.fixedDeltaTime * _rotateSpeed);
         }
         else
         {
@@ -82,12 +105,6 @@ public class DroneWithPanelController : MonoBehaviour
     #endregion
 
     #region Public Methods
-
-    public bool PlayerInRange()
-    {
-        return (actualPlayer.position - transform.position).magnitude <
-               Mathf.Max(_aheadOfPlayer, _warningRadius); //warning
-    }
 
     public Transform actualPlayer
     {

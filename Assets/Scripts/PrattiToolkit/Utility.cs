@@ -255,6 +255,12 @@ namespace PrattiToolkit
             return v;
         }
 
+        /// Returns a Vector3 with only the X and Z components (Y is 0'd)
+        public static Vector3 vector3XZOnly(this Vector3 vec)
+        {
+            return new Vector3(vec.x, 0f, vec.z);
+        }
+
         #endregion
 
         #region Transform

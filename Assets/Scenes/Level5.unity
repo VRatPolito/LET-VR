@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.48397493, g: 0.575722, b: 0.6801979, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2156,7 +2156,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh110540
+  m_Name: pb_Mesh161954
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -19795,7 +19795,7 @@ PrefabInstance:
     - target: {fileID: 2724447825322628163, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
         type: 3}
       propertyPath: _aheadOfPlayer
-      value: 2.5
+      value: 1.4
       objectReference: {fileID: 0}
     - target: {fileID: 2724447825322628163, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
         type: 3}
@@ -19806,6 +19806,11 @@ PrefabInstance:
         type: 3}
       propertyPath: _escapeSpeed
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2724447825322628163, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
+        type: 3}
+      propertyPath: _warningRadius
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7211918441912809975, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
         type: 3}
