@@ -67,7 +67,7 @@ public class Level4Manager : UnitySingleton<Level4Manager>
         _headShooter.OnShuttedDown += HeadShooterOnShuttedDown;
 
         _bodyShooterStart.OnDisabled += OnBodyShooterStart;
-        _headShooter.OnLastBulletExpired += OnLastBulletBodyShooterBulletExpired;
+        _bodyShooter.OnLastBulletExpired += OnLastBulletBodyShooterBulletExpired;
     }
 
     private void Update()
