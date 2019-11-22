@@ -146,6 +146,7 @@ public class Level4Manager : UnitySingleton<Level4Manager>
     private void OnBodyShooterStart()
     {
         _bodyShooter.enabled = true;
+        _headShooter.HitsCounter = 0;
         StatisticsLogger.StartLogBodyShooter();
     }
 

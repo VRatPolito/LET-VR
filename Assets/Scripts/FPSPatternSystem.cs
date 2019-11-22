@@ -23,7 +23,7 @@ public class FPSPatternSystem : MonoBehaviour
 
     [SerializeField] private bool _followPlayer = false;
     [SerializeField] private bool _destroyBulletsOnHit = false;
-    [SerializeField] [Range(0, 1)] private float _robotMoveSmoothing = 0.5f;
+    [SerializeField] [Range(0, 1f)] private float _robotMoveSmoothing = 0.2f;
 
     [SerializeField] private TextMeshPro _hitsVisualizer;
     [SerializeField] private Transform _referenceTransform;
@@ -158,9 +158,9 @@ public class FPSPatternSystem : MonoBehaviour
         {
             _rp.y = LocomotionManager.Instance.CameraEye.position.y;
             _rp.z = LocomotionManager.Instance.CameraEye.position.z;
-            _robotFollowPlayer.transform.DOBlendableMoveBy(_rp-_robot.transform.position, _robotMoveSmoothing);
-            //_robot.transform.DOBlendableMoveBy(_rp - _robot.transform.position, _robotMoveSmoothing);
-            yield return null;
+            _robot.transform.position = Vector3.Lerp(_robot.transform.position, _rp, _robotMoveSmoothing);
+            //_robotFollowPlayer.transform.DOBlendableMoveBy(_rp - _robot.transform.position, 0.5f);
+            yield return null;// new WaitForFixedUpdate();
         }
 
         _followPlayer = fp;
@@ -172,9 +172,9 @@ public class FPSPatternSystem : MonoBehaviour
 
         if (_bulletIdx == _bulletPattern.Bullets.Count)
         {
-            _bulletIdx = 0;
             _bulletFinished = true;
             OnBulletFinished.RaiseEvent();
+            return;
         }
 
         var bullet = _bulletPattern.Bullets[_bulletIdx];
@@ -197,7 +197,7 @@ public class FPSPatternSystem : MonoBehaviour
             0.2f));
         _aimAndShootSequence.Join(DOTween.To(() => _aimRenderer.sharedMaterial.GetColor("_TintColor"),
             x => _aimRenderer.sharedMaterial.SetColor("_TintColor", x), _coolColor, bullet.CoolDownTime));
-        _aimAndShootSequence.OnComplete(() => _shooterReady = true);
+        _aimAndShootSequence.OnComplete(() => _shooterReady = !_bulletFinished);
         _aimAndShootSequence.Play();
     }
 
@@ -248,7 +248,7 @@ public class FPSPatternSystem : MonoBehaviour
         }
 
         collisionDetect.ResetHitEventListener();
-        if (_bulletFinished || _bulletIdx == _bulletPattern.Bullets.Count + 1)
+        if (_bulletFinished || _bulletIdx == _bulletPattern.Bullets.Count)
         {
             _followPlayer = false;
             OnLastBulletExpired.RaiseEvent();

@@ -83,7 +83,7 @@ public class StatisticsLoggerL4 : StatisticsLoggerBase
         {
             "" + Level4Manager.Instance.BodyShooterHits
         };
-        WriteToCSV("BS", values, 3);
+        WriteToCSV("BS", values, 4);
         StopMasterLog();
     }
 
