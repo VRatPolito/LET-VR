@@ -97,7 +97,7 @@ public class DroneWithPanelController : MonoBehaviour
 
     public Transform actualPlayer
     {
-        get => _dummyPlayer.transform;
+        get => LocomotionManager.Instance.CurrentPlayerController;
     }
 
     #endregion
@@ -106,7 +106,6 @@ public class DroneWithPanelController : MonoBehaviour
 
     private void MoveRobot()
     {
-        _dir = _currentCharacterController.velocity.normalized;
     }
 
     protected void UpdateStatus()
