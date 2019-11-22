@@ -5,7 +5,8 @@ Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: Sample_Mod4_blocks_outline blue
   m_Shader: {fileID: 4800000, guid: 253cc723461c2fd41b101f50d8e4d824, type: 3}
   m_ShaderKeywords: _DETAIL_MULX2 _EMISSION _NORMALMAP _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
@@ -71,7 +72,7 @@ Material:
     - _Metallic: 0.235
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _Outline: 0.2
+    - _Outline: 0.1
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 1
     - _SpecularHighlights: 1

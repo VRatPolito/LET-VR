@@ -29,7 +29,7 @@ public class BillBoardManager : MonoBehaviour
         else if (id == 1)
         {
             if (!CheckOrder(_button1.transform))
-                _button0.ResetPush();
+                _button1.ResetPush();
         }
     }
     
