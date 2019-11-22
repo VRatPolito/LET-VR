@@ -30,6 +30,7 @@ public class DroneWithPanelController : MonoBehaviour
 
     [SerializeField] [Range(0, 3)] private float _aheadOfPlayer = 1.5f;
     [SerializeField] [Range(0.05f, 2)] private float _playerMovementThreshold = 0.1f;
+    [SerializeField] [Range(0, 90)] private float _maxPlayerManouverAngle = 50f;
     [SerializeField] [Range(0, 1)] private float _robotMoveSmoothing = 0.3f;
     [SerializeField] [Range(0, 2)] private float _wanderingSpeed = 2f;
     [SerializeField] [Range(0, 360)] private float _maxWanderingAngleVariation = 30f;
@@ -97,7 +98,7 @@ public class DroneWithPanelController : MonoBehaviour
 
     public Transform actualPlayer
     {
-        get => _dummyPlayer.transform;
+        get => LocomotionManager.Instance.CurrentPlayerController;
     }
 
     #endregion
@@ -222,6 +223,8 @@ public class DroneWithPanelController : MonoBehaviour
 
     private IEnumerator Escape()
     {
+        float smooth=_robotMoveSmoothing;
+        var pDeltaP = Vector3.zero;
         var tPos = transform.position;
         var tRot = transform.eulerAngles;
         var pDir = transform.forward;
@@ -229,10 +232,11 @@ public class DroneWithPanelController : MonoBehaviour
 
         while (_currentState == DroneStatus.ESCAPE)
         {
- 
-            if ((actualPlayer.position - lastPlayerPos).magnitude > _playerMovementThreshold / 2)
+
+            pDeltaP = actualPlayer.position - lastPlayerPos;
+            if (pDeltaP.magnitude > _playerMovementThreshold / 2)
             {
-                pDir = (actualPlayer.position - lastPlayerPos);
+                pDir = pDeltaP;
                 pDir.y = 0;
                 pDir.Normalize();
                 lastPlayerPos = actualPlayer.position;
@@ -244,21 +248,20 @@ public class DroneWithPanelController : MonoBehaviour
                 tPos.y = transform.position.y;
             }
 
-            //if (Mathf.Acos(Vector3.Dot(pDir, transform.forward)) > Mathf.Deg2Rad * 50 ||
-            //    (actualPlayer.position - lastPlayerPos).magnitude < _playerMovementThreshold)
-            //{
-            //    lastPlayerPos = actualPlayer.position;
-            //    tPos = transform.position + pDir * _playerMovementThreshold;
-            //    tPos.y = transform.position.y;
-            //    //yield return new WaitForFixedUpdate();
-            //}
+            if (Mathf.Acos(Vector3.Dot(pDir, transform.forward)) > Mathf.Deg2Rad * _maxPlayerManouverAngle ||
+               pDeltaP.magnitude < _playerMovementThreshold)
+            {
+                lastPlayerPos = actualPlayer.position;
+                tPos = transform.position + transform.forward * _playerMovementThreshold;
+                tPos.y = transform.position.y;
+            }
 
             //if (inRange && Vector3.Dot(actualPlayer.position + pDir * _aheadOfPlayer - transform.position, transform.forward) <= 0)
 
-            //else
+            else
             if (PlayerInCloseRange())
             {
-                if (Vector3.Dot(tPos - transform.position, pDir) > 0)
+                //if (Vector3.Dot(tPos - transform.position, pDir) > 0)
                 {
                     tPos = actualPlayer.position + pDir * _aheadOfPlayer;
                     tPos.y = transform.position.y;
@@ -272,7 +275,9 @@ public class DroneWithPanelController : MonoBehaviour
                 //yield return new WaitForFixedUpdate();
             }
 
-            transform.position = Vector3.Lerp(transform.position, tPos, _robotMoveSmoothing);
+            smooth = Mathf.Lerp(_robotMoveSmoothing, 1, pDeltaP.magnitude.Remap(0, .17f, 0, 1));
+
+            transform.position = Vector3.Lerp(transform.position, tPos, smooth);
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(pDir, Vector3.up), 0.15f);
 
 
