@@ -35,7 +35,7 @@ public class Level5Manager : UnitySingleton<Level5Manager>
 
     public GrabDestination Red, Green, Blue;
     public Destination Cyan;
-    public GameObject Link, AntiFallingT5;
+    public GameObject Link;
 
     #endregion
 
@@ -62,10 +62,6 @@ public class Level5Manager : UnitySingleton<Level5Manager>
         StatisticsLogger = GetComponent<StatisticsLoggerL5>();
         Assert.IsNotNull(StatisticsLogger);
         Assert.IsNotNull(Link);
-        Assert.IsNotNull(AntiFallingT5);
-
-        AntiFallingT5.SetActive(false);
-
 
         StartGrab1.OnDisabled += StatisticsLogger.StartLogGrabbing;
         StartGrab2.OnDisabled += StatisticsLogger.StartLogGrabbing;
@@ -109,10 +105,17 @@ public class Level5Manager : UnitySingleton<Level5Manager>
 
     private void StartMovingInteractionLevel()
     {
-        AntiFallingT5.SetActive(true);
-        Link.transform.DOMoveY(5, 5).SetEase(Ease.InOutQuad).OnComplete(() =>
+        var antifall = Link.transform.GetChildRecursive("AntiFalling").gameObject;
+        foreach (var c in antifall.GetComponents<BoxCollider>())
+            c.enabled = true;
+        
+        LocomotionManager.Instance.StopLocomotion();
+        LocomotionManager.Instance.CurrentPlayerController.parent = Link.transform;
+        Link.transform.DOMoveY(3.5f, 5).SetEase(Ease.InOutQuad).OnComplete(() =>
         {
-            AntiFallingT5.SetActive(false);
+            LocomotionManager.Instance.CurrentPlayerController.parent = null;
+            LocomotionManager.Instance.StartLocomotion();
+            antifall.SetActive(false);
             //Destoy(Link);
         });
         //TODO ROBOT
