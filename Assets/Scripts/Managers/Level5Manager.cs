@@ -154,7 +154,6 @@ public class Level5Manager : UnitySingleton<Level5Manager>
             LocomotionManager.Instance.StartLocomotion();
             antifall.SetActive(false);
         });
-        _drone.enabled = true;
     }
 
     private void EndLevel()

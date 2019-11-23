@@ -638,6 +638,20 @@ namespace PrattiToolkit
             }
         }
 
+        public static bool NearlyEqualRange(float a, float b, float range)
+        {
+            if (a == b)
+                return true;
+
+            float min = b - Mathf.Abs(range);
+            float max = b + Mathf.Abs(range);
+
+            if (a >= min && a <= max)
+                return true;
+
+            return false;
+        }
+
         public static Color GetColor(this float[] colorFloatArray)
         {
             if (colorFloatArray.Length != 4)

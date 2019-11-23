@@ -50,7 +50,7 @@ public class GrabDestination : Destination
         if (dist >= maxdist)
             return 0;
         else
-            return dist / maxdist * 100;
+            return (1 - (dist / maxdist)) * 100;
     }
 
     public float GetRotDiff()
@@ -62,7 +62,7 @@ public class GrabDestination : Destination
         if (angle < -180)
             angle += 360;
 
-        return Mathf.Abs(angle) / 180 * 100;
+        return (1 - Mathf.Abs(angle) / 180) * 100;
     }
     private void OnTriggerStay(Collider other)
     {

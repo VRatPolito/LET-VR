@@ -126,13 +126,13 @@ public class ButtonManager : MonoBehaviour
             if (_targetPressedByHand != ControllerHand.Invalid)
             {
                 targetPos = CheckLimits(_buttonTarget.transform.localPosition);
-                if (!UnityExtender.NearlyEqual(GetSingleComponent(targetPos), GetSingleComponent(_button.localPosition), 0.02f))
+                if (!UnityExtender.NearlyEqualRange(GetSingleComponent(targetPos), GetSingleComponent(_button.localPosition), 0.02f))
                     VibrateHand(_targetPressedByHand);
             }
             _button.localPosition = Vector3.Lerp(_button.localPosition, targetPos, .5f);
             targetPos = CheckLimits(_button.localPosition);
 
-            if (UnityExtender.NearlyEqual(GetSingleComponent(targetPos), _pushPos, 0.02f))
+            if (UnityExtender.NearlyEqualRange(GetSingleComponent(targetPos), _pushPos, 0.02f))
             {
                 _pushed = true;
                 _source.Play();

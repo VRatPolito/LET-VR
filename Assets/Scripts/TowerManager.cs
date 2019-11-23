@@ -39,7 +39,7 @@ public class TowerManager : MonoBehaviour
         if (dist >= maxdist)
             return 0;
         else
-            return dist / maxdist * 100;
+            return (1 - (dist / maxdist)) * 100;
     }
 
     private float GetRotDiff(int i)
@@ -51,6 +51,6 @@ public class TowerManager : MonoBehaviour
         if (angle < -180)
             angle += 360;
 
-        return Mathf.Abs(angle) / 180 * 100;
+        return (1 - Mathf.Abs(angle) / 180) * 100;
     }
 }
