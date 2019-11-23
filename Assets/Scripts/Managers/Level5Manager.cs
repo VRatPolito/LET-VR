@@ -36,9 +36,11 @@ public class Level5Manager : UnitySingleton<Level5Manager>
 
     public GrabDestination Red, Green, Blue;
     public Destination Cyan;
+    private TowerManager _tower;
     public GameObject Link;
     [SerializeField] protected DroneWithPanelController _drone;
     [SerializeField] protected BillBoardManager _plate;
+
 
     #endregion
 
@@ -64,7 +66,12 @@ public class Level5Manager : UnitySingleton<Level5Manager>
     {
         StatisticsLogger = GetComponent<StatisticsLoggerL5>();
         Assert.IsNotNull(StatisticsLogger);
+        Assert.IsNotNull(Red);
+        Assert.IsNotNull(Green);
+        Assert.IsNotNull(Blue);
+        Assert.IsNotNull(Cyan);
         Assert.IsNotNull(Link);
+        _tower = Cyan.GetComponent<TowerManager>();
 
         StartGrab1.OnDisabled += StatisticsLogger.StartLogGrabbing;
         StartGrab2.OnDisabled += StatisticsLogger.StartLogGrabbing;
@@ -77,13 +84,19 @@ public class Level5Manager : UnitySingleton<Level5Manager>
         Green.OnDisabled += CountSnap;
         Blue.OnDisabled += CountSnap;
         StartManipulation.OnDisabled += StatisticsLogger.StartLogManipulation;
-        StartMovingInteraction.OnDisabled += StatisticsLogger.StopLogManipulation;
+        StartMovingInteraction.OnDisabled += StopManipulation;
         StartMovingInteraction.OnDisabled += StartMovingInteractionLevel;
         _drone.PlayerInRange.AddListener(PlayerInRange);
         _drone.PlayerOutRange.AddListener(StatisticsLogger.LogPlayerOutRange);
         _plate.InteractionError.AddListener(StatisticsLogger.LogInteractionError);
         _plate.AllInteractionsDone.AddListener(StopDrone);
         _plate.AllInteractionsDone.AddListener(EndLevel);
+    }
+
+    private void StopManipulation(Destination d)
+    {
+        StatisticsLogger.LogPrecision(_tower.GetPosDiff(), _tower.GetRotDiff());
+        StatisticsLogger.StopLogManipulation(d);
     }
 
     private void StopDrone()

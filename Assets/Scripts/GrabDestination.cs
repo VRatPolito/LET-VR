@@ -7,8 +7,7 @@ public class GrabDestination : Destination
 {
     [SerializeField] private GenericItem _item;
     [SerializeField] private Transform _referenceItem;
-    [SerializeField] private Transform _itemLength;
-    [SerializeField] private Transform _colliderLength;
+    private Transform _itemLength;
     [SerializeField] private bool _autoDisable = true;
     [SerializeField] private bool _makeItemUngrabbable = true;
     [SerializeField] private bool _makeKinematic = false;
@@ -17,6 +16,11 @@ public class GrabDestination : Destination
     private float _timeStop = 0;
     private Vector3 _lastPos;
     private Quaternion _lastRot;
+
+    private void Awake()
+    {
+        _itemLength = _referenceItem.GetChild(0);
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -42,15 +46,23 @@ public class GrabDestination : Destination
     public float GetPosDiff()
     {
         var dist = Vector3.Distance(_item.transform.position, _referenceItem.position);
-        var maxdist = Vector3.Distance(transform.position, _colliderLength.position) + Vector3.Distance(_referenceItem.position, _itemLength.position);
-        return dist / maxdist * 100;
+        var maxdist = Vector3.Distance(_referenceItem.position, _itemLength.position);
+        if (dist >= maxdist)
+            return 0;
+        else
+            return dist / maxdist * 100;
     }
 
     public float GetRotDiff()
     {
         var angle = Quaternion.Angle(_item.transform.rotation, _referenceItem.transform.rotation);
-        //todo
-        return angle;
+        angle = angle % 360;
+        if (angle > 180)
+            angle -= 360;
+        if (angle < -180)
+            angle += 360;
+
+        return Mathf.Abs(angle) / 180 * 100;
     }
     private void OnTriggerStay(Collider other)
     {

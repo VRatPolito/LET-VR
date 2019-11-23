@@ -2418,7 +2418,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4685003575905426, guid: 02186cf23431e1445a5a07bae02be94a, type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4685003575905426, guid: 02186cf23431e1445a5a07bae02be94a, type: 3}
       propertyPath: m_LocalScale.x
@@ -2467,8 +2467,6 @@ MonoBehaviour:
   Next: {fileID: 0}
   _item: {fileID: 2081455800}
   _referenceItem: {fileID: 984639044}
-  _itemLength: {fileID: 1847750262}
-  _colliderLength: {fileID: 2104874573}
   _autoDisable: 1
   _makeItemUngrabbable: 1
   _makeKinematic: 0
@@ -2658,6 +2656,36 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.5310457, y: 2.9939365, z: 0.42468587}
   m_Center: {x: 0.0048224926, y: 1.4978683, z: 0.78643477}
+--- !u!1 &320240739
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 320240740}
+  m_Layer: 11
+  m_Name: BatteryLength
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &320240740
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 320240739}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 645433597}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!21 &366605782
 Material:
   serializedVersion: 6
@@ -2692,36 +2720,6 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
---- !u!1 &368586176
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 368586177}
-  m_Layer: 11
-  m_Name: ColliderLength
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &368586177
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 368586176}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.306, y: 0, z: -0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 723200325}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &376172403
 Mesh:
   m_ObjectHideFlags: 0
@@ -4679,7 +4677,7 @@ GameObject:
   - component: {fileID: 645433599}
   - component: {fileID: 645433598}
   m_Layer: 11
-  m_Name: Battery_Small (3)
+  m_Name: Battery_Blue
   m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4695,7 +4693,8 @@ Transform:
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.70710677}
   m_LocalPosition: {x: 0, y: 0.2907, z: 0}
   m_LocalScale: {x: 0.20000003, y: 0.20000035, z: 0.20000032}
-  m_Children: []
+  m_Children:
+  - {fileID: 320240740}
   m_Father: {fileID: 1264744373}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 90.00001, y: 0, z: 0}
@@ -4744,6 +4743,36 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 645433596}
   m_Mesh: {fileID: 4300072, guid: 5cfef2d0d6c6279458ebadcb3af1bb41, type: 3}
+--- !u!1 &650971813
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 650971814}
+  m_Layer: 11
+  m_Name: BatteryLength
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &650971814
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 650971813}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 706128581}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &677855949
 Mesh:
   m_ObjectHideFlags: 0
@@ -4974,7 +5003,7 @@ GameObject:
   - component: {fileID: 706128583}
   - component: {fileID: 706128582}
   m_Layer: 11
-  m_Name: Battery_Small (4)
+  m_Name: Battery_Green
   m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4990,7 +5019,8 @@ Transform:
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.70710677}
   m_LocalPosition: {x: 0, y: 0.5065, z: 0}
   m_LocalScale: {x: 0.10000001, y: 0.1000002, z: 0.10000019}
-  m_Children: []
+  m_Children:
+  - {fileID: 650971814}
   m_Father: {fileID: 1264744373}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 90.00001, y: 0, z: 0}
@@ -5222,8 +5252,6 @@ MonoBehaviour:
   Next: {fileID: 0}
   _item: {fileID: 1042262053}
   _referenceItem: {fileID: 853568694}
-  _itemLength: {fileID: 1326656460}
-  _colliderLength: {fileID: 368586177}
   _autoDisable: 1
   _makeItemUngrabbable: 1
   _makeKinematic: 0
@@ -5240,7 +5268,7 @@ GameObject:
   - component: {fileID: 727329761}
   - component: {fileID: 727329760}
   m_Layer: 11
-  m_Name: Battery_Big (2)
+  m_Name: Battery_Red
   m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5256,7 +5284,8 @@ Transform:
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.70710677}
   m_LocalPosition: {x: 0, y: 0.0135, z: 0}
   m_LocalScale: {x: 0.24999999, y: 0.25000018, z: 0.2500002}
-  m_Children: []
+  m_Children:
+  - {fileID: 1621243498}
   m_Father: {fileID: 1264744373}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90.00001, y: 0, z: 0}
@@ -5760,7 +5789,7 @@ GameObject:
   - component: {fileID: 853568696}
   - component: {fileID: 853568695}
   m_Layer: 11
-  m_Name: Battery_Big (2)
+  m_Name: Battery
   m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6608,36 +6637,6 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
---- !u!1 &972518723
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 972518724}
-  m_Layer: 11
-  m_Name: ColliderLength
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &972518724
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 972518723}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.3060023, y: 0, z: 0}
-  m_LocalScale: {x: 1.6666673, y: 1.6666665, z: 1.6666673}
-  m_Children: []
-  m_Father: {fileID: 1310040127}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &982130873
 Mesh:
   m_ObjectHideFlags: 0
@@ -6810,7 +6809,7 @@ GameObject:
   - component: {fileID: 984639046}
   - component: {fileID: 984639045}
   m_Layer: 11
-  m_Name: Battery_Small (2)
+  m_Name: Battery
   m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9280,7 +9279,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4685003575905426, guid: 02186cf23431e1445a5a07bae02be94a, type: 3}
       propertyPath: m_RootOrder
-      value: 13
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 4685003575905426, guid: 02186cf23431e1445a5a07bae02be94a, type: 3}
       propertyPath: m_LocalScale.x
@@ -9327,6 +9326,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Next: {fileID: 0}
+--- !u!114 &1264744376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1264744374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 218e0ed597bdd1e4b9edd093bab46d63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pieces:
+  - {fileID: 1042262058}
+  - {fileID: 2081455805}
+  - {fileID: 535243051}
+  _refPieces:
+  - {fileID: 727329759}
+  - {fileID: 645433597}
+  - {fileID: 706128581}
 --- !u!43 &1287591853
 Mesh:
   m_ObjectHideFlags: 0
@@ -9532,7 +9551,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4685003575905426, guid: 02186cf23431e1445a5a07bae02be94a, type: 3}
       propertyPath: m_RootOrder
-      value: 12
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4685003575905426, guid: 02186cf23431e1445a5a07bae02be94a, type: 3}
       propertyPath: m_LocalScale.x
@@ -9581,8 +9600,6 @@ MonoBehaviour:
   Next: {fileID: 0}
   _item: {fileID: 535243046}
   _referenceItem: {fileID: 1533599830}
-  _itemLength: {fileID: 1457400516}
-  _colliderLength: {fileID: 972518724}
   _autoDisable: 1
   _makeItemUngrabbable: 1
   _makeKinematic: 0
@@ -9876,8 +9893,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1457400515}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.9989948, z: 0}
-  m_LocalScale: {x: 6.249997, y: 6.2499847, z: 6.2499886}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1533599830}
   m_RootOrder: 0
@@ -10196,7 +10213,7 @@ GameObject:
   - component: {fileID: 1533599832}
   - component: {fileID: 1533599831}
   m_Layer: 11
-  m_Name: Battery_Small (2)
+  m_Name: Battery
   m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10262,6 +10279,36 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1533599829}
   m_Mesh: {fileID: 4300072, guid: 5cfef2d0d6c6279458ebadcb3af1bb41, type: 3}
+--- !u!1 &1621243497
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1621243498}
+  m_Layer: 11
+  m_Name: BatteryLength
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1621243498
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1621243497}
+  m_LocalRotation: {x: 0, y: 0, z: 0.008726558, w: 0.999962}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 727329759}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 1}
 --- !u!1 &1626865848
 GameObject:
   m_ObjectHideFlags: 0
@@ -18365,8 +18412,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1847750261}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.002, z: 0}
-  m_LocalScale: {x: 3.124999, y: 3.1249957, z: 3.124997}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 984639044}
   m_RootOrder: 0
@@ -20082,36 +20129,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!1 &2104874572
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2104874573}
-  m_Layer: 11
-  m_Name: ColliderLength
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2104874573
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2104874572}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.30599913, y: 0, z: 0}
-  m_LocalScale: {x: 0.8333337, y: 0.83333325, z: 0.8333337}
-  m_Children: []
-  m_Father: {fileID: 262782086}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2123561279
 GameObject:
   m_ObjectHideFlags: 0
