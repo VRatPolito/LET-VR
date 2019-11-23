@@ -68,7 +68,7 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
     public void StartLogManipulation(Destination d)
     {
         _timeStart = Time.time;
-
+        _speeds.Clear();
         StartMasterLog("M");
     }
     public void StartLogMovingInteraction()
