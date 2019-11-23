@@ -12,6 +12,7 @@ public class TowerManager : MonoBehaviour
     // Start is called before the first frame update
     private void Awake()
     {
+        _refLenghts = new Transform[_pieces.Length];
         for(int i = 0; i < _pieces.Length; i++)
             _refLenghts[i] = _refPieces[i].GetChild(0);
     }
