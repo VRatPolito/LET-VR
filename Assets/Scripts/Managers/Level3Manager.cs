@@ -72,29 +72,29 @@ public class Level3Manager : UnitySingleton<Level3Manager>
         };
     }
 
-    private void StartRobotT2()
+    private void StartRobotT2(Destination d)
     {
         if (RobotsCoinCollectorController != null) RobotsCoinCollectorController.StartCollecting();
     }
 
-    private void StopRobotT2()
+    private void StopRobotT2(Destination d)
     {
         if (RobotsCoinCollectorController != null) RobotsCoinCollectorController.Outro();
     }
 
-    private void StartDronesT3()
+    private void StartDronesT3(Destination d)
     {
         if(DronesCoinCollectorController!=null) DronesCoinCollectorController.StartCollecting();
     }
-    private void StopDronesT3()
+    private void StopDronesT3(Destination d)
     {
         if(DronesCoinCollectorController != null) DronesCoinCollectorController.Outro();
     }
 
 
-    private void EndGame()
+    private void EndGame(Destination d)
     {
-        StopDronesT3();
+        StopDronesT3(d);
         StatisticsLogger.OnLogFinalized += (ix) =>
         {
             Debug.Log($"Log {ix} finalized!");
@@ -102,7 +102,7 @@ public class Level3Manager : UnitySingleton<Level3Manager>
                 Invoke("Quit", 5);
         };
         //StatisticsLogger.StopLogPointWalking();
-        StatisticsLogger.StopLogWaveHandWalking(); //TODO SURE??
+        StatisticsLogger.StopLogWaveHandWalking(d); //TODO SURE??
     }
 
     private void Quit()

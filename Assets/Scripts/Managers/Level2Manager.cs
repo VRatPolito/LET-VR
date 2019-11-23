@@ -83,25 +83,25 @@ public class Level2Manager : UnitySingleton<Level2Manager>
         LevelEnd.OnDisabled += EndGame;
     }
 
-    private void EndGame()
+    private void EndGame(Destination d)
     {
         Application.Quit();
     }
 
-    private void OpenFearDoor()
+    private void OpenFearDoor(Destination d)
     {
         var seq = DOTween.Sequence();
         seq.Append(_fearDoor.DOMoveX(15.02f, 1.5f));
         seq.Play();
     }
 
-    private void DetachLight()
+    private void DetachLight(Destination d)
     {
         _headlight.transform.parent = null;
         _headlight.GetComponent<Light>().enabled = false;
     }
 
-    private void AttachLight()
+    private void AttachLight(Destination d)
     {
         _headlight.transform.parent = LocomotionManager.Instance.CameraEye;
         _headlight.transform.localPosition = Vector3.zero;
@@ -126,7 +126,7 @@ public class Level2Manager : UnitySingleton<Level2Manager>
 
     #region Public Methods
 
-    public void StartGrow()
+    public void StartGrow(Destination d)
     {
         _pathController.GrowHead();
         _pathController.GrowHead();

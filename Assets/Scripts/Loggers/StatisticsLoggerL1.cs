@@ -35,13 +35,13 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
 
     #region MonoBehaviour
 
-    public void StartLogWalking()
+    public void StartLogWalking(Destination d)
     {
         StartMasterLog("W");
         _timeStart = Time.time;
         _walking = true;
     }
-    public void StopLogWalking()
+    public void StopLogWalking(Destination d)
     {
         _walking = false;
         _timeStop = Time.time - _timeStart;
@@ -103,7 +103,7 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
         _running = true;
         _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
     }
-    public void StopLogRunning()
+    public void StopLogRunning(Destination d)
     {
         _running = false;
         _timeStop = Time.time - _timeStart;

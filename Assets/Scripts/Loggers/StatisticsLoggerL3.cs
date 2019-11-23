@@ -44,7 +44,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
         base.Initialize();
     }
 
-    public void StartLogUncoupledWalking()
+    public void StartLogUncoupledWalking(Destination d)
     {
         StartMasterLog("UW");
         _timeStart = Time.time;
@@ -55,7 +55,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
         _stopPos = Vector3.negativeInfinity;
         _errors = 0;
     }
-    public void StopLogUncoupledWalking()
+    public void StopLogUncoupledWalking(Destination d)
     {
         _uncoupledWalking = false;
         _timeStop = Time.time - _timeStart;
@@ -84,7 +84,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
         return v / _angles.Count;
     }
 
-    public void StartLogPointWalking()
+    public void StartLogPointWalking(Destination d)
     {
         StartMasterLog("PW");
         _timeStart = Time.time;
@@ -98,7 +98,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
         _count = 0;
         _errors = 0;
     }
-    public void StopLogPointWalking()
+    public void StopLogPointWalking(Destination d)
     {
         _pointWalking = false;
         _timeStop = Time.time - _timeStart;
@@ -118,7 +118,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
         StopMasterLog();
     }
        
-    public void StartLogWaveHandWalking()
+    public void StartLogWaveHandWalking(Destination d)
     {
         StartMasterLog("WH");
         _timeStart = Time.time;
@@ -135,7 +135,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
         _count = 0;
         _errors = 0;
     }
-    public void StopLogWaveHandWalking()
+    public void StopLogWaveHandWalking(Destination d)
     {
         _pointWalking = false;
         _timeStop = Time.time - _timeStart;

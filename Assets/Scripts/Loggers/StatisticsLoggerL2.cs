@@ -98,7 +98,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
     }
 
 
-    internal void StartLogSlope()
+    internal void StartLogSlope(Destination d)
     {
         _timeStop = float.MinValue;
         _timeStart = Time.time;
@@ -108,7 +108,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
         _stairslopeWalking = true;
     }
 
-    internal void StopLogSlope()
+    internal void StopLogSlope(Destination d)
     {
         _timeStop = Time.time - _timeStart;
         _stairslopeWalking = false;
@@ -122,7 +122,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
         Level2Manager.Instance.StartHalfStairs.gameObject.SetActive(true);
     }
 
-    internal void StartLogHalfStairs()
+    internal void StartLogHalfStairs(Destination d)
     {
         _choice = "ST";
         _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
@@ -138,7 +138,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
         }
     }
 
-    internal void StopLogStairsSlope()
+    internal void StopLogStairsSlope(Destination d)
     {
         _timeStop = Time.time - _timeStart;
         _stairslopeWalking = false;
@@ -164,7 +164,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
         StopMasterLog();
     }
 
-    internal void StartLogHalfSlope()
+    internal void StartLogHalfSlope(Destination d)
     {
         _choice = "SL";
         _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
@@ -180,7 +180,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
         }
     }
 
-    internal void StopLogStair()
+    internal void StopLogStair(Destination d)
     {
         _timeStop = Time.time - _timeStart;
         var values = new List<string>
@@ -192,7 +192,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
         _stairslopeWalking = false;
     }
 
-    internal void StartLogStair()
+    internal void StartLogStair(Destination d)
     {
         StartMasterLog("S");
         _timeStart = Time.time;
@@ -203,7 +203,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
         _stairslopeWalking = true;
     }
 
-    public void StopLogBackWalking()
+    public void StopLogBackWalking(Destination d)
     {
         _backWalking = false;
         _timeStop = Time.time - _timeStart;
@@ -218,7 +218,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
         StopMasterLog();
     }
 
-    public void StartLogCurvedWalking()
+    public void StartLogCurvedWalking(Destination d)
     {
         StartMasterLog("CW");
         _timeStart = Time.time;
@@ -229,7 +229,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
         _speeds.Clear();
         _errors = 0; // # walking interruptions
     }
-    public void StopLogCurvedWalking()
+    public void StopLogCurvedWalking(Destination d)
     {
         _curvedWalking = false;
         _timeStop = Time.time - _timeStart;
@@ -243,7 +243,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
         StopMasterLog();
     }
 
-    public void StartLogFear()
+    public void StartLogFear(Destination d)
     {
         StartMasterLog("F");
         _timeStart = Time.time;
@@ -252,7 +252,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
         _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
         _speeds.Clear();
     }
-    public void StopLogFear()
+    public void StopLogFear(Destination d)
     {
         _fear = false;
         _timeStop = Time.time - _timeStart;

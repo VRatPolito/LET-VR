@@ -55,8 +55,8 @@ public class Level4Manager : UnitySingleton<Level4Manager>
         Assert.IsNotNull(StatisticsLogger);
 
 
-        _agilityStart.OnDisabled += () => { StatisticsLogger.StartLogAgility(); };
-        _agilityEnd.OnDisabled += () =>
+        _agilityStart.OnDisabled += (Destination d) => { StatisticsLogger.StartLogAgility(); };
+        _agilityEnd.OnDisabled += (Destination d) =>
         {
             _pOPSystem.GetComponent<ProceduralObstacleSpawnerSystem>().DestroyRenderedElements();
             _pOPSystem.SetActive(false);
@@ -92,7 +92,7 @@ public class Level4Manager : UnitySingleton<Level4Manager>
 
     #region Events Callbacks
 
-    private void OnHeadShooterStartOnDisabled()
+    private void OnHeadShooterStartOnDisabled(Destination d)
     {
         _headShooter.enabled = true;
         LocomotionManager.Instance.StopLocomotion();
@@ -145,7 +145,7 @@ public class Level4Manager : UnitySingleton<Level4Manager>
         LocomotionManager.Instance.LeftController.GetComponent<Collider>().enabled = true;
     }
 
-    private void OnBodyShooterStart()
+    private void OnBodyShooterStart(Destination d)
     {
         _bodyShooter.enabled = true;
         _headShooter.HitsCounter = 0;

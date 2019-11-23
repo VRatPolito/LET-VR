@@ -2,6 +2,7 @@
 /*
  * Custom template by Gabriele P.
  */
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -36,7 +37,7 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
         base.Initialize();
     }
 
-    public void StartLogGrabbing()
+    public void StartLogGrabbing(Destination d)
     {
         if (_grabtask == 0)
         {
@@ -64,7 +65,7 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
         _grabbing = true;
     }
 
-    public void StartLogManipulation()
+    public void StartLogManipulation(Destination d)
     {
         _timeStart = Time.time;
 
@@ -106,7 +107,7 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
         LocomotionManager.Instance.RightController.GetComponent<VibrationController>().ShortVibration(.5f);
     }
 
-    public void StopLogGrabbing()
+    public void StopLogGrabbing(Destination d)
     {
         _timeStop = Time.time - _timeStart;
         var values = new List<string>
@@ -126,16 +127,23 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
 
         _grabbing = false;
     }
-    public void StopLogManipulation()
+    public void StopLogManipulation(Destination d)
     {
         _timeStop = Time.time - _timeStart;
         var values = new List<string>
         {
-            "" + _timeStop
+            "" + _timeStop,
+            "" + GetAverageSpeed()      //average precision
         };
         WriteToCSV("M", values, 2);
         StopMasterLog();
     }
+
+    internal void LogPrecision(float pos, float rot)
+    {
+        _speeds.Add((pos + rot) /2);
+    }
+
     public void StopLogMovingInteraction()
     {
         _timeStop = Time.time - _timeStart;

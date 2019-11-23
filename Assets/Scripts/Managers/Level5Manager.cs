@@ -112,9 +112,11 @@ public class Level5Manager : UnitySingleton<Level5Manager>
 
     #region Events Callbacks
 
-    private void CountSnap()
+    private void CountSnap(Destination d)
     {
         _snaps++;
+        GrabDestination gd = (GrabDestination)d;
+        StatisticsLogger.LogPrecision(gd.GetPosDiff(), gd.GetRotDiff());
         if (_snaps == 3)
         {
             foreach (var g in ManipulationStuff)
@@ -125,7 +127,7 @@ public class Level5Manager : UnitySingleton<Level5Manager>
         }
     }
 
-    private void StartMovingInteractionLevel()
+    private void StartMovingInteractionLevel(Destination d)
     {
         var antifall = Link.transform.GetChildRecursive("AntiFalling").gameObject;
         foreach (var c in antifall.GetComponents<BoxCollider>())

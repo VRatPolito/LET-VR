@@ -77,19 +77,19 @@ public class Level1Manager : UnitySingleton<Level1Manager>
 
         InitChoreographies();
 
-        _startRunningDestination.OnDisabled += () =>
+        _startRunningDestination.OnDisabled += (Destination d) =>
         {
             _runTimer.gameObject.SetActive(true);
             _runTimer.Running = true;
         };
-        _end.OnDisabled += () => { _runTimer.Running = false; };
+        _end.OnDisabled += (Destination d) => { _runTimer.Running = false; };
         _runTimer.gameObject.SetActive(false);
 
         _start.OnDisabled += Instance.StatisticsLogger.StartLogWalking;
         _stopWalk.OnDisabled += Instance.StatisticsLogger.StopLogWalking;
         _end.OnDisabled += Instance.StatisticsLogger.StopLogRunning;
         _doortochase.OnOpenGate += EnableChasingDest;
-        _chasingDest.OnEnabled += () => _robotRotateAndPointSequence.Play();
+        _chasingDest.OnEnabled += (Destination d) => _robotRotateAndPointSequence.Play();
     }
 
 
