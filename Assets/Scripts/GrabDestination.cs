@@ -67,8 +67,12 @@ public class GrabDestination : Destination
     private void OnTriggerStay(Collider other)
     {
         if(_item.transform.position != _lastPos || _item.transform.rotation != _lastRot)
+        {
+            _lastPos = _item.transform.position;
+            _lastRot = _item.transform.rotation;
             _timeStop = Time.time + _timeStillForStop;
-        else if (Time.time == _timeStop)
+        }
+        else if (Time.time >= _timeStop)
         {
             var p = _item.Player;
             if (_makeKinematic)

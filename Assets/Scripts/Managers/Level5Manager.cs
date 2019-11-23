@@ -84,7 +84,7 @@ public class Level5Manager : UnitySingleton<Level5Manager>
         Green.OnDisabled += CountSnap;
         Blue.OnDisabled += CountSnap;
         StartManipulation.OnDisabled += StatisticsLogger.StartLogManipulation;
-        StartMovingInteraction.OnDisabled += StopManipulation;
+        EndManipulation.OnDisabled += StopManipulation;
         StartMovingInteraction.OnDisabled += StartMovingInteractionLevel;
         _drone.PlayerInRange.AddListener(PlayerInRange);
         _drone.PlayerOutRange.AddListener(StatisticsLogger.LogPlayerOutRange);
@@ -153,9 +153,8 @@ public class Level5Manager : UnitySingleton<Level5Manager>
             LocomotionManager.Instance.CurrentPlayerController.parent = null;
             LocomotionManager.Instance.StartLocomotion();
             antifall.SetActive(false);
-            //Destoy(Link);
         });
-        //TODO ROBOT
+        _drone.enabled = true;
     }
 
     private void EndLevel()

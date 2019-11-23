@@ -106,14 +106,14 @@ public class LeverManager : MonoBehaviour
                 float currAngle;
                 Vector3 currAxis;
                 _arm.localRotation.ToAngleAxis(out currAngle, out currAxis);
-                if (!UnityExtender.NearlyEqual(angle, currAngle, 0.1f))
+                if (!UnityExtender.NearlyEqual(angle, currAngle, 1f))
                     VibrateHand(_targetGrabbedByHand);
             }
             _arm.localRotation = Quaternion.Slerp(_arm.localRotation, targetRot, .5f);
             _arm.localRotation.ToAngleAxis(out angle, out axis);
             angle = CheckLimits(angle, axis);
 
-            if (UnityExtender.NearlyEqual(angle,_pushAngle,0.01f))
+            if (UnityExtender.NearlyEqual(angle,_pushAngle, 1f))
             {
                 _pushed = true;
                 _source.Play();

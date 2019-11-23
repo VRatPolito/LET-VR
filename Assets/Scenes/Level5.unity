@@ -19368,7 +19368,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 3201512232648340085}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 504e0eebfc09ba343971526f85684482, type: 3}
   m_Name: 
@@ -20523,6 +20523,11 @@ PrefabInstance:
       propertyPath: _rotateSpeed
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 2724447825322628163, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7211918441912809975, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
         type: 3}
       propertyPath: m_StaticEditorFlags
@@ -20668,6 +20673,11 @@ PrefabInstance:
       propertyPath: _battery
       value: 
       objectReference: {fileID: 1854807256}
+    - target: {fileID: 6471331572387428306, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5075078832080939477, guid: 3a4a9c4076e09a64fbd8cc476c8e273d, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 3a4a9c4076e09a64fbd8cc476c8e273d, type: 3}
