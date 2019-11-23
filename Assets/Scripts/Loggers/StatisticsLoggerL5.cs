@@ -21,7 +21,7 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
 
     private float _timeStart, _timeStop;
     private uint  _grabtask;
-    private bool _grabbing, _manipulation;
+    private bool _grabbing;
     private int _itemCollisions;
     #endregion
 
@@ -69,9 +69,25 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
         _timeStart = Time.time;
 
         StartMasterLog("M");
-        _manipulation = true;
+    }
+    public void StartLogMovingInteraction()
+    {
+        _timeStart = Time.time;
+        //times player gets out of range
+        Collisions = 0;
+        _errors = 0;
+
+        StartMasterLog("MI");
+    }
+    public void LogPlayerOutRange()
+    {
+        Collisions++;
     }
 
+    public void LogInteractionError()
+    {
+        _errors++;
+    }
     private void LogDrop(GenericItem i)
     {
         if (_grabbing)
@@ -119,7 +135,18 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
         };
         WriteToCSV("M", values, 2);
         StopMasterLog();
-        _manipulation = false;
+    }
+    public void StopLogMovingInteraction()
+    {
+        _timeStop = Time.time - _timeStart;
+        var values = new List<string>
+        {
+            "" + _timeStop,
+            "" + _errors,
+            "" + Collisions,       //times player gets out of range
+        };
+        WriteToCSV("MI", values, 3);
+        StopMasterLog();
     }
 
     #endregion

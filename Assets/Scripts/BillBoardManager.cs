@@ -4,9 +4,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.Events;
 
 public class BillBoardManager : MonoBehaviour
 {
+    public UnityEvent InteractionError, AllInteractionsDone;
+
     [SerializeField]
     LeverManager _leverManager;
     [SerializeField]
@@ -51,13 +54,13 @@ public class BillBoardManager : MonoBehaviour
         {
             index++;
             Debug.Log(item.name + " interaction is correct!");
-            /*if(index == _interactOrder.Length)
-                signalvictory*/
+            if(index == _interactOrder.Length)
+                AllInteractionsDone?.Invoke();
             return true;
         }
 
         Debug.Log(item.name + " interaction is incorrect!");
-        //signalerror 
+        InteractionError?.Invoke();
         return false;
     }
 

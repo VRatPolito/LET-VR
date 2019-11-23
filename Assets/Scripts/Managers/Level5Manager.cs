@@ -2,6 +2,7 @@
  * Custom template by Gabriele P.
  */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -36,6 +37,8 @@ public class Level5Manager : UnitySingleton<Level5Manager>
     public GrabDestination Red, Green, Blue;
     public Destination Cyan;
     public GameObject Link;
+    [SerializeField] protected DroneWithPanelController _drone;
+    [SerializeField] protected BillBoardManager _plate;
 
     #endregion
 
@@ -43,7 +46,7 @@ public class Level5Manager : UnitySingleton<Level5Manager>
 
     private uint _snaps = 0;
     public List<GenericItem> ManipulationStuff;
-
+    private bool _firstTime = true;
     #endregion
 
     #region Properties
@@ -74,8 +77,27 @@ public class Level5Manager : UnitySingleton<Level5Manager>
         Green.OnDisabled += CountSnap;
         Blue.OnDisabled += CountSnap;
         StartManipulation.OnDisabled += StatisticsLogger.StartLogManipulation;
+        StartMovingInteraction.OnDisabled += StatisticsLogger.StopLogManipulation;
         StartMovingInteraction.OnDisabled += StartMovingInteractionLevel;
-        //StartMovingInteraction.OnDisabled += EndLevel;
+        _drone.PlayerInRange.AddListener(PlayerInRange);
+        _drone.PlayerOutRange.AddListener(StatisticsLogger.LogPlayerOutRange);
+        _plate.InteractionError.AddListener(StatisticsLogger.LogInteractionError);
+        _plate.AllInteractionsDone.AddListener(StopDrone);
+        _plate.AllInteractionsDone.AddListener(EndLevel);
+    }
+
+    private void StopDrone()
+    {
+        _drone.enabled = false;
+    }
+
+    private void PlayerInRange()
+    {
+        if(_firstTime)
+        {
+            StatisticsLogger.StartLogMovingInteraction();
+            _firstTime = false;
+        }
     }
 
     #endregion
@@ -128,7 +150,7 @@ public class Level5Manager : UnitySingleton<Level5Manager>
             if (ix == 0)
                 Application.Quit();
         };
-        StatisticsLogger.StopLogManipulation();
+        StatisticsLogger.StopLogMovingInteraction();
     }
 
     #endregion
