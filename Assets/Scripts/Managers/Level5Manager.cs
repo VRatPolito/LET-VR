@@ -95,7 +95,7 @@ public class Level5Manager : UnitySingleton<Level5Manager>
 
     private void StopManipulation(Destination d)
     {
-        StatisticsLogger.LogPrecision(_tower.GetPosDiff(), _tower.GetRotDiff());
+        StatisticsLogger.LogTowerPrecision(_tower.GetPosDiff(), _tower.GetRotDiff());
         StatisticsLogger.StopLogManipulation(d);
     }
 
@@ -129,7 +129,7 @@ public class Level5Manager : UnitySingleton<Level5Manager>
     {
         _snaps++;
         GrabDestination gd = (GrabDestination)d;
-        StatisticsLogger.LogPrecision(gd.GetPosDiff(), gd.GetRotDiff());
+        StatisticsLogger.LogSetupPrecision(gd.GetPosDiff(), gd.GetRotDiff());
         if (_snaps == 3)
         {
             foreach (var g in ManipulationStuff)

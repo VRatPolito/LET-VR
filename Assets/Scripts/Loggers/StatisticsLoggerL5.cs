@@ -19,7 +19,7 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
     #endregion
 
     #region Private Members and Constants
-
+    protected List<float> _precision = new List<float>();
     private float _timeStart, _timeStop;
     private uint  _grabtask;
     private bool _grabbing;
@@ -133,15 +133,20 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
         var values = new List<string>
         {
             "" + _timeStop,
-            "" + GetAverageSpeed()      //average precision
+            "" + GetAverageSpeed(),      //avg setup precision
+            "" + GetAvgPrecision()    //avg tower precision
         };
         WriteToCSV("M", values, 2);
         StopMasterLog();
     }
 
-    internal void LogPrecision(float pos, float rot)
+    internal void LogSetupPrecision(float pos, float rot)
     {
         _speeds.Add((pos + rot) /2);
+    }
+    internal void LogTowerPrecision(float pos, float rot)
+    {
+        _precision.Add((pos + rot) / 2);
     }
 
     public void StopLogMovingInteraction()
@@ -163,7 +168,16 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
 
     #endregion
 
-    #region Helper Methods
+    #region Helper Methods    
+    protected float GetAvgPrecision()
+    {
+        float v = 0.0f;
+        foreach (var s in _precision)
+        {
+            v += s;
+        }
+        return v / _precision.Count;
+    }
     protected override void ComputeStatisticsStep()
     {
         if (_grabbing)
