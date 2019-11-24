@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -59,7 +59,7 @@ LightmapSettings:
     m_BakeResolution: 40
     m_AtlasSize: 1024
     m_AO: 1
-    m_AOMaxDistance: 3
+    m_AOMaxDistance: 5
     m_CompAOExponent: 1
     m_CompAOExponentDirect: 0
     m_Padding: 2
@@ -73,7 +73,7 @@ LightmapSettings:
     m_MixedBakeMode: 2
     m_BakeBackend: 2
     m_PVRSampling: 1
-    m_PVRDirectSampleCount: 32
+    m_PVRDirectSampleCount: 64
     m_PVRSampleCount: 500
     m_PVRBounces: 2
     m_PVRFilterTypeDirect: 0
@@ -88,7 +88,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaIndirect: 2
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ShowResolutionOverlay: 1
-  m_LightingDataAsset: {fileID: 112000000, guid: ad15f8e03e7020f498505f91f71bc8fa,
+  m_LightingDataAsset: {fileID: 112000000, guid: 529fe46e6260d1c44b5affdd7b6f39c4,
     type: 2}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -634,13 +634,13 @@ PrefabInstance:
       propertyPath: m_Lightmapping
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 6581012, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 142944, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 6581012, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
@@ -1000,7 +1000,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f39146eabdcab894eab10b0475d7cce5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ItemCode: 16
+  ItemCode: 0
   Grabbable: 1
   CanInteractFromStart: 1
   outlined: 0
@@ -1013,11 +1013,20 @@ MonoBehaviour:
   ItemActive: 0
   SeekTarget: {fileID: 0}
   Slave: {fileID: 0}
-  Player: {fileID: 0}
+  _grabSound: 1
   startParentPosition: {x: 0, y: 0, z: 0}
   startParentRotationQ: {x: 0, y: 0, z: 0, w: 0}
   startChildPosition: {x: 0, y: 0, z: 0}
   startChildRotationQ: {x: 0, y: 0, z: 0, w: 0}
+  OnInteract:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGrab:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDrop:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &585658134
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1165,22 +1174,10 @@ PrefabInstance:
     - target: {fileID: 114418623813158348, guid: 2cbe1bbe1af4c4f41b702dc672c82b8c,
         type: 3}
       propertyPath: ItemCode
-      value: 16
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2cbe1bbe1af4c4f41b702dc672c82b8c, type: 3}
---- !u!114 &639191865 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 114418623813158348, guid: 2cbe1bbe1af4c4f41b702dc672c82b8c,
-    type: 3}
-  m_PrefabInstance: {fileID: 639191864}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f39146eabdcab894eab10b0475d7cce5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &876039732
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1480,13 +1477,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Next: {fileID: 0}
-  _items:
-  - {fileID: 639191865}
-  - {fileID: 1293653396}
-  - {fileID: 419986913}
+  _item: {fileID: 0}
+  _referenceItem: {fileID: 0}
   _autoDisable: 0
-  _makeItemsUngrabbable: 1
+  _makeItemUngrabbable: 1
   _makeKinematic: 0
+  _timeStillForStop: 2
 --- !u!1 &1162121628
 GameObject:
   m_ObjectHideFlags: 0
@@ -2068,7 +2064,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f39146eabdcab894eab10b0475d7cce5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ItemCode: 16
+  ItemCode: 0
   Grabbable: 1
   CanInteractFromStart: 1
   outlined: 0
@@ -2081,11 +2077,20 @@ MonoBehaviour:
   ItemActive: 0
   SeekTarget: {fileID: 0}
   Slave: {fileID: 0}
-  Player: {fileID: 0}
+  _grabSound: 1
   startParentPosition: {x: 0, y: 0, z: 0}
   startParentRotationQ: {x: 0, y: 0, z: 0, w: 0}
   startChildPosition: {x: 0, y: 0, z: 0}
   startChildRotationQ: {x: 0, y: 0, z: 0, w: 0}
+  OnInteract:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGrab:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDrop:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!54 &1293653397
 Rigidbody:
   m_ObjectHideFlags: 0
