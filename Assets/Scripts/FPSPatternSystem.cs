@@ -248,7 +248,7 @@ public class FPSPatternSystem : MonoBehaviour
         }
 
         collisionDetect.ResetHitEventListener();
-        if (_bulletFinished || _bulletIdx == _bulletPattern.Bullets.Count)
+        if (_bulletIdx == _bulletPattern.Bullets.Count)
         {
             _followPlayer = false;
             OnLastBulletExpired.RaiseEvent();
