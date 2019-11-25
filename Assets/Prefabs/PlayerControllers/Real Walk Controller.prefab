@@ -734,7 +734,6 @@ GameObject:
   - component: {fileID: 3007497752238505979}
   - component: {fileID: 3007497752238505978}
   - component: {fileID: 3007497752238505977}
-  - component: {fileID: 2164327462032671854}
   - component: {fileID: 54396723514675406}
   m_Layer: 8
   m_Name: Real Walk Controller
@@ -983,23 +982,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LeftController: {fileID: 3007497752377188281}
   RightController: {fileID: 3007497750966608933}
---- !u!114 &2164327462032671854
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3007497752238505975}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 046c8806f4943c741bfa0a33fa20d56b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _teleportPoints:
-  - {x: 4.5, y: 0, z: 0}
-  - {x: 4.5, y: 0, z: 14}
-  - {x: 4.5, y: 0, z: 28}
-  - {x: 4.5, y: 0, z: 43}
 --- !u!54 &54396723514675406
 Rigidbody:
   m_ObjectHideFlags: 0

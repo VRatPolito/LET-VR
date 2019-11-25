@@ -29073,6 +29073,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 425717904}
+  - component: {fileID: 425717905}
   m_Layer: 0
   m_Name: RealWalkTeleportPoints
   m_TagString: Untagged
@@ -29100,6 +29101,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 20
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &425717905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 425717903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 046c8806f4943c741bfa0a33fa20d56b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _teleportPoints:
+  - {fileID: 627799690}
+  - {fileID: 495195768}
+  - {fileID: 1585243828}
+  - {fileID: 1379051922}
+  - {fileID: 21718932}
+  - {fileID: 1922424137}
 --- !u!4 &427331216 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4513388610173514, guid: 23b331d8a58ac6149b8e80410cf5240a,

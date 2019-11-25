@@ -12,15 +12,18 @@ public class RealWalkToolset : MonoBehaviour
     private int _currPoint = 0;
     private CharacterController _charc;
 
-    private void Awake()
+    private void Start()
     {
-        _input = GetComponent<InputManagement>();
-        _charc = GetComponent<CharacterController>();
-        _cVR = GetComponent<CharacterControllerVR>();
-        _input.OnLeftPadPressed += LeftPadPressed;
-        _input.OnRightPadPressed += RightPadPressed;
-        _input.OnLeftPadTouched += LeftPadTouched;
-        _input.OnRightPadTouched += RightPadTouched;
+        if (LocomotionManager.Instance.Locomotion == ControllerType.RealWalk)
+        {
+            _input = LocomotionManager.Instance.CurrentPlayerController.GetComponent<InputManagement>();
+            _charc = LocomotionManager.Instance.CurrentPlayerController.GetComponent<CharacterController>();
+            _cVR = LocomotionManager.Instance.CurrentPlayerController.GetComponent<CharacterControllerVR>();
+            _input.OnLeftPadPressed += LeftPadPressed;
+            _input.OnRightPadPressed += RightPadPressed;
+            _input.OnLeftPadTouched += LeftPadTouched;
+            _input.OnRightPadTouched += RightPadTouched;
+        }
     }
 
 
