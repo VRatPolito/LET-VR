@@ -24,76 +24,64 @@ MonoBehaviour:
     CoolDownTime: 0.3
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 3
+    Speed: 4
     LoadingTime: 0.5
     AimingTime: 2
     CoolDownTime: 0.3
-  - TargetType: 0
-    TargetPosition: {x: 0, y: 0, z: 0}
+  - TargetType: 1
+    TargetPosition: {x: 0, y: 0, z: 1}
     Speed: 3
     LoadingTime: 0.5
     AimingTime: 0.5
-    CoolDownTime: 2
+    CoolDownTime: 0.3
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
     Speed: 2
-    LoadingTime: 0.5
+    LoadingTime: 0.7
     AimingTime: 0.5
-    CoolDownTime: 0.4
-  - TargetType: 0
-    TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 5
+    CoolDownTime: 0.3
+  - TargetType: 1
+    TargetPosition: {x: 0, y: 0, z: -1}
+    Speed: 4
     LoadingTime: 0.3
     AimingTime: 0.5
     CoolDownTime: 0.3
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 7
+    Speed: 5
     LoadingTime: 0.6
     AimingTime: 0.5
     CoolDownTime: 0.3
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
     Speed: 4
-    LoadingTime: 0.5
+    LoadingTime: 0.4
     AimingTime: 0.5
     CoolDownTime: 0.3
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
     Speed: 3
-    LoadingTime: 0.5
-    AimingTime: 0.5
-    CoolDownTime: 0.3
-  - TargetType: 0
-    TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 2
-    LoadingTime: 0.5
-    AimingTime: 0.5
-    CoolDownTime: 0.3
-  - TargetType: 0
-    TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 3
-    LoadingTime: 0.5
-    AimingTime: 0.5
-    CoolDownTime: 0.3
-  - TargetType: 0
-    TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 4
-    LoadingTime: 0.5
-    AimingTime: 0.5
-    CoolDownTime: 0.4
-  - TargetType: 0
-    TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 3
-    LoadingTime: 0.5
-    AimingTime: 0.5
-    CoolDownTime: 0.4
-  - TargetType: 0
-    TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 5
     LoadingTime: 0.3
     AimingTime: 0.5
-    CoolDownTime: 0.4
+    CoolDownTime: 0.3
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 3
+    LoadingTime: 0.6
+    AimingTime: 0.5
+    CoolDownTime: 0.3
+  - TargetType: 1
+    TargetPosition: {x: 0, y: 0, z: -1}
+    Speed: 5
+    LoadingTime: 0.5
+    AimingTime: 0.5
+    CoolDownTime: 0.3
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 4
+    LoadingTime: 0.5
+    AimingTime: 0.5
+    CoolDownTime: 0.3
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
     Speed: 3
@@ -103,33 +91,45 @@ MonoBehaviour:
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
     Speed: 5
-    LoadingTime: 0.5
-    AimingTime: 0.5
-    CoolDownTime: 0.3
-  - TargetType: 0
-    TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 3
-    LoadingTime: 0.5
-    AimingTime: 0.5
-    CoolDownTime: 0.3
-  - TargetType: 0
-    TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 4
     LoadingTime: 0.6
     AimingTime: 0.5
     CoolDownTime: 0.3
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
-    Speed: 2
+    Speed: 3
     LoadingTime: 0.5
     AimingTime: 0.5
-    CoolDownTime: 0.4
+    CoolDownTime: 0.3
+  - TargetType: 1
+    TargetPosition: {x: 0, y: 0, z: -1}
+    Speed: 3.5
+    LoadingTime: 0.1
+    AimingTime: 0.5
+    CoolDownTime: 0.3
+  - TargetType: 1
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 5
+    LoadingTime: 0.1
+    AimingTime: 0.5
+    CoolDownTime: 0.3
+  - TargetType: 1
+    TargetPosition: {x: 0, y: 0, z: 1}
+    Speed: 6.5
+    LoadingTime: 0.1
+    AimingTime: 0.5
+    CoolDownTime: 0.3
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
     Speed: 2
     LoadingTime: 0.5
     AimingTime: 0.5
-    CoolDownTime: 0.4
+    CoolDownTime: 0.3
+  - TargetType: 0
+    TargetPosition: {x: 0, y: 0, z: 0}
+    Speed: 3
+    LoadingTime: 0.5
+    AimingTime: 0.5
+    CoolDownTime: 0.3
   - TargetType: 0
     TargetPosition: {x: 0, y: 0, z: 0}
     Speed: 7
