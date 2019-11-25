@@ -40,6 +40,7 @@ public class Level5Manager : UnitySingleton<Level5Manager>
     public GameObject Link;
     [SerializeField] protected DroneWithPanelController _drone;
     [SerializeField] protected BillBoardManager _plate;
+    public List<GenericItem> ManipulationStuff;
 
 
     #endregion
@@ -47,7 +48,6 @@ public class Level5Manager : UnitySingleton<Level5Manager>
     #region Private Members and Constants
 
     private uint _snaps = 0;
-    public List<GenericItem> ManipulationStuff;
     private bool _firstTime = true;
     #endregion
 
