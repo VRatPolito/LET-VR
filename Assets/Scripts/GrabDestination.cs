@@ -16,6 +16,8 @@ public class GrabDestination : Destination
     private float _timeStop = 0;
     private Vector3 _lastPos;
     private Quaternion _lastRot;
+    [SerializeField]
+    private bool _debugDifference = false;
 
     private void Awake()
     {
@@ -55,6 +57,12 @@ public class GrabDestination : Destination
 
     public float GetRotDiff()
     {
+        /*var dir1 = _item.transform.up;
+        var dir2 = _referenceItem.up;
+        dir1 = new Vector3(dir1.x, 0, dir1.z).normalized;
+        dir2 = new Vector3(dir2.x, 0, dir2.z).normalized;
+        var angle = Vector3.Angle(dir1, dir2);*/
+
         var angle = Quaternion.Angle(_item.transform.rotation, _referenceItem.transform.rotation);
         angle = angle % 360;
         if (angle > 180)
@@ -62,7 +70,9 @@ public class GrabDestination : Destination
         if (angle < -180)
             angle += 360;
 
-        return (1 - Mathf.Abs(angle) / 180) * 100;
+        angle = Mathf.Abs((Mathf.Abs(angle) - 90));
+
+        return (1 - (Mathf.Abs(angle) / 90)) * 100;
     }
     private void OnTriggerStay(Collider other)
     {
@@ -83,6 +93,30 @@ public class GrabDestination : Destination
                 _item.CanInteract(false, LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>());
             if (_autoDisable)
                 gameObject.SetActive(false);
+        }
+    }
+
+    public override void Update()
+    {
+        if(_debugDifference && _itemInRange)
+        {
+            /*var dir1 = _item.transform.up;
+            var dir2 = _referenceItem.up;
+            dir1 = new Vector3(dir1.x, 0, dir1.z).normalized;
+            dir2 = new Vector3(dir2.x, 0, dir2.z).normalized;
+            var angle = Vector3.Angle(dir1, dir2);*/
+            
+            var angle = Quaternion.Angle(_item.transform.rotation, _referenceItem.transform.rotation);
+            var angle2 = angle % 360;
+            if (angle2 > 180)
+                angle2 -= 360;
+            if (angle2 < -180)
+                angle2 += 360;
+
+            angle2 = Mathf.Abs((Mathf.Abs(angle2) - 90));
+            var perc = (Mathf.Abs(angle2) / 90) * 100;
+
+            Debug.Log("Angle before: " + angle + " Angle next: " + angle2 + " Precision: " + perc);
         }
     }
 }

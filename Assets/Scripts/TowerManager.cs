@@ -44,13 +44,21 @@ public class TowerManager : MonoBehaviour
 
     private float GetRotDiff(int i)
     {
-        var angle = Quaternion.Angle(_pieces[i].transform.rotation, _refPieces[i].transform.rotation);
+        /*var dir1 = _pieces[i].up;
+        var dir2 = _refPieces[i].up;
+        dir1 = new Vector3(dir1.x, 0, dir1.z).normalized;
+        dir2 = new Vector3(dir2.x, 0, dir2.z).normalized;
+        var angle = Vector3.Angle(dir1, dir2);*/
+
+        var angle = Quaternion.Angle(_pieces[i].rotation, _refPieces[i].rotation);
         angle = angle % 360;
         if (angle > 180)
             angle -= 360;
         if (angle < -180)
             angle += 360;
 
-        return (1 - Mathf.Abs(angle) / 180) * 100;
+        angle = Mathf.Abs((Mathf.Abs(angle) - 90));
+
+        return (1 - (Mathf.Abs(angle) / 90)) * 100;
     }
 }
