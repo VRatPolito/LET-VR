@@ -155,8 +155,6 @@ public class Level4Manager : UnitySingleton<Level4Manager>
     private void OnLastBulletBodyShooterBulletExpired()
     {
         _bodyShooter.Shutdown();
-        _bodyShooter.enabled = false;
-
         StatisticsLogger.OnLogFinalized += (ix) =>
         {
             Debug.Log($"Log {ix} finalized!");
