@@ -136,6 +136,13 @@ public class DronesCoinCollectorController : MonoBehaviour
     private void SetupCoreo()
     {
         _introducingSequence = DOTween.Sequence();
+        _introducingSequence.OnComplete(() => IsCollecting = true);
+        _introducingSequence.OnKill(() =>
+        {
+            IsCollecting = true;
+            _leftDrone.transform.position = _leftDrone.transform.position;
+            _rightDrone.transform.position = _rightDrone.transform.position;
+        });
         _introducingSequence.AppendCallback(() => _idleAudioSource.ForEach(source => source.Play()));
         _introducingSequence.AppendInterval(.5f);
         _introducingSequence.Append(_leftDrone.transform.DOShakeRotation(2));
@@ -182,6 +189,8 @@ public class DronesCoinCollectorController : MonoBehaviour
 
     IEnumerator CollectorCoroutine()
     {
+        while (!IsCollecting) yield return null;
+
         yield return new WaitForFixedUpdate();
         //yield return new WaitForSeconds(2);
         _leftDrone.rotation = _rightDrone.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
@@ -202,6 +211,7 @@ public class DronesCoinCollectorController : MonoBehaviour
 
         Vector3 currPos, p, lp, rp;
         float leftControllerDistance, rightControllerDistance, fromD, dzL, dzR;
+
 
         while (IsCollecting)
         {

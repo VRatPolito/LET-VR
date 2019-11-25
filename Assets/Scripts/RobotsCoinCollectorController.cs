@@ -137,6 +137,13 @@ public class RobotsCoinCollectorController : MonoBehaviour
     private void SetupCoreo()
     {
         _introducingSequence = DOTween.Sequence();
+        _introducingSequence.OnComplete(() => IsCollecting = true);
+        _introducingSequence.OnKill(() =>
+        {
+            IsCollecting = true;
+            _leftRobot.transform.position = _leftRobot.transform.position;
+            _rightRobot.transform.position = _rightRobot.transform.position;
+        });
         _introducingSequence.AppendCallback(() => _idleAudioSource.ForEach(source => source.Play()));
         _introducingSequence.AppendInterval(.5f);
         _introducingSequence.Append(_leftRobot.transform.DOShakeRotation(2));
@@ -183,6 +190,8 @@ public class RobotsCoinCollectorController : MonoBehaviour
 
     IEnumerator CollectorCoroutine()
     {
+        while (!IsCollecting) yield return null;
+
         yield return new WaitForFixedUpdate();
         //yield return new WaitForSeconds(2);
         _leftRobot.rotation = _rightRobot.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
@@ -193,11 +202,11 @@ public class RobotsCoinCollectorController : MonoBehaviour
 
         var ray = new Ray(_leftRobot.transform.position, _leftRobot.transform.right * -1);
         Physics.Raycast(ray, out hitL, rayLength, layerMask);
-        Debug.DrawRay(ray.origin, ray.direction, Color.red);
+        //Debug.DrawRay(ray.origin, ray.direction, Color.red);
 
         ray = new Ray(_rightRobot.transform.position, _rightRobot.transform.right);
         Physics.Raycast(ray, out hitR, rayLength, layerMask);
-        Debug.DrawRay(ray.origin, ray.direction, Color.blue);
+        //Debug.DrawRay(ray.origin, ray.direction, Color.blue);
         _robotPositionLimit = new Tuple<Vector3, Vector3>(hitL.point, hitR.point);
         Debug.Log(_robotPositionLimit);
 

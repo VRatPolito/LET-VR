@@ -101,7 +101,7 @@ public class Level5Manager : UnitySingleton<Level5Manager>
 
     private void StopDrone()
     {
-        _drone.enabled = false;
+        _drone.End();
     }
 
     private void PlayerInRange()
@@ -161,7 +161,7 @@ public class Level5Manager : UnitySingleton<Level5Manager>
         StatisticsLogger.OnLogFinalized += (ix) =>
         {
             if (ix == 0)
-                Application.Quit();
+                Invoke("Quit", 5);
         };
         StatisticsLogger.StopLogMovingInteraction();
     }

@@ -34,11 +34,16 @@ public class DroneWithPanelController : MonoBehaviour
     private Vector3 _lastDir, _dir, _pDir, _rDir;
     private Quaternion _rot;
     private float _currSpeed = 0, _targetSpeed = 0, _boost = 1, _pGap;
-    private object[] _playingCoreo;
+    private Sequence[] _playingCoreo;
 
     #endregion
 
     #region Properties
+
+    public Transform actualPlayer
+    {
+        get => LocomotionManager.Instance.CurrentPlayerController;
+    }
 
     #endregion
 
@@ -56,14 +61,15 @@ public class DroneWithPanelController : MonoBehaviour
 
         PlayerInRange.AddListener(() =>
         {
-            if (_playingCoreo != null) DOTween.KillAll();
-            //.ForEach(o => DOTween.Kill(o));
+            //if (_playingCoreo != null) DOTween.KillAll();
+            _playingCoreo?.ForEach(s => s.Kill());
             _playingCoreo = null;
         });
     }
 
     private void Start()
     {
+        //End();
         _playingCoreo = WaitForPlayerCoreo();
     }
 
@@ -125,16 +131,29 @@ public class DroneWithPanelController : MonoBehaviour
 
     #region Public Methods
 
-    public Transform actualPlayer
+    public void End()
     {
-        get => LocomotionManager.Instance.CurrentPlayerController;
+        var shutdownSequence = DOTween.Sequence();
+        var seq2 = DOTween.Sequence();
+
+        shutdownSequence.Append(transform.DOBlendableLocalMoveBy(Vector3.forward * 100, 6).SetEase(Ease.InCubic));
+        shutdownSequence.Join(transform.DOScale(Vector3.zero, 8).SetEase(Ease.InCubic));
+        shutdownSequence.OnComplete(() =>
+        {
+           
+        });
+        shutdownSequence.Play();
+
+        seq2.Append(_panel.transform.DORotate(_panel.transform.eulerAngles + new Vector3(1, 0, 0) * 20, .25f).SetEase(Ease.InOutSine));
+        seq2.SetLoops(-1, LoopType.Yoyo);
+        seq2.Play();
     }
 
     #endregion
 
     #region Helper Methods   
 
-    private object[] WaitForPlayerCoreo()
+    private Sequence[] WaitForPlayerCoreo()
     {
         var currPos = transform.position;
         var currBillRot = _panel.transform.rotation;
@@ -153,7 +172,7 @@ public class DroneWithPanelController : MonoBehaviour
         seq2.Append(_panel.transform.DORotate(_panel.transform.eulerAngles + new Vector3(1, 0, 0) * 20, .75f).SetEase(Ease.InOutSine));
         seq2.SetLoops(-1, LoopType.Yoyo);
         seq2.OnKill(endCall);
-        return new[] { seq1.id, seq2.id };
+        return new Sequence[] { seq1, seq2 };
     }
 
     #endregion
