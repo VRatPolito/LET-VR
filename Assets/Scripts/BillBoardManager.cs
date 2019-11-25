@@ -20,7 +20,10 @@ public class BillBoardManager : MonoBehaviour
     BatteryHolder _batteryHolder;
     [SerializeField]
     Transform[] _interactOrder;
+
+    [SerializeField] private GameObject _projector;
     int index = 0;
+    private Sequence _intro;
 
     public void ButtonPressed(int id)
     {
@@ -64,9 +67,17 @@ public class BillBoardManager : MonoBehaviour
         return false;
     }
 
-    // Update is called once per frame
-    void Update()
+    void Start()
     {
-        
+        _batteryHolder.Battery.GetComponent<GenericItem>().OnGrab.AddListener((arg0, hand) =>
+        {
+            _intro.Kill();
+            _projector.GetComponentInChildren<ParticleSystem>().Stop();
+        });
+
+        _intro = DOTween.Sequence();
+        _intro.Append(_batteryHolder.Battery.transform.DOMoveY(_batteryHolder.Battery.transform.position.y + 0.15f, 2.0f).SetEase(Ease.InOutSine));
+        _intro.SetLoops(-1, LoopType.Yoyo);
+        _intro.Play();
     }
 }

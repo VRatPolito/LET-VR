@@ -11,6 +11,13 @@ public class BatteryHolder : MonoBehaviour
         get { return _needBattery; }
         set { _needBattery = value; }
     }
+
+    public GameObject Battery
+    {
+        get { return _battery; }
+        protected set { _battery = value; }
+    }
+
     public UnityEvent BatteryPlugged, BatteryUnplugged;
 
     [SerializeField] protected bool _needBattery = false;
@@ -37,7 +44,7 @@ public class BatteryHolder : MonoBehaviour
         {
             if (!NeedBattery || c.tag != "Item") return;
 
-            if (c.gameObject == _battery)
+            if (c.gameObject == Battery)
             {
                 var g = c.GetComponent<GenericItem>();
 
@@ -72,13 +79,13 @@ public class BatteryHolder : MonoBehaviour
     {
         if (NeedBattery)
         {
-            var g = _battery.GetComponent<GenericItem>();
+            var g = Battery.GetComponent<GenericItem>();
             g.GetComponent<Rigidbody>().isKinematic = true;
             g.CanInteract(false, LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>());
             (LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>()).OnDrop -= ItemDropped;
-            _battery.transform.parent = _batteryTarget.transform;
-            _battery.transform.position = _batteryTarget.transform.position;
-            _battery.transform.rotation = _batteryTarget.transform.rotation;
+            Battery.transform.parent = _batteryTarget.transform;
+            Battery.transform.position = _batteryTarget.transform.position;
+            Battery.transform.rotation = _batteryTarget.transform.rotation;
             StopPulse();
             NeedBattery = false;
             BatteryPlugged.Invoke();
@@ -87,11 +94,11 @@ public class BatteryHolder : MonoBehaviour
 
     public void UnplugBattery()
     {
-        var g = _battery.GetComponent<GenericItem>();
+        var g = Battery.GetComponent<GenericItem>();
         g.GetComponent<Rigidbody>().isKinematic = false;
         g.CanInteract(true, LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>());
         (LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>()).OnDrop += ItemDropped;
-        _battery.transform.parent = null;
+        Battery.transform.parent = null;
         if(_pulseWhenUnplugged)
             StartPulse();
         NeedBattery = true;
