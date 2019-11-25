@@ -1302,7 +1302,7 @@ public class VRItemController : ItemController
                 LeftVibrationController.ShortVibration();
 
                 i.SignalDrop(this, ControllerHand.LeftHand);
-                if (OnDrop != null)
+                if (!force && OnDrop != null)
                     OnDrop.Invoke(i);
             }
             LeftInteracting = false;
@@ -1360,7 +1360,7 @@ public class VRItemController : ItemController
                 RightVibrationController.ShortVibration();
 
                 i.SignalDrop(this, ControllerHand.RightHand);
-                if (OnDrop != null)
+                if (!force && OnDrop != null)
                     OnDrop.Invoke(i);
             }
             RightInteracting = false;

@@ -6,7 +6,7 @@ using UnityEngine;
 public class RealWalkToolset : MonoBehaviour
 {
     [SerializeField]
-    private List<Vector3> _teleportPoints;
+    private List<Transform> _teleportPoints;
     private InputManagement _input;
     private CharacterControllerVR _cVR;
     private int _currPoint = 0;
@@ -109,7 +109,8 @@ public class RealWalkToolset : MonoBehaviour
             _currPoint++;
             if (_currPoint > _teleportPoints.Count - 1)
                 _currPoint = _teleportPoints.Count - 1;
-            transform.position = _teleportPoints[_currPoint];
+            transform.position = _teleportPoints[_currPoint].position;
+            transform.rotation = _teleportPoints[_currPoint].rotation;
         }
     }
 
@@ -118,7 +119,8 @@ public class RealWalkToolset : MonoBehaviour
         _currPoint--;
         if (_currPoint < 0)
             _currPoint = 0;
-        transform.position = _teleportPoints[_currPoint];
+        transform.position = _teleportPoints[_currPoint].position;
+        transform.rotation = _teleportPoints[_currPoint].rotation;
     }
 
     private void Rotate(float a)

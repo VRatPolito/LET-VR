@@ -180,6 +180,11 @@ public class Level2Manager : UnitySingleton<Level2Manager>
 
     }
 
+    public void OnPlayerFallen()
+    {
+        StatisticsLogger.PlayerFallen();
+    }
+
     #endregion
 
     #region Coroutines

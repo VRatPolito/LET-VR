@@ -203,6 +203,12 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
         _stairslopeWalking = true;
     }
 
+    internal void PlayerFallen()
+    {
+        if (_fear)
+            _errors++;
+    }
+
     public void StopLogBackWalking(Destination d)
     {
         _backWalking = false;
@@ -248,6 +254,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
         StartMasterLog("F");
         _timeStart = Time.time;
         _fear = true;
+        _errors = 0;
         _avoidance = 0;
         _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
         _speeds.Clear();
@@ -261,7 +268,8 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
             "" + _timeStop,
             "" + GetAverageSpeed(),
             "" + GetAvgHDR(),
-            "" + _avoidance
+            "" + _avoidance,
+            "" + _errors
         };
         WriteToCSV("F", values, 5);
         StopMasterLog();

@@ -19,7 +19,11 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
     #endregion
 
     #region Private Members and Constants
-    protected List<float> _precision = new List<float>();
+    protected List<float> _towerPrecision = new List<float>();
+    protected List<float> _rotSetupPrecision = new List<float>();
+    protected List<float> _posSetupPrecision = new List<float>();
+    protected List<float> _rotTowerPrecision = new List<float>();
+    protected List<float> _posTowerPrecision = new List<float>();
     private float _timeStart, _timeStop;
     private uint  _grabtask;
     private bool _grabbing;
@@ -133,8 +137,12 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
         var values = new List<string>
         {
             "" + _timeStop,
-            "" + GetAverageSpeed(),      //avg setup precision
-            "" + GetAvgPrecision()    //avg tower precision
+            "" + GetAvgPosSetupPrecision(),     //avg pos setup precision
+            "" + GetAvgRotSetupPrecision(),     //avg rot setup precision
+            "" + GetAvgPosTowerPrecision(),     //avg pos tower precision
+            "" + GetAvgRotTowerPrecision(),     //avg rot tower precision
+            "" + GetAverageSpeed(),             //avg setup precision
+            "" + GetAvgTowerPrecision()         //avg tower precision
         };
         WriteToCSV("M", values, 2);
         StopMasterLog();
@@ -142,11 +150,15 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
 
     internal void LogSetupPrecision(float pos, float rot)
     {
+        _posSetupPrecision.Add(pos);
+        _rotSetupPrecision.Add(rot);
         _speeds.Add((pos + rot) /2);
     }
     internal void LogTowerPrecision(float pos, float rot)
     {
-        _precision.Add((pos + rot) / 2);
+        _posTowerPrecision.Add(pos);
+        _rotTowerPrecision.Add(rot);        
+        _towerPrecision.Add((pos + rot) / 2);
     }
 
     public void StopLogMovingInteraction()
@@ -168,15 +180,51 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
 
     #endregion
 
-    #region Helper Methods    
-    protected float GetAvgPrecision()
+    #region Helper Methods      
+    protected float GetAvgPosSetupPrecision()
     {
         float v = 0.0f;
-        foreach (var s in _precision)
+        foreach (var s in _posSetupPrecision)
         {
             v += s;
         }
-        return v / _precision.Count;
+        return v / _posSetupPrecision.Count;
+    }
+    protected float GetAvgRotSetupPrecision()
+    {
+        float v = 0.0f;
+        foreach (var s in _rotSetupPrecision)
+        {
+            v += s;
+        }
+        return v / _rotSetupPrecision.Count;
+    }
+    protected float GetAvgPosTowerPrecision()
+    {
+        float v = 0.0f;
+        foreach (var s in _posTowerPrecision)
+        {
+            v += s;
+        }
+        return v / _posTowerPrecision.Count;
+    }
+    protected float GetAvgRotTowerPrecision()
+    {
+        float v = 0.0f;
+        foreach (var s in _rotTowerPrecision)
+        {
+            v += s;
+        }
+        return v / _rotTowerPrecision.Count;
+    }
+    protected float GetAvgTowerPrecision()
+    {
+        float v = 0.0f;
+        foreach (var s in _towerPrecision)
+        {
+            v += s;
+        }
+        return v / _towerPrecision.Count;
     }
     protected override void ComputeStatisticsStep()
     {
