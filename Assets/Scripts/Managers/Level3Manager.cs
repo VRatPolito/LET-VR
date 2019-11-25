@@ -33,6 +33,8 @@ public class Level3Manager : UnitySingleton<Level3Manager>
 
     #region Private Members and Constants
 
+    private LookAtMeCatalizer _lookAtMe;
+    
     #endregion
 
     #region Properties
@@ -48,13 +50,15 @@ public class Level3Manager : UnitySingleton<Level3Manager>
     private void Awake()
     {
         StatisticsLogger = GetComponent<StatisticsLoggerL3>();
+        _lookAtMe = FindObjectOfType<LookAtMeCatalizer>();
         Assert.IsNotNull(StatisticsLogger);
+        Assert.IsNotNull(_lookAtMe);
 
         StartUnc.OnDisabled += StatisticsLogger.StartLogUncoupledWalking;
+        EndUnc.OnDisabled += d => _lookAtMe.End();
         EndUnc.OnDisabled += StatisticsLogger.StopLogUncoupledWalking;
         StartPointHandFar.OnDisabled += StatisticsLogger.StartLogPointWalking;
         StartPointHandFar.OnDisabled += StartRobotT2;
-        //TODO TO CHECK
         EndPointHandFar.OnDisabled += StatisticsLogger.StopLogPointWalking;
         EndPointHandFar.OnDisabled += StopRobotT2;
         StartWavingHand.OnDisabled += StatisticsLogger.StartLogWaveHandWalking;
