@@ -250,8 +250,7 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
                 "" + _righthandrotations[i].z
             };
 
-            if (LocomotionManager.Instance.Locomotion == ControllerType.ArmSwing ||
-                LocomotionManager.Instance.Locomotion == ControllerType.FootSwing)
+            if (LocomotionManager.Instance.Locomotion == ControllerType.FootSwing)
             {
                 values.Add("" + _dirtrackpositions[i].x);
                 values.Add("" + _dirtrackpositions[i].y);
@@ -259,22 +258,20 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
                 values.Add("" + _dirtrackrotations[i].x);
                 values.Add("" + _dirtrackrotations[i].y);
                 values.Add("" + _dirtrackrotations[i].z);
-                if (LocomotionManager.Instance.Locomotion == ControllerType.FootSwing)
-                {
-                    values.Add("" + _leftlegpositions[i].x);
-                    values.Add("" + _leftlegpositions[i].y);
-                    values.Add("" + _leftlegpositions[i].z);
-                    values.Add("" + _leftlegrotations[i].x);
-                    values.Add("" + _leftlegrotations[i].y);
-                    values.Add("" + _leftlegrotations[i].z);
+               
+                values.Add("" + _leftlegpositions[i].x);
+                values.Add("" + _leftlegpositions[i].y);
+                values.Add("" + _leftlegpositions[i].z);
+                values.Add("" + _leftlegrotations[i].x);
+                values.Add("" + _leftlegrotations[i].y);
+                values.Add("" + _leftlegrotations[i].z);
 
-                    values.Add("" + _rightlegpositions[i].x);
-                    values.Add("" + _rightlegpositions[i].y);
-                    values.Add("" + _rightlegpositions[i].z);
-                    values.Add("" + _rightlegrotations[i].x);
-                    values.Add("" + _rightlegrotations[i].y);
-                    values.Add("" + _rightlegrotations[i].z);
-                }
+                values.Add("" + _rightlegpositions[i].x);
+                values.Add("" + _rightlegpositions[i].y);
+                values.Add("" + _rightlegpositions[i].z);
+                values.Add("" + _rightlegrotations[i].x);
+                values.Add("" + _rightlegrotations[i].y);
+                values.Add("" + _rightlegrotations[i].z);
             }
 
             if (_masterlogtype == "C")
