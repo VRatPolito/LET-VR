@@ -323,19 +323,15 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
             _lefthandrotations.Add(LocomotionManager.Instance.LeftController.localEulerAngles);
             _righthandpositions.Add(LocomotionManager.Instance.RightController.localPosition);
             _righthandrotations.Add(LocomotionManager.Instance.RightController.localEulerAngles);
-            if (LocomotionManager.Instance.Locomotion == ControllerType.ArmSwing ||
-                LocomotionManager.Instance.Locomotion == ControllerType.FootSwing)
-            {
-                _dirtrackpositions.Add(LocomotionManager.Instance.DirectionalTracker.localPosition);
-                _dirtrackrotations.Add(LocomotionManager.Instance.DirectionalTracker.localEulerAngles);
-                if (LocomotionManager.Instance.Locomotion == ControllerType.FootSwing)
+            if (LocomotionManager.Instance.Locomotion == ControllerType.FootSwing)
                 {
+                    _dirtrackpositions.Add(LocomotionManager.Instance.DirectionalTracker.localPosition);
+                    _dirtrackrotations.Add(LocomotionManager.Instance.DirectionalTracker.localEulerAngles);
                     _leftlegpositions.Add(LocomotionManager.Instance.LeftTracker.localPosition);
                     _leftlegrotations.Add(LocomotionManager.Instance.LeftTracker.localEulerAngles);
                     _rightlegpositions.Add(LocomotionManager.Instance.RightTracker.localPosition);
                     _rightlegrotations.Add(LocomotionManager.Instance.RightTracker.localEulerAngles);
                 }
-            }
         }
     }
 

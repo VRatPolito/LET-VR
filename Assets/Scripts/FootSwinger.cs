@@ -14,21 +14,6 @@ public class FootSwinger : MonoBehaviour {
     public bool generalScaleWorldUnitsToCameraRigScale = false;
     [Tooltip("General - Auto Adjust Fixed Timestep\n\nIn order for FootSwinger to handle movement and wall collisions correctly, Time.fixedDeltaTime must be 0.0111 (90 per second) or less.  If this feature is enabled, the setting will be adjusted automatically if it is higher than 0.0111.  If disabled, an error will be generated but the value will not be changed.\n\n(Default: true)")]
     public bool generalAutoAdjustFixedTimestep = true;
-    /*[SerializeField]
-    [Tooltip("Fade Out Sec\nTime in seconds to fade the player view OUT.\n\n(Default: .15f)")]
-    public float FadeOutSec = .15f;
-    [SerializeField]
-    [Tooltip("Fade In Sec\nTime in seconds to fade the player view IN.\n(Default: .35f)")]
-    public float FadeInSec = .35f;*/
-    //[SerializeField]
-    [Tooltip("ArmSwinger FallBack Available\n\nEnables the ArmSwinger FallBack in case one or both leg controllers are not available.\n(Default: false)")]
-    public bool ArmSwingFallBackAvailable = false;
-    //[SerializeField]
-    [Tooltip("Force ArmSwinger FallBack\n\nForces the ArmSwinger FallBack even if both leg controllers are available.\n(Default: false)")]
-    public bool ForceArmSwingFallBack = false;
-    /*[SerializeField]
-    [Tooltip("RayCast Enabled\n\nEnables the raycast check for colliders between current position and the next one, in order to prevent overstepping.\n(Default: true)")]
-    public bool RayCastEnabled = true;*/
 
     // Foot Swing Settings
     [Header("Foot Swing Settings")]
@@ -45,10 +30,7 @@ public class FootSwinger : MonoBehaviour {
     private ControllerButton _footSwingButton = ControllerButton.Grip;
     [SerializeField]
     [Tooltip("Foot Swing - Mode\nOnly if Foot Swing Navigation is enabled\n\nDetermines what is necessary to activate foot swing locomotion.\n\nBoth Buttons - Activate by pushing both buttons on both controllers.\n\nLeft Button - Activate by pushing the left controller button.\n\nRight Button - Activate by pushing the right controller button.\n\nOne Button - Activate by pushing either controller's button.\n\n(Default: One Button Same Controller)")]
-    private FootSwingMode _footSwingMode = FootSwingMode.NoButtons;
-    [SerializeField]
-    [Tooltip("Arm Swing - FallBack Mode\nOnly if Foot Swing Navigation is enabled and leg controllers are not available\n\nDetermines what is necessary to activate arm swing locomotion during the fallback.\n\nBoth Buttons - Activate by pushing both buttons on both controllers.\n\nLeft Button - Activate by pushing the left controller button.\n\nRight Button - Activate by pushing the right controller button.\n\nOne Button - Activate by pushing either controller's button.\n\n(Default: One Button Same Controller)")]
-    private ArmSwingMode _armSwingFallBackMode = FootSwinger.ArmSwingMode.BothButtons;
+    private FootSwingMode _footSwingMode = FootSwingMode.NoButtons; 
     [SerializeField]
     [Tooltip("Foot Swing - Direction Mode\nDetermines what direction is used to calculate the movement.\n\nLeg Direction Rear Controllers - uses the average rotation of the leg controllers, supports must be placed behind the calfs.\n\nLeg Direction Side Controllers - uses the average rotation of the leg controllers, supports must be placed on the external side of the legs.\n\nArm Direction - uses the rotation of the arm controllers.\n\nHead Direction - uses the direction of the headset.\n\n(Default: Leg Direction Rear Controllers)")]
     private FootSwingDirectionMode _footSwingDirectionMode = FootSwingDirectionMode.LegDirectionRearControllers;
@@ -134,14 +116,7 @@ public class FootSwinger : MonoBehaviour {
         RightButton,
         OneButton
     };
-    public enum ArmSwingMode
-    {
-        BothButtons,
-        LeftButton,
-        RightButton,
-        OneButton
-    };
-
+    
     public enum FootSwingDirectionMode
     {
         LegDirectionRearControllers,
@@ -167,12 +142,8 @@ public class FootSwinger : MonoBehaviour {
     public enum ControllerSmoothingMode { Lowest, Average, AverageMinusHighest };
 
     // Controller positions
-    private Vector3 leftControllerLocalPosition;
-    private Vector3 rightControllerLocalPosition;
     private Vector3 leftlegDeviceLocalPosition;
     private Vector3 rightlegDeviceLocalPosition;
-    private Vector3 leftControllerPreviousLocalPosition;
-    private Vector3 rightControllerPreviousLocalPosition;
     private Vector3 leftlegDevicePreviousLocalPosition;
     private Vector3 rightlegDevicePreviousLocalPosition;
 
@@ -199,24 +170,25 @@ public class FootSwinger : MonoBehaviour {
     private Valve.VR.EVRButtonId steamVRFootSwingButton;
     private bool leftButtonPressed = false;
     private bool rightButtonPressed = false;
-    private bool ArmSwingFallBack = false;
 
     //// Controllers ////
     private SteamVR_ControllerManager controllerManager;
-    private GameObject leftControllerGameObject, leftlegDeviceGameObject;
-    private GameObject rightControllerGameObject, rightlegDeviceGameObject;
-    private SteamVR_TrackedObject leftControllerTrackedObj;
-    private SteamVR_TrackedObject rightControllerTrackedObj;
+    private GameObject leftlegDeviceGameObject;
+    private GameObject rightlegDeviceGameObject;
     private SteamVR_TrackedObject leftlegDeviceTrackedObj;
     private SteamVR_TrackedObject rightlegDeviceTrackedObj;
-    private SteamVR_Controller.Device leftController;
-    private SteamVR_Controller.Device rightController;
     private SteamVR_Controller.Device leftlegDevice;
     private SteamVR_Controller.Device rightlegDevice;
+    private int leftlegDeviceIndex;
+    private int rightlegDeviceIndex;    
+    private GameObject leftControllerGameObject;
+    private GameObject rightControllerGameObject;
+    private SteamVR_TrackedObject leftControllerTrackedObj;
+    private SteamVR_TrackedObject rightControllerTrackedObj;
+    private SteamVR_Controller.Device leftController;
+    private SteamVR_Controller.Device rightController;
     private int leftControllerIndex;
     private int rightControllerIndex;
-    private int leftlegDeviceIndex;
-    private int rightlegDeviceIndex;
 
     // GameObjects
     private GameObject headsetGameObject;
@@ -231,13 +203,15 @@ public class FootSwinger : MonoBehaviour {
     private void Awake()
     {
         controllerManager = this.GetComponent<SteamVR_ControllerManager>();
-      }
+        leftControllerGameObject = controllerManager.left;
+        rightControllerGameObject = controllerManager.right;
+        leftControllerTrackedObj = leftControllerGameObject.GetComponent<SteamVR_TrackedObject>();
+        rightControllerTrackedObj = rightControllerGameObject.GetComponent<SteamVR_TrackedObject>();
+    }
 
     /****** INITIALIZATION ******/
     void Initialize()
     {
-        /*VRItemController ic1 = null;
-        VRItemController ic2 = null;*/
         // Find an assign components and objects		
         if(controllerManager.objects.Length > 2)
             leftlegDeviceGameObject = controllerManager.objects[2];
@@ -251,18 +225,7 @@ public class FootSwinger : MonoBehaviour {
                 var sc = leftlegDeviceGameObject.GetComponent<SphereCollider>();
                 if (sc != null)
                     sc.enabled = false;
-
-                //ic1 = leftlegDeviceGameObject.GetComponent<VRItemController>();
-                /*leftlegDeviceGameObject.transform.FindChild("Model2").gameObject.SetActive(false);
-                m3 = leftlegDeviceGameObject.transform.FindChild("Model3");
-                if (m3 != null)
-                    m3.gameObject.SetActive(false);*/
-               /* if (ic1 != null)
-                {
-                    ic1.enabled = false;
-                    ic1.ControllerType = ControllerHand.LeftLeg;
-                }*/
-
+                
                 if (_footSwingDirectionMode == FootSwingDirectionMode.LegDirectionsSideControllers)
                 {
                     if (controller.childCount == 0)
@@ -321,9 +284,7 @@ public class FootSwinger : MonoBehaviour {
             }
             leftlegDeviceTrackedObj = leftlegDeviceGameObject.GetComponent<SteamVR_TrackedObject>();
         }
-
-        if (!ForceArmSwingFallBack)
-        {
+        
             if (controllerManager.objects.Length > 2)
                 rightlegDeviceGameObject = controllerManager.objects[3];
 
@@ -336,21 +297,7 @@ public class FootSwinger : MonoBehaviour {
                     var sc = rightlegDeviceGameObject.GetComponent<SphereCollider>();
                     if (sc != null)
                         sc.enabled = false;
-                    /*ic2 = rightlegDeviceGameObject.GetComponent<ItemController>();
-                    rightlegDeviceGameObject.transform.FindChild("Model2").gameObject.SetActive(false);
-                m3 = rightlegDeviceGameObject.transform.FindChild("Model3");
-                if (m3 != null)
-                    m3.gameObject.SetActive(false);*/
-                    /* if (ic2 != null)
-                         {
-                             ic2.enabled = false;
-                             if (ic1 != null)
-                             {
-                                 ic1.OtherHand = ic2;
-                                 ic2.OtherHand = ic1;
-                             }
-                             ic2.ControllerType = ControllerHand.RightLeg;
-                         }*/
+               
 
                     if (_footSwingDirectionMode == FootSwingDirectionMode.LegDirectionsSideControllers)
                     {
@@ -412,35 +359,7 @@ public class FootSwinger : MonoBehaviour {
 
                 rightlegDeviceTrackedObj = rightlegDeviceGameObject.GetComponent<SteamVR_TrackedObject>();
             }
-
-        }
-        /*ic1 = null;
-        ic2 = null;*/
-
-        leftControllerGameObject = controllerManager.left;
-       /* ic1 = leftControllerGameObject.GetComponent<VRItemController>();
-        if(ic1 != null)
-            ic1.ControllerType = ControllerHand.LeftHand;*/
-            
-        /*leftControllerGameObject.transform.FindChild("Model2").gameObject.SetActive(true);
-        m3 = leftControllerGameObject.transform.FindChild("Model3");
-        if(m3 != null)
-            m3.gameObject.SetActive(false);*/
-
-
-        rightControllerGameObject = controllerManager.right;
-
-       /* ic2 = rightControllerGameObject.GetComponent<VRItemController>();
-        if(ic2!=null)
-        {
-            ic2.ControllerType = ControllerHand.RightHand;
-            if (ic1 != null)
-            {
-                ic1.OtherHand = ic2;
-                ic2.OtherHand = ic1;
-            }
-        }*/
-
+       
         if (DirectionalTracker != null)
         {
             var mr = DirectionalTracker.GetComponent<MeshRenderer>();
@@ -464,21 +383,8 @@ public class FootSwinger : MonoBehaviour {
             }
             else
                 setdirectionalcolorlater = true;
-        }
-
-        /*rightControllerGameObject.transform.FindChild("Model2").gameObject.SetActive(true);
-        m3 = rightControllerGameObject.transform.FindChild("Model3");
-        if (m3 != null)
-            m3.gameObject.SetActive(false);*/
-
-
-        leftControllerTrackedObj = leftControllerGameObject.GetComponent<SteamVR_TrackedObject>();
-        rightControllerTrackedObj = rightControllerGameObject.GetComponent<SteamVR_TrackedObject>();
-
-
-        if (rightlegDeviceTrackedObj == null || leftlegDeviceTrackedObj == null || !rightlegDeviceTrackedObj.isValid || !leftlegDeviceTrackedObj.isValid)
-            ArmSwingFallBack = true;
-
+        }        
+                
         headsetGameObject = GameObject.FindObjectOfType<SteamVR_Camera>().gameObject;
 
         steamVRFootSwingButton = convertControllerButtonToSteamVRButton(footSwingButton);
@@ -491,8 +397,6 @@ public class FootSwinger : MonoBehaviour {
             leftlegDevicePreviousLocalPosition = leftlegDeviceGameObject.transform.localPosition;
         if (rightlegDeviceGameObject != null)
             rightlegDevicePreviousLocalPosition = rightlegDeviceGameObject.transform.localPosition;
-        leftControllerPreviousLocalPosition = leftControllerGameObject.transform.localPosition;
-        rightControllerPreviousLocalPosition = rightControllerGameObject.transform.localPosition;
 
         // Verify and fix settings
         verifySettings();
@@ -504,33 +408,8 @@ public class FootSwinger : MonoBehaviour {
     {
         if (!initialized)
             Initialize();
-
-        if (leftlegDeviceGameObject == null || rightlegDeviceGameObject == null || !rightlegDeviceTrackedObj.isValid || !leftlegDeviceTrackedObj.isValid)
-            ArmSwingFallBack = true;
-        else
-            ArmSwingFallBack = false;
-
-        if (!UnityEngine.XR.XRDevice.isPresent)
-            {
-            //if (FootSwingNavigation == false)
-                return;
-
-            /*Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
-
-            // Find the forward direction
-            Vector3 f = forwardDirection.forward;
-            f.y = 0f;
-
-            Target.SimpleMove(Quaternion.LookRotation(f) * Vector3.ClampMagnitude(input, 1f) * (Input.GetKey(KeyCode.LeftShift) ? 3.0F : 1.0F));           //@Cyberith: Run
-
-            if (Input.GetKeyDown(KeyCode.E)) transform.rotation = Quaternion.Euler(0f, 45f, 0f) * transform.rotation;
-            else if (Input.GetKeyDown(KeyCode.Q)) transform.rotation = Quaternion.Euler(0f, -45f, 0f) * transform.rotation;
-
-            transform.rotation = Quaternion.Euler(0f, Input.GetAxis("Mouse X") * 2f, 0f) * transform.rotation;
-            return;*/
-            }
-        else
-        {
+        
+        
         if(setleftcolorlater && leftlegDeviceGameObject != null)
             {
             setleftcolorlater = false;
@@ -688,8 +567,6 @@ public class FootSwinger : MonoBehaviour {
             getControllerButtons();
 
             // Save the current controller positions for our use
-            leftControllerLocalPosition = leftControllerGameObject.transform.localPosition;
-            rightControllerLocalPosition = rightControllerGameObject.transform.localPosition;
             if (leftlegDeviceGameObject != null)
                 leftlegDeviceLocalPosition = leftlegDeviceGameObject.transform.localPosition;
             if (rightlegDeviceGameObject != null)
@@ -718,10 +595,7 @@ public class FootSwinger : MonoBehaviour {
             if(leftlegDeviceGameObject != null)
                 leftlegDevicePreviousLocalPosition = leftlegDeviceGameObject.transform.localPosition;
             if (rightlegDeviceGameObject != null)
-                rightlegDevicePreviousLocalPosition = rightlegDeviceGameObject.transform.localPosition;
-            leftControllerPreviousLocalPosition = leftControllerGameObject.transform.localPosition;
-            rightControllerPreviousLocalPosition = rightControllerGameObject.transform.localPosition;
-        }          
+                rightlegDevicePreviousLocalPosition = rightlegDeviceGameObject.transform.localPosition;                  
 
         // Save this Time.deltaTime for next frame (inertia simulation)
         previousTimeDeltaTime = Time.deltaTime;
@@ -762,23 +636,7 @@ public class FootSwinger : MonoBehaviour {
         Quaternion movementRotation = Quaternion.identity;
         bool movedThisFrame = false;
         
-        if((ArmSwingFallBack || ForceArmSwingFallBack) && ArmSwingFallBackAvailable)
-            switch (ArmSwingFallBackMode)
-            {
-                case ArmSwingMode.BothButtons:
-                    movedThisFrame = swingBothButtons(ref movementAmount, ref movementRotation);
-                    break;
-                case ArmSwingMode.RightButton:
-                    movedThisFrame = swingLeftRightButtons(ref movementAmount, ref movementRotation);
-                    break;
-                case ArmSwingMode.LeftButton:
-                    movedThisFrame = swingLeftRightButtons(ref movementAmount, ref movementRotation);
-                    break;
-                case ArmSwingMode.OneButton:
-                    movedThisFrame = swingOneButton(ref movementAmount, ref movementRotation);
-                    break;
-            }
-        else
+       
             switch (footSwingMode)
             {
                 case FootSwingMode.NoButtons:
@@ -800,38 +658,6 @@ public class FootSwinger : MonoBehaviour {
 
         if (movedThisFrame)
         {
-            /*if (!FootSwinging && RayCastEnabled)
-            {
-                FootSwinging = true;
-                var raycastpointhead = headsetGameObject.transform.position;
-                var raycastpointfeet = raycastpointhead;
-                raycastpointfeet.y = Target.stepOffset + 0.1f;
-                var raycastpoint = raycastpointhead;
-                raycastpoint.y = Target.height/2;
-                var rot = vector3XZOnly(movementRotation.eulerAngles);
-
-                Ray ray = new Ray(raycastpoint, rot);
-                Ray rayfeet = new Ray(raycastpointfeet, rot);
-                Ray rayhead = new Ray(raycastpointhead, rot);
-                RaycastHit hit1, hit2, hit3;
-
-                if(Physics.Raycast(ray, out hit1, Target.radius + (movementAmount * movementSpeedMultiplier)))
-                {
-                    Debug.Log("FootSwinging blocked by collider of object " + hit1.transform.name);
-                    return Vector3.zero;
-                }
-                if (Physics.Raycast(rayhead, out hit2, Target.radius + (movementAmount * movementSpeedMultiplier)))
-                {
-                    Debug.Log("FootSwinging blocked by collider of object " + hit2.transform.name);
-                    return Vector3.zero;
-                }
-                if (Physics.Raycast(rayfeet, out hit3, Target.radius + (movementAmount * movementSpeedMultiplier)))
-                {
-                    Debug.Log("FootSwinging blocked by collider of object " + hit3.transform.name);
-                    return Vector3.zero;
-                }
-                
-            }*/
 
             FootSwinging = true;
             
@@ -874,23 +700,15 @@ public class FootSwinger : MonoBehaviour {
 
         float leftMovement = 0;
         float rightMovement = 0;
-
-        if ((ArmSwingFallBack || ForceArmSwingFallBack) && ArmSwingFallBackAvailable)
-        {
-        leftControllerChange = Vector3.Distance(leftControllerPreviousLocalPosition, leftControllerLocalPosition);
-        rightControllerChange = Vector3.Distance(rightControllerPreviousLocalPosition, rightControllerLocalPosition);
-        }
+      
+        if (FootSwingOnlyVerticalMovement)
+            leftControllerChange = Mathf.Abs(leftlegDevicePreviousLocalPosition.y - leftlegDeviceLocalPosition.y);
         else
-        {
-            if (FootSwingOnlyVerticalMovement)
-                leftControllerChange = Mathf.Abs(leftlegDevicePreviousLocalPosition.y - leftlegDeviceLocalPosition.y);
-            else
-                leftControllerChange = Vector3.Distance(leftlegDevicePreviousLocalPosition, leftlegDeviceLocalPosition);
-            if (FootSwingOnlyVerticalMovement)
-                rightControllerChange = Mathf.Abs(rightlegDevicePreviousLocalPosition.y - rightlegDeviceLocalPosition.y);
-            else
-                rightControllerChange = Vector3.Distance(rightlegDevicePreviousLocalPosition, rightlegDeviceLocalPosition);
-        }
+            leftControllerChange = Vector3.Distance(leftlegDevicePreviousLocalPosition, leftlegDeviceLocalPosition);
+        if (FootSwingOnlyVerticalMovement)
+            rightControllerChange = Mathf.Abs(rightlegDevicePreviousLocalPosition.y - rightlegDeviceLocalPosition.y);
+        else
+            rightControllerChange = Vector3.Distance(rightlegDevicePreviousLocalPosition, rightlegDeviceLocalPosition);
 
         // Calculate what camera rig movement the change should be converted to
         leftMovement = calculateMovement(FootSwingControllerToMovementCurve, leftControllerChange, FootSwingControllerSpeedForMaxSpeed, footSwingMaxSpeed);
@@ -948,22 +766,15 @@ public class FootSwinger : MonoBehaviour {
             float leftMovement = 0;
             float rightMovement = 0;
 
-            if ((ArmSwingFallBack || ForceArmSwingFallBack) && ArmSwingFallBackAvailable)
-            {
-                leftControllerChange = Vector3.Distance(leftControllerPreviousLocalPosition, leftControllerLocalPosition);
-                rightControllerChange = Vector3.Distance(rightControllerPreviousLocalPosition, rightControllerLocalPosition);
-            }
+            if (FootSwingOnlyVerticalMovement)
+                leftControllerChange = Mathf.Abs(leftlegDevicePreviousLocalPosition.y - leftlegDeviceLocalPosition.y);
             else
-            {
-                if (FootSwingOnlyVerticalMovement)
-                    leftControllerChange = Mathf.Abs(leftlegDevicePreviousLocalPosition.y - leftlegDeviceLocalPosition.y);
-                else
-                    leftControllerChange = Vector3.Distance(leftlegDevicePreviousLocalPosition, leftlegDeviceLocalPosition);
-                if (FootSwingOnlyVerticalMovement)
-                    rightControllerChange = Mathf.Abs(rightlegDevicePreviousLocalPosition.y - rightlegDeviceLocalPosition.y);
-                else
-                    rightControllerChange = Vector3.Distance(rightlegDevicePreviousLocalPosition, rightlegDeviceLocalPosition);
-            }
+                leftControllerChange = Vector3.Distance(leftlegDevicePreviousLocalPosition, leftlegDeviceLocalPosition);
+            if (FootSwingOnlyVerticalMovement)
+                rightControllerChange = Mathf.Abs(rightlegDevicePreviousLocalPosition.y - rightlegDeviceLocalPosition.y);
+            else
+                rightControllerChange = Vector3.Distance(rightlegDevicePreviousLocalPosition, rightlegDeviceLocalPosition);
+
 
             // Calculate what camera rig movement the change should be converted to
             leftMovement = calculateMovement(FootSwingControllerToMovementCurve, leftControllerChange, FootSwingControllerSpeedForMaxSpeed, footSwingMaxSpeed);
@@ -1025,14 +836,7 @@ public class FootSwinger : MonoBehaviour {
 
                 float leftMovement = 0;
                 float rightMovement = 0;
-
-                if ((ArmSwingFallBack || ForceArmSwingFallBack) && ArmSwingFallBackAvailable)
-                {
-                    leftControllerChange = Vector3.Distance(leftControllerPreviousLocalPosition, leftControllerLocalPosition);
-                    rightControllerChange = Vector3.Distance(rightControllerPreviousLocalPosition, rightControllerLocalPosition);
-                }
-                else
-                {
+            
                 if (FootSwingOnlyVerticalMovement)
                     leftControllerChange = Mathf.Abs(leftlegDevicePreviousLocalPosition.y - leftlegDeviceLocalPosition.y);
                 else
@@ -1041,7 +845,6 @@ public class FootSwinger : MonoBehaviour {
                     rightControllerChange = Mathf.Abs(rightlegDevicePreviousLocalPosition.y - rightlegDeviceLocalPosition.y);
                 else
                     rightControllerChange = Vector3.Distance(rightlegDevicePreviousLocalPosition, rightlegDeviceLocalPosition);
-                }
 
                 // Calculate what camera rig movement the change should be converted to
                 leftMovement = calculateMovement(FootSwingControllerToMovementCurve, leftControllerChange, FootSwingControllerSpeedForMaxSpeed, footSwingMaxSpeed);
@@ -1101,23 +904,15 @@ public class FootSwinger : MonoBehaviour {
 
             float leftMovement = 0;
             float rightMovement = 0;
-
-            if ((ArmSwingFallBack || ForceArmSwingFallBack) && ArmSwingFallBackAvailable)
-            {
-                leftControllerChange = Vector3.Distance(leftControllerPreviousLocalPosition, leftControllerLocalPosition);
-                rightControllerChange = Vector3.Distance(rightControllerPreviousLocalPosition, rightControllerLocalPosition);
-            }
+           
+            if (FootSwingOnlyVerticalMovement)
+                leftControllerChange = Mathf.Abs(leftlegDevicePreviousLocalPosition.y - leftlegDeviceLocalPosition.y);
             else
-            {
-                if (FootSwingOnlyVerticalMovement)
-                    leftControllerChange = Mathf.Abs(leftlegDevicePreviousLocalPosition.y - leftlegDeviceLocalPosition.y);
-                else
-                    leftControllerChange = Vector3.Distance(leftlegDevicePreviousLocalPosition, leftlegDeviceLocalPosition);
-                if (FootSwingOnlyVerticalMovement)
-                    rightControllerChange = Mathf.Abs(rightlegDevicePreviousLocalPosition.y - rightlegDeviceLocalPosition.y);
-                else
-                    rightControllerChange = Vector3.Distance(rightlegDevicePreviousLocalPosition, rightlegDeviceLocalPosition);
-            }
+                leftControllerChange = Vector3.Distance(leftlegDevicePreviousLocalPosition, leftlegDeviceLocalPosition);
+            if (FootSwingOnlyVerticalMovement)
+                rightControllerChange = Mathf.Abs(rightlegDevicePreviousLocalPosition.y - rightlegDeviceLocalPosition.y);
+            else
+                rightControllerChange = Vector3.Distance(rightlegDevicePreviousLocalPosition, rightlegDeviceLocalPosition);
 
             // Calculate what camera rig movement the change should be converted to
             leftMovement = calculateMovement(FootSwingControllerToMovementCurve, leftControllerChange, FootSwingControllerSpeedForMaxSpeed, footSwingMaxSpeed);
@@ -1407,6 +1202,38 @@ public class FootSwinger : MonoBehaviour {
         return determineAverageLegControllerRotation();
     }
 
+
+    // Returns the average rotation of the two controllers
+    Quaternion determineAverageArmControllerRotation()
+    {
+        // Build the average rotation of the controller(s)
+        Quaternion newRotation;
+
+        // Both controllers are present
+        if (leftController != null && rightController != null)
+        {
+            newRotation = averageRotation(leftControllerGameObject.transform.rotation, rightControllerGameObject.transform.rotation);
+        }
+        // Left controller only
+        else if (leftController != null && rightController == null)
+        {
+            newRotation = leftControllerGameObject.transform.rotation;
+        }
+        // Right controller only
+        else if (rightController != null && leftController == null)
+        {
+            newRotation = rightControllerGameObject.transform.rotation;
+        }
+        // No controllers!
+        else
+        {
+            newRotation = Quaternion.identity;
+        }
+
+        return newRotation;
+    }
+
+
     public Quaternion determineAverageArmControllerRotationPublic(out Quaternion left, out Quaternion right)
     {
         left = leftControllerGameObject.transform.rotation;
@@ -1420,11 +1247,7 @@ public class FootSwinger : MonoBehaviour {
         Quaternion newRotation = Quaternion.identity;
 
         var ArmRoot = determineAverageArmControllerRotation();
-
-        if((ArmSwingFallBack || ForceArmSwingFallBack) && ArmSwingFallBackAvailable)
-            return ArmRoot;
-        else
-        {
+        
             switch (footSwingDirectionMode)
             {
                 case FootSwingDirectionMode.ArmDirection:
@@ -1532,40 +1355,9 @@ public class FootSwinger : MonoBehaviour {
 
                     return newRotation;
             }
-        }
 
         return Quaternion.identity;
-    }
-
-    // Returns the average rotation of the two controllers
-    Quaternion determineAverageArmControllerRotation()
-    {
-        // Build the average rotation of the controller(s)
-        Quaternion newRotation;
-
-        // Both controllers are present
-        if (leftController != null && rightController != null)
-        {
-            newRotation = averageRotation(leftControllerGameObject.transform.rotation, rightControllerGameObject.transform.rotation);
-        }
-        // Left controller only
-        else if (leftController != null && rightController == null)
-        {
-            newRotation = leftControllerGameObject.transform.rotation;
-        }
-        // Right controller only
-        else if (rightController != null && leftController == null)
-        {
-            newRotation = rightControllerGameObject.transform.rotation;
-        }
-        // No controllers!
-        else
-        {
-            newRotation = Quaternion.identity;
-        }
-
-        return newRotation;
-    }
+    }    
 
     float smoothedControllerMovement(LinkedList<float> controllerMovementHistory)
     {
@@ -1740,19 +1532,6 @@ public class FootSwinger : MonoBehaviour {
         {
             controllerMovementResultHistory.Clear();
             _footSwingMode = value;
-        }
-    }
-
-    public ArmSwingMode ArmSwingFallBackMode
-    {
-        get
-        {
-            return _armSwingFallBackMode;
-        }
-        set
-        {
-            controllerMovementResultHistory.Clear();
-            _armSwingFallBackMode = value;
         }
     }
 

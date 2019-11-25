@@ -848,7 +848,7 @@ GameObject:
   - component: {fileID: 23261738566282764}
   - component: {fileID: 33210182162361074}
   - component: {fileID: 114572815787998360}
-  - component: {fileID: 7693294785903760519}
+  - component: {fileID: 8819900740240974816}
   m_Layer: 8
   m_Name: '[CameraRig]'
   m_TagString: Untagged
@@ -961,7 +961,7 @@ MonoBehaviour:
   - {x: -1.65, y: 0.01, z: -1.275}
   - {x: -1.65, y: 0.01, z: 1.275}
   - {x: 1.65, y: 0.01, z: 1.275}
---- !u!114 &7693294785903760519
+--- !u!114 &8819900740240974816
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -970,21 +970,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1566240698378012}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 491b5fcf6fb841542b8852081913ec05, type: 3}
+  m_Script: {fileID: 11500000, guid: 2b655cff5a815334db9eea9d1cee98ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GithubProjectAndDocs: https://github.com/ElectricNightOwl/ArmSwinger
   generalScaleWorldUnitsToCameraRigScale: 0
   generalAutoAdjustFixedTimestep: 1
-  ArmSwingFallBackAvailable: 1
-  ForceArmSwingFallBack: 1
-  FootSwingNavigation: 1
-  movementSpeedMultiplier: 1
-  _footSwingLegTrackingDevice: 0
-  _footSwingButton: 1
-  _footSwingMode: 0
-  _armSwingFallBackMode: 0
-  _footSwingDirectionMode: 0
-  FootSwingControllerToMovementCurve:
+  armSwingNavigation: 1
+  _armSwingButton: 1
+  _armSwingMode: 3
+  armSwingControllerToMovementCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
@@ -1008,14 +1003,10 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _FootSwingControllerSpeedForMaxSpeed: 3
-  _FootSwingMaxSpeed: 7
-  _FootSwingBothControllersCoefficient: 1
-  FootSwingOnlyVerticalMovement: 0
-  LeftLegDeviceColor: {r: 1, g: 0, b: 0, a: 1}
-  RightLegDeviceColor: {r: 0, g: 1, b: 0, a: 1}
-  DirectionalDeviceColor: {r: 1, g: 1, b: 1, a: 1}
-  TrackerTexture: {fileID: 2800000, guid: 3090ae79d36889c468dbfaa8d3d71e83, type: 3}
+  _armSwingControllerSpeedForMaxSpeed: 3
+  _armSwingMaxSpeed: 7
+  _armSwingBothControllersCoefficient: 1
+  _armSwingSingleControllerCoefficient: 0.7
   controllerSmoothing: 1
   controllerSmoothingMode: 2
   controllerSmoothingCacheSize: 3
@@ -1023,10 +1014,50 @@ MonoBehaviour:
   movingInertiaTimeToStopAtMaxSpeed: 0.5
   _stoppingInertia: 1
   stoppingInertiaTimeToStopAtMaxSpeed: 0.35
-  FootSwinging: 0
+  raycastGroundLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  _raycastMaxLength: 100
+  _raycastAverageHeightCacheSize: 3
+  raycastOnlyHeightAdjustWhileArmSwinging: 0
+  _preventWallClip: 1
+  preventWallClipLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  preventWallClipMode: 1
+  _preventWallClipHeadsetColliderRadius: 0.11
+  _preventWallClipMinAngleToTrigger: 20
+  preventClimbing: 1
+  _preventClimbingMaxAnglePlayerCanClimb: 45
+  preventFalling: 1
+  _preventFallingMaxAnglePlayerCanFall: 60
+  preventWallWalking: 1
+  _instantHeightMaxChange: 0.2
+  instantHeightClimbPreventionMode: 1
+  instantHeightFallPreventionMode: 0
+  checksNumClimbFallChecksOOBBeforeRewind: 5
+  checksNumWallWalkChecksOOBBeforeRewind: 15
+  pushBackOverride: 1
+  pushBackOverrideRefillPerSec: 30
+  pushBackOverrideMaxTokens: 90
+  _rewindMinDistanceChangeToSavePosition: 0.05
+  rewindDontSaveUnsafeClimbFallPositions: 1
+  rewindDontSaveUnsafeWallWalkPositions: 1
+  rewindNumSavedPositionsToStore: 28
+  rewindNumSavedPositionsToRewind: 7
+  rewindFadeOutSec: 0.15
+  rewindFadeInSec: 0.35
+  outOfBounds: 0
+  rewindInProgress: 0
+  armSwinging: 0
   Target: {fileID: 143989061141002904}
-  DirectionalTracker: {fileID: 0}
-  _FootSwingingPaused: 0
+  _armSwingingPaused: 0
+  _preventionsPaused: 1
+  _anglePreventionsPaused: 1
+  _wallClipPreventionPaused: 1
+  _playAreaHeightAdjustmentPaused: 1
+  wallClipThisFrame: 0
+  rewindThisFrame: 0
 --- !u!1 &1658180417744100
 GameObject:
   m_ObjectHideFlags: 0

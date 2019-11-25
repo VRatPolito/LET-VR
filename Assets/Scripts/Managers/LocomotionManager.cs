@@ -196,7 +196,7 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
         switch (Locomotion)
         {
             case ControllerType.ArmSwing:
-                CurrentPlayerController.GetComponentInChildren<FootSwinger>().FootSwingNavigation = true;
+                CurrentPlayerController.GetComponentInChildren<ArmSwinger>().armSwingingPaused = true;
                 break;
             case ControllerType.FootSwing:
                 CurrentPlayerController.GetComponentInChildren<FootSwinger>().FootSwingNavigation = true;
@@ -222,7 +222,7 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
         switch (Locomotion)
         {
             case ControllerType.ArmSwing:
-                CurrentPlayerController.GetComponentInChildren<FootSwinger>().FootSwingNavigation = false;
+                CurrentPlayerController.GetComponentInChildren<ArmSwinger>().armSwingingPaused = false;
                 break;
             case ControllerType.FootSwing:
                 CurrentPlayerController.GetComponentInChildren<FootSwinger>().FootSwingNavigation = false;
