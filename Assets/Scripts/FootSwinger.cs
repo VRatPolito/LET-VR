@@ -16,9 +16,6 @@ public class FootSwinger : MonoBehaviour {
     public bool generalAutoAdjustFixedTimestep = true;
 
     // Foot Swing Settings
-    [Header("Foot Swing Settings")]
-    [Tooltip("Foot Swing - Navigation\n\nEnables variable locomotion using the controllers to determine speed and direction.  Activated according to the selected Mode. \n\n(Default: true)")]
-    public bool FootSwingNavigation = true;
     [Range(0.0f, 50.0f)]
     [Tooltip("Movement Speed Multiplier\n\n. A multiplier useful to regulate the movement speed without having to deal with curves or min/max values.  \n\n(Default: 1)")]
     public float movementSpeedMultiplier = 1.0f;
@@ -573,8 +570,7 @@ public class FootSwinger : MonoBehaviour {
                 rightlegDeviceLocalPosition = rightlegDeviceGameObject.transform.localPosition;
 
             // Variable motion based on controller movement
-            if (FootSwingNavigation &&
-                !FootSwingingPaused)
+            if (!footSwingingPaused)
             {
                 if (this.movementSpeedMultiplier != 0f)
                     {
@@ -1486,7 +1482,7 @@ public class FootSwinger : MonoBehaviour {
         }
     }
 
-    public bool FootSwingingPaused
+    public bool footSwingingPaused
     {
         get
         {

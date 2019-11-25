@@ -196,10 +196,10 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
         switch (Locomotion)
         {
             case ControllerType.ArmSwing:
-                CurrentPlayerController.GetComponentInChildren<ArmSwinger>().armSwingingPaused = true;
+                CurrentPlayerController.GetComponentInChildren<ArmSwinger>().armSwingingPaused = false;
                 break;
             case ControllerType.FootSwing:
-                CurrentPlayerController.GetComponentInChildren<FootSwinger>().FootSwingNavigation = true;
+                CurrentPlayerController.GetComponentInChildren<FootSwinger>().footSwingingPaused = false;
                 break;
             case ControllerType.CVirtualizer:
                 CurrentPlayerController.GetComponent<CVirtPlayerController>().movementSpeedMultiplier = _initialMult;
@@ -222,10 +222,10 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
         switch (Locomotion)
         {
             case ControllerType.ArmSwing:
-                CurrentPlayerController.GetComponentInChildren<ArmSwinger>().armSwingingPaused = false;
+                CurrentPlayerController.GetComponentInChildren<ArmSwinger>().armSwingingPaused = true;
                 break;
             case ControllerType.FootSwing:
-                CurrentPlayerController.GetComponentInChildren<FootSwinger>().FootSwingNavigation = false;
+                CurrentPlayerController.GetComponentInChildren<FootSwinger>().footSwingingPaused = true;
                 break;
             case ControllerType.CVirtualizer:
                 CurrentPlayerController.GetComponent<CVirtPlayerController>().movementSpeedMultiplier = 0.0f;
