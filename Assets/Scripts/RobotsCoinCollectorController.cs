@@ -46,6 +46,7 @@ public class RobotsCoinCollectorController : MonoBehaviour
     private List<AudioSource> _coinAudioSource, _idleAudioSource;
 
     private Sequence _introducingSequence, _outroSequence;
+    private Coroutine _collectorCor;
 
     #endregion
 
@@ -81,6 +82,8 @@ public class RobotsCoinCollectorController : MonoBehaviour
         Assert.IsNotNull(_rightCoinRow);
         Assert.IsNotNull(_to);
         Assert.IsNotNull(_coinsCollectedVisualizerText);
+        IsCollecting = false;
+
         _calibratedControllerDistance = LocomotionManager.Instance.CalibrationData.ControllerDistance;
         foreach (var cel in GetComponentsInChildren<ColliderEventsListener>())
             cel.OnTriggerEnterAction += Collect;
@@ -114,19 +117,21 @@ public class RobotsCoinCollectorController : MonoBehaviour
     public void Introduce()
     {
         _introducingSequence.Play();
-        IsCollecting = true;
+        IsCollecting = false;
     }
 
     public void StartCollecting()
     {
         _introducingSequence.Kill();
-        StartCoroutine(CollectorCoroutine());
+        if (_collectorCor == null)
+            _collectorCor = StartCoroutine(CollectorCoroutine());
     }
 
     public void Outro()
     {
         IsCollecting = false;
         StopCoroutine(CollectorCoroutine());
+        _collectorCor = null;
         _outroSequence.Play();
     }
 
@@ -137,12 +142,17 @@ public class RobotsCoinCollectorController : MonoBehaviour
     private void SetupCoreo()
     {
         _introducingSequence = DOTween.Sequence();
-        _introducingSequence.OnComplete(() => IsCollecting = true);
+        _introducingSequence.OnComplete(() =>
+        {
+            IsCollecting = true;
+            if (_collectorCor == null)
+                _collectorCor = StartCoroutine(CollectorCoroutine());
+        });
         _introducingSequence.OnKill(() =>
         {
             IsCollecting = true;
-            _leftRobot.transform.position = _leftRobot.transform.position;
-            _rightRobot.transform.position = _rightRobot.transform.position;
+            if (_collectorCor == null)
+                _collectorCor = StartCoroutine(CollectorCoroutine());
         });
         _introducingSequence.AppendCallback(() => _idleAudioSource.ForEach(source => source.Play()));
         _introducingSequence.AppendInterval(.5f);
@@ -153,7 +163,6 @@ public class RobotsCoinCollectorController : MonoBehaviour
         _introducingSequence.AppendInterval(1.5f);
         _introducingSequence.Append(_leftRobot.transform.DOLocalRotate(new Vector3(0, 90, 0), .8f));
         _introducingSequence.Join(_rightRobot.transform.DOLocalRotate(new Vector3(0, 90, 0), .8f));
-        _introducingSequence.AppendCallback(StartCollecting);
         _introducingSequence.Pause();
 
         _outroSequence = DOTween.Sequence();
@@ -190,11 +199,15 @@ public class RobotsCoinCollectorController : MonoBehaviour
 
     IEnumerator CollectorCoroutine()
     {
-        while (!IsCollecting) yield return null;
+        while (!IsCollecting || _introducingSequence.IsPlaying()) yield return null;
 
         yield return new WaitForFixedUpdate();
-        //yield return new WaitForSeconds(2);
+
+        _leftRobot.position = _lastLeftRobotPosition;
+        _leftRobot.position = _lastRightRobotPosition;
         _leftRobot.rotation = _rightRobot.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
+
+        yield return new WaitForFixedUpdate();
 
         float rayLength = 30;
         int layerMask = LayerMask.GetMask(new[] { "Default" });
@@ -242,8 +255,8 @@ public class RobotsCoinCollectorController : MonoBehaviour
             if (Vector3.Dot(rp - _lastRightRobotPosition, _movingDirection) < 0)
                 rp = p;
 
-            lp.z = Mathf.Min(lp.z+dzL,_robotPositionLimit.Item1.z-0.65f);
-            rp.z = Mathf.Max(rp.z-dzR,_robotPositionLimit.Item2.z+0.65f);
+            lp.z = Mathf.Min(lp.z + dzL, _robotPositionLimit.Item1.z - 0.65f);
+            rp.z = Mathf.Max(rp.z - dzR, _robotPositionLimit.Item2.z + 0.65f);
 
             _leftRobot.DOMove(lp, _robotMoveSmoothing);
             _rightRobot.DOMove(rp, _robotMoveSmoothing);

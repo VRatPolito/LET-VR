@@ -9235,8 +9235,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e0e2936e18e38e42a920b083e215af7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _getLocomotionFromConfigFile: 1
-  _locomotion: 0
+  _getLocomotionFromConfigFile: 0
+  _locomotion: 1
   _playerControllers:
   - {fileID: 298989869}
   - {fileID: 33636196}
@@ -19121,7 +19121,7 @@ PrefabInstance:
     - target: {fileID: 2724447825322628163, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
         type: 3}
       propertyPath: _aheadOfPlayer
-      value: 1.3
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 2724447825322628163, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
         type: 3}
@@ -19352,6 +19352,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4421747656130783197, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.093
+      objectReference: {fileID: 0}
+    - target: {fileID: 4421747656130783197, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.48
       objectReference: {fileID: 0}
     - target: {fileID: 7663259878537561882, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
         type: 3}

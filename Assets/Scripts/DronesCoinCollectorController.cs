@@ -36,14 +36,16 @@ public class DronesCoinCollectorController : MonoBehaviour
     private int _score = 0;
     private float _calibratedControllerDistance = 2;
     private Vector3 _movingDirection;
-    private Vector3 _lastLeftRobotPosition;
-    private Vector3 _lastRightRobotPosition;
+    private Vector3 _lastLeftDronePosition;
+    private Vector3 _lastRightDronePosition;
     private Vector3 _lastPlayerPosition;
     private Tuple<Vector3, Vector3> _robotPositionLimit;
 
     private List<AudioSource> _coinAudioSource, _idleAudioSource;
 
     private Sequence _introducingSequence, _outroSequence;
+    private Coroutine _collectorCor;
+
 
     #endregion
 
@@ -79,6 +81,8 @@ public class DronesCoinCollectorController : MonoBehaviour
         Assert.IsNotNull(_rightCoinRow);
         Assert.IsNotNull(_to);
         Assert.IsNotNull(_coinsCollectedVisualizerText);
+        IsCollecting = false;
+
         _calibratedControllerDistance = LocomotionManager.Instance.CalibrationData.ControllerDistance;
         Assert.IsNotNull(_coinsCollectedVisualizerText);
         foreach (var cel in GetComponentsInChildren<ColliderEventsListener>())
@@ -86,8 +90,8 @@ public class DronesCoinCollectorController : MonoBehaviour
 
         _movingDirection = (_to.position - _from.position).normalized;
 
-        _lastLeftRobotPosition = _leftDrone.position;
-        _lastRightRobotPosition = _rightDrone.position;
+        _lastLeftDronePosition = _leftDrone.position;
+        _lastRightDronePosition = _rightDrone.position;
 
         _coinAudioSource = new List<AudioSource>();
         _idleAudioSource = new List<AudioSource>();
@@ -113,19 +117,21 @@ public class DronesCoinCollectorController : MonoBehaviour
     public void Introduce()
     {
         _introducingSequence.Play();
-        IsCollecting = true;
+        IsCollecting = false;
     }
 
     public void StartCollecting()
     {
         _introducingSequence.Kill();
-        StartCoroutine(CollectorCoroutine());
+        if (_collectorCor == null)
+            _collectorCor = StartCoroutine(CollectorCoroutine());
     }
 
     public void Outro()
     {
         IsCollecting = false;
         StopCoroutine(CollectorCoroutine());
+        _collectorCor = null;
         _outroSequence.Play();
     }
 
@@ -137,11 +143,17 @@ public class DronesCoinCollectorController : MonoBehaviour
     {
         _introducingSequence = DOTween.Sequence();
         _introducingSequence.OnComplete(() => IsCollecting = true);
+        _introducingSequence.OnComplete(() =>
+        {
+            IsCollecting = true;
+            if (_collectorCor == null)
+                _collectorCor = StartCoroutine(CollectorCoroutine());
+        });
         _introducingSequence.OnKill(() =>
         {
             IsCollecting = true;
-            _leftDrone.transform.position = _leftDrone.transform.position;
-            _rightDrone.transform.position = _rightDrone.transform.position;
+            if (_collectorCor == null)
+                _collectorCor = StartCoroutine(CollectorCoroutine());
         });
         _introducingSequence.AppendCallback(() => _idleAudioSource.ForEach(source => source.Play()));
         _introducingSequence.AppendInterval(.5f);
@@ -152,7 +164,6 @@ public class DronesCoinCollectorController : MonoBehaviour
         _introducingSequence.AppendInterval(1.5f);
         _introducingSequence.Append(_leftDrone.transform.DOLocalRotate(new Vector3(0, 90, 0), .8f));
         _introducingSequence.Join(_rightDrone.transform.DOLocalRotate(new Vector3(0, 90, 0), .8f));
-        _introducingSequence.AppendCallback(StartCollecting);
         _introducingSequence.Pause();
 
         _outroSequence = DOTween.Sequence();
@@ -189,11 +200,15 @@ public class DronesCoinCollectorController : MonoBehaviour
 
     IEnumerator CollectorCoroutine()
     {
-        while (!IsCollecting) yield return null;
+        while (!IsCollecting || _introducingSequence.IsPlaying()) yield return null;
 
         yield return new WaitForFixedUpdate();
-        //yield return new WaitForSeconds(2);
+
+        _leftDrone.position = _lastLeftDronePosition;
+        _rightDrone.position = _lastRightDronePosition;
         _leftDrone.rotation = _rightDrone.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
+
+        yield return new WaitForFixedUpdate();
 
         float rayLength = 30;
         int layerMask = LayerMask.GetMask(new[] { "Default" });
@@ -201,11 +216,11 @@ public class DronesCoinCollectorController : MonoBehaviour
 
         var ray = new Ray(_leftDrone.transform.position, _leftDrone.transform.right * -1);
         Physics.Raycast(ray, out hitL, rayLength, layerMask);
-        Debug.DrawRay(ray.origin, ray.direction, Color.red,5);
+        //Debug.DrawRay(ray.origin, ray.direction, Color.red,5);
 
         ray = new Ray(_rightDrone.transform.position, _rightDrone.transform.right);
         Physics.Raycast(ray, out hitR, rayLength, layerMask);
-        Debug.DrawRay(ray.origin, ray.direction, Color.blue, 5);
+        //Debug.DrawRay(ray.origin, ray.direction, Color.blue, 5);
         _robotPositionLimit = new Tuple<Vector3, Vector3>(hitL.point, hitR.point);
         Debug.Log(_robotPositionLimit);
 
@@ -237,9 +252,9 @@ public class DronesCoinCollectorController : MonoBehaviour
             dzR = Mathf.Lerp(.75f, _from.position.z - _rightCoinRow.position.z,
                 Mathf.InverseLerp(0, _calibratedControllerDistance / 2, rightControllerDistance));
 
-            if (Vector3.Dot(lp - _lastLeftRobotPosition, _movingDirection) < 0)
+            if (Vector3.Dot(lp - _lastLeftDronePosition, _movingDirection) < 0)
                 lp = p;
-            if (Vector3.Dot(rp - _lastRightRobotPosition, _movingDirection) < 0)
+            if (Vector3.Dot(rp - _lastRightDronePosition, _movingDirection) < 0)
                 rp = p;
 
             lp.y = LocomotionManager.Instance.LeftController.position.y;
@@ -251,8 +266,8 @@ public class DronesCoinCollectorController : MonoBehaviour
             _leftDrone.DOMove(lp, _robotMoveSmoothing);
             _rightDrone.DOMove(rp, _robotMoveSmoothing);
 
-            _lastLeftRobotPosition = _leftDrone.position;
-            _lastRightRobotPosition = _rightDrone.position;
+            _lastLeftDronePosition = _leftDrone.position;
+            _lastRightDronePosition = _rightDrone.position;
 
             yield return null;
         }
