@@ -38999,7 +38999,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e0e2936e18e38e42a920b083e215af7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _getLocomotionFromConfigFile: 0
+  _getLocomotionFromConfigFile: 1
   _locomotion: 0
   _playerControllers:
   - {fileID: 427331216}
