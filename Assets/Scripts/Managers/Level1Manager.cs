@@ -77,19 +77,19 @@ public class Level1Manager : UnitySingleton<Level1Manager>
 
         InitChoreographies();
 
-        _startRunningDestination.OnDisabled += (Destination d) =>
+        _startRunningDestination.OnDisabled.AddListener((Destination d) =>
         {
             _runTimer.gameObject.SetActive(true);
             _runTimer.Running = true;
-        };
-        _end.OnDisabled += (Destination d) => { _runTimer.Running = false; };
+        });
+        _end.OnDisabled.AddListener((Destination d) => { _runTimer.Running = false; });
         _runTimer.gameObject.SetActive(false);
 
-        _start.OnDisabled += Instance.StatisticsLogger.StartLogWalking;
-        _stopWalk.OnDisabled += Instance.StatisticsLogger.StopLogWalking;
-        _end.OnDisabled += Instance.StatisticsLogger.StopLogRunning;
-        _doortochase.OnOpenGate += EnableChasingDest;
-        _chasingDest.OnEnabled += (Destination d) => _robotRotateAndPointSequence.Play();
+        _start.OnDisabled.AddListener(Instance.StatisticsLogger.StartLogWalking);
+        _stopWalk.OnDisabled.AddListener(Instance.StatisticsLogger.StopLogWalking);
+        _end.OnDisabled.AddListener(Instance.StatisticsLogger.StopLogRunning);
+        _doortochase.OnOpenGate.AddListener(EnableChasingDest);
+        _chasingDest.OnEnabled.AddListener((Destination d) => _robotRotateAndPointSequence.Play());
     }
 
 
@@ -152,7 +152,7 @@ public class Level1Manager : UnitySingleton<Level1Manager>
 
     private void EnableChasingDest()
     {
-        _doortochase.OnOpenGate -= EnableChasingDest;
+        _doortochase.OnOpenGate.RemoveListener(EnableChasingDest);
         _chasingDest.gameObject.SetActive(true);
     }
 

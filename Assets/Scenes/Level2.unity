@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.48397493, g: 0.575722, b: 0.6801979, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -521,7 +521,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh139572
+  m_Name: pb_Mesh80186
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -681,7 +681,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh118126
+  m_Name: pb_Mesh80532
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -871,6 +871,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 397cf43b41bda51408d3ea5250dedc26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 1810205597}
 --- !u!1 &85336422
 GameObject:
@@ -21090,9 +21096,39 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114505818614940286, guid: a5b4a34f6cb01374e91ea03d44a0e136,
         type: 3}
+      propertyPath: OnDisabled.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114505818614940286, guid: a5b4a34f6cb01374e91ea03d44a0e136,
+        type: 3}
       propertyPath: Next
       value: 
       objectReference: {fileID: 1280185498}
+    - target: {fileID: 114505818614940286, guid: a5b4a34f6cb01374e91ea03d44a0e136,
+        type: 3}
+      propertyPath: OnDisabled.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114505818614940286, guid: a5b4a34f6cb01374e91ea03d44a0e136,
+        type: 3}
+      propertyPath: OnDisabled.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114505818614940286, guid: a5b4a34f6cb01374e91ea03d44a0e136,
+        type: 3}
+      propertyPath: OnDisabled.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 747482275}
+    - target: {fileID: 114505818614940286, guid: a5b4a34f6cb01374e91ea03d44a0e136,
+        type: 3}
+      propertyPath: OnDisabled.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: AutoFreeze
+      objectReference: {fileID: 0}
+    - target: {fileID: 114505818614940286, guid: a5b4a34f6cb01374e91ea03d44a0e136,
+        type: 3}
+      propertyPath: OnDisabled.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a5b4a34f6cb01374e91ea03d44a0e136, type: 3}
 --- !u!4 &100695579 stripped
@@ -22045,6 +22081,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 397cf43b41bda51408d3ea5250dedc26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 940299292}
 --- !u!65 &109337217
 BoxCollider:
@@ -22084,6 +22126,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2c8cacd9ad67444a8b0a00f13a96d69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 1037561265}
 --- !u!1 &129000588 stripped
 GameObject:
@@ -22109,6 +22157,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be748f821c4575a4aba5c64bc79bdf66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 289040480}
   _item: {fileID: 1331834416}
 --- !u!4 &160096587 stripped
@@ -22400,6 +22454,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 397cf43b41bda51408d3ea5250dedc26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 667831329}
 --- !u!1001 &179894063
 PrefabInstance:
@@ -28249,6 +28309,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 397cf43b41bda51408d3ea5250dedc26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 0}
 --- !u!1 &289040480 stripped
 GameObject:
@@ -28274,6 +28340,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be748f821c4575a4aba5c64bc79bdf66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 676913597}
   _item: {fileID: 1331834405}
 --- !u!1 &290817719
@@ -28860,6 +28932,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 397cf43b41bda51408d3ea5250dedc26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 172939120}
 --- !u!43 &399302641
 Mesh:
@@ -38261,6 +38339,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 397cf43b41bda51408d3ea5250dedc26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 0}
 --- !u!21 &668122012
 Material:
@@ -38469,6 +38553,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be748f821c4575a4aba5c64bc79bdf66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 709414433}
   _item: {fileID: 1331834407}
 --- !u!1 &709414433 stripped
@@ -38495,6 +38585,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be748f821c4575a4aba5c64bc79bdf66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 1087036121}
   _item: {fileID: 1331834410}
 --- !u!1001 &713690433
@@ -38616,6 +38712,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 397cf43b41bda51408d3ea5250dedc26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 391047816}
 --- !u!21 &723017282
 Material:
@@ -43875,6 +43977,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 397cf43b41bda51408d3ea5250dedc26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 1680037867}
 --- !u!65 &940299295
 BoxCollider:
@@ -43896,7 +44004,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh139710
+  m_Name: pb_Mesh80324
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -44347,6 +44455,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf2d08b322ad7ca46befdf07364288c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 747482275}
+        m_MethodName: AutoFreeze
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 774544943}
 --- !u!1 &1038687984
 GameObject:
@@ -45181,6 +45306,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be748f821c4575a4aba5c64bc79bdf66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 747482275}
+        m_MethodName: AutoFreeze
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 128438161}
   _item: {fileID: 1331834412}
 --- !u!1 &1101364948
@@ -56583,6 +56725,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1918707143519122, guid: a96e20f031f0f3942a6b1e525137de92, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 65372361913154154, guid: a96e20f031f0f3942a6b1e525137de92,
         type: 3}
       propertyPath: m_Size.x
@@ -56665,10 +56811,6 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1918707143519122, guid: a96e20f031f0f3942a6b1e525137de92, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1034674543356360, guid: a96e20f031f0f3942a6b1e525137de92, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
@@ -56682,7 +56824,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh117524
+  m_Name: pb_Mesh79930
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -57324,7 +57466,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh118148
+  m_Name: pb_Mesh80554
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -59802,6 +59944,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 397cf43b41bda51408d3ea5250dedc26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 747482275}
+        m_MethodName: AutoFreeze
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 0}
 --- !u!1 &1663138418
 GameObject:
@@ -59844,7 +60003,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh117540
+  m_Name: pb_Mesh79946
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -60162,6 +60321,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 397cf43b41bda51408d3ea5250dedc26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 0}
 --- !u!1001 &1680037865
 PrefabInstance:
@@ -60245,6 +60410,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 397cf43b41bda51408d3ea5250dedc26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 0}
 --- !u!1 &1711041242
 GameObject:
@@ -61738,6 +61909,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be748f821c4575a4aba5c64bc79bdf66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 129000588}
   _item: {fileID: 1331834404}
 --- !u!1001 &1827680301
@@ -69095,7 +69272,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh118090
+  m_Name: pb_Mesh80496
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -69660,7 +69837,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh117636
+  m_Name: pb_Mesh80042
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -69820,7 +69997,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh117650
+  m_Name: pb_Mesh80056
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -70757,7 +70934,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh117968
+  m_Name: pb_Mesh80374
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2

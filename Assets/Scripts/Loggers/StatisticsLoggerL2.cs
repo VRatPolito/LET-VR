@@ -152,12 +152,12 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
         WriteToCSV("STL", values, 4);
         if (Level2Manager.Instance.StartHalfSlope.gameObject.activeSelf)
         {
-            Level2Manager.Instance.StartHalfSlope.OnDisabled -= StartLogHalfSlope;
+            Level2Manager.Instance.StartHalfSlope.OnDisabled.RemoveListener(StartLogHalfSlope);
             Level2Manager.Instance.StartHalfSlope.gameObject.SetActive(false);
         }
         else if (Level2Manager.Instance.StartHalfStairs.gameObject.activeSelf)
         {
-            Level2Manager.Instance.StartHalfStairs.OnDisabled -= StartLogHalfStairs;
+            Level2Manager.Instance.StartHalfStairs.OnDisabled.RemoveListener(StartLogHalfStairs);
             Level2Manager.Instance.StartHalfStairs.gameObject.SetActive(false);
         }
 

@@ -26,7 +26,7 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
     [SerializeField] private bool _getLocomotionFromConfigFile = true;
     [SerializeField] private ControllerType _locomotion;
     [SerializeField] private List<Transform> _playerControllers;
-
+    [SerializeField] private bool _autoFreezable = true;
     [SerializeField] private KeyCode _freezePalyerKeyCode = KeyCode.F;
     //[Expandable]
     [SerializeField] private LocomotionCalibrationData _calibrationData;
@@ -43,7 +43,7 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
     #endregion
 
     #region Properties
-
+    public bool IsAutoFreezable { get { return _autoFreezable; } private set { _autoFreezable = value; } }
     public float CurrentPlayerSpeed { get; private set; }
     public Transform CurrentPlayerController { get; private set; }
     public Transform LeftController { get; private set; }
@@ -189,8 +189,22 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
     #endregion
 
     #region Public Methods
+    public void AutoFreeze()
+    {
+        if(_autoFreezable)
+            IsPlayerFreezed = true;
+    }
 
-    public void StartLocomotion()
+    public void StartLocomotionPublic()
+    {
+        if (!IsPlayerFreezed)
+            StartLocomotion();
+    }
+    public void StopLocomotionPublic()
+    {
+        StopLocomotion();
+    }
+    void StartLocomotion()
     {
         if (CurrentPlayerController == null) return;
         switch (Locomotion)
@@ -216,7 +230,7 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
                 break;
         }
     }
-    public void StopLocomotion()
+    void StopLocomotion()
     {
         if (CurrentPlayerController == null) return;
         switch (Locomotion)

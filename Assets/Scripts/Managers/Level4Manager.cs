@@ -55,18 +55,19 @@ public class Level4Manager : UnitySingleton<Level4Manager>
         Assert.IsNotNull(StatisticsLogger);
 
 
-        _agilityStart.OnDisabled += (Destination d) => { StatisticsLogger.StartLogAgility(); };
-        _agilityEnd.OnDisabled += (Destination d) =>
+        _agilityStart.OnDisabled.AddListener((Destination d) => { StatisticsLogger.StartLogAgility(); });
+        _agilityEnd.OnDisabled.AddListener((Destination d) =>
         {
             _pOPSystem.GetComponent<ProceduralObstacleSpawnerSystem>().DestroyRenderedElements();
             _pOPSystem.SetActive(false);
             StatisticsLogger.StopLogAgility();
-        };
-        _headShooterStart.OnDisabled += OnHeadShooterStartOnDisabled;
+        });
+        _headShooterStart.OnDisabled.AddListener(OnHeadShooterStartOnDisabled);
         _headShooter.OnLastBulletExpired += OnLastBulletHeadShooterBulletExpired;
+        _headShooter.OnLastBulletExpired += LocomotionManager.Instance.AutoFreeze;
         _headShooter.OnShuttedDown += HeadShooterOnShuttedDown;
 
-        _bodyShooterStart.OnDisabled += OnBodyShooterStart;
+        _bodyShooterStart.OnDisabled.AddListener(OnBodyShooterStart);
         _bodyShooter.OnLastBulletExpired += OnLastBulletBodyShooterBulletExpired;
     }
 
@@ -95,7 +96,7 @@ public class Level4Manager : UnitySingleton<Level4Manager>
     private void OnHeadShooterStartOnDisabled(Destination d)
     {
         _headShooter.enabled = true;
-        LocomotionManager.Instance.StopLocomotion();
+        LocomotionManager.Instance.StopLocomotionPublic();
         switch(LocomotionManager.Instance.Locomotion)
         {
             case ControllerType.ArmSwing:
@@ -128,7 +129,7 @@ public class Level4Manager : UnitySingleton<Level4Manager>
 
         _jailBalcony.GetComponent<Collider>().enabled = false;
         _jailBalcony.transform.DOMoveY(_jailBalcony.transform.position.y - 2, 5);
-        LocomotionManager.Instance.StartLocomotion();
+        LocomotionManager.Instance.StartLocomotionPublic();
         switch (LocomotionManager.Instance.Locomotion)
         {
             case ControllerType.ArmSwing:

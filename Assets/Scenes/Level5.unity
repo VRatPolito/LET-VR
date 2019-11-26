@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.48397493, g: 0.575722, b: 0.6801979, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2172,6 +2172,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 397cf43b41bda51408d3ea5250dedc26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 1642378764}
 --- !u!65 &219271261
 BoxCollider:
@@ -2359,7 +2365,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh206460
+  m_Name: pb_Mesh88142
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -2553,7 +2559,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh206824
+  m_Name: pb_Mesh88428
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -3364,7 +3370,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh206252
+  m_Name: pb_Mesh87990
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -3641,7 +3647,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh206502
+  m_Name: pb_Mesh88182
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -4189,6 +4195,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b309536b44327004390f4a261cfa2e98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnOpenGate:
+    m_PersistentCalls:
+      m_Calls: []
+  OnOpenGateFirstTime:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1627850430}
+        m_MethodName: AutoFreeze
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnCloseGate:
+    m_PersistentCalls:
+      m_Calls: []
+  DoorClosedPermanently:
+    m_PersistentCalls:
+      m_Calls: []
   _triggerCollider: {fileID: 1317276621}
   AutoClose: 0
   _sensorEnabled: 1
@@ -4658,9 +4687,39 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8163946071741379355, guid: 19e6f41aaf7e60c4ba0403ac298c720f,
         type: 3}
+      propertyPath: OnDisabled.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163946071741379355, guid: 19e6f41aaf7e60c4ba0403ac298c720f,
+        type: 3}
       propertyPath: Next
       value: 
       objectReference: {fileID: 4020192612930475583}
+    - target: {fileID: 8163946071741379355, guid: 19e6f41aaf7e60c4ba0403ac298c720f,
+        type: 3}
+      propertyPath: OnDisabled.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163946071741379355, guid: 19e6f41aaf7e60c4ba0403ac298c720f,
+        type: 3}
+      propertyPath: OnDisabled.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163946071741379355, guid: 19e6f41aaf7e60c4ba0403ac298c720f,
+        type: 3}
+      propertyPath: OnDisabled.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1627850430}
+    - target: {fileID: 8163946071741379355, guid: 19e6f41aaf7e60c4ba0403ac298c720f,
+        type: 3}
+      propertyPath: OnDisabled.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: AutoFreeze
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163946071741379355, guid: 19e6f41aaf7e60c4ba0403ac298c720f,
+        type: 3}
+      propertyPath: OnDisabled.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 19e6f41aaf7e60c4ba0403ac298c720f, type: 3}
 --- !u!114 &741211896 stripped
@@ -5027,13 +5086,13 @@ PrefabInstance:
       propertyPath: m_Shadows.m_Type
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 6581012, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 142944, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 6581012, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
@@ -7448,7 +7507,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh206916
+  m_Name: pb_Mesh88520
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -7768,6 +7827,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b309536b44327004390f4a261cfa2e98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnOpenGate:
+    m_PersistentCalls:
+      m_Calls: []
+  OnOpenGateFirstTime:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1627850430}
+        m_MethodName: AutoFreeze
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnCloseGate:
+    m_PersistentCalls:
+      m_Calls: []
+  DoorClosedPermanently:
+    m_PersistentCalls:
+      m_Calls: []
   _triggerCollider: {fileID: 643722166}
   AutoClose: 0
   _sensorEnabled: 1
@@ -8168,6 +8250,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 397cf43b41bda51408d3ea5250dedc26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 2143266416}
 --- !u!65 &1235266203
 BoxCollider:
@@ -8749,13 +8837,13 @@ PrefabInstance:
       propertyPath: m_Shadows.m_Type
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 6581012, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 142944, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 6581012, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
@@ -8975,6 +9063,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe98b765e9afb6d4c97147d10d4f717c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnOpenGate:
+    m_PersistentCalls:
+      m_Calls: []
+  OnOpenGateFirstTime:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1627850430}
+        m_MethodName: AutoFreeze
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnCloseGate:
+    m_PersistentCalls:
+      m_Calls: []
+  DoorClosedPermanently:
+    m_PersistentCalls:
+      m_Calls: []
   _triggerCollider: {fileID: 1887940359}
   AutoClose: 0
   _sensorEnabled: 1
@@ -9244,6 +9355,7 @@ MonoBehaviour:
   - {fileID: 1918503169}
   - {fileID: 1232009231}
   - {fileID: 1137977516}
+  _autoFreezable: 1
   _freezePalyerKeyCode: 102
   _calibrationData:
     _controllerDistance: 1.5
@@ -9354,13 +9466,13 @@ PrefabInstance:
       propertyPath: m_Shadows.m_Type
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 6581012, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 142944, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 6581012, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
@@ -9414,6 +9526,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 397cf43b41bda51408d3ea5250dedc26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 2123561279}
 --- !u!65 &1642378767
 BoxCollider:
@@ -16066,13 +16184,13 @@ PrefabInstance:
       propertyPath: m_Shadows.m_Type
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 6581012, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 142944, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 6581012, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c0a6df65fcfba243abb2cf9260b869f, type: 3}
@@ -18735,6 +18853,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 397cf43b41bda51408d3ea5250dedc26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 1235266200}
 --- !u!65 &2123561282
 BoxCollider:
@@ -18935,6 +19059,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 397cf43b41bda51408d3ea5250dedc26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 0}
 --- !u!65 &2143266418
 BoxCollider:
@@ -19598,6 +19728,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5926bac4ec3c1a42a230bb04dc5f056, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnOpenGate:
+    m_PersistentCalls:
+      m_Calls: []
+  OnOpenGateFirstTime:
+    m_PersistentCalls:
+      m_Calls: []
+  OnCloseGate:
+    m_PersistentCalls:
+      m_Calls: []
+  DoorClosedPermanently:
+    m_PersistentCalls:
+      m_Calls: []
   _triggerCollider: {fileID: 4020192612298995288}
   AutoClose: 1
   _sensorEnabled: 0
@@ -20228,6 +20370,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 397cf43b41bda51408d3ea5250dedc26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1627850430}
+        m_MethodName: AutoFreeze
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 0}
 --- !u!1 &4020192614219666019
 GameObject:

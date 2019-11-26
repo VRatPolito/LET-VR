@@ -64,23 +64,23 @@ public class Level2Manager : UnitySingleton<Level2Manager>
         Assert.IsNotNull(_pathController);
 
 
-        StartDest.OnDisabled += StartGrow;
-        BackEnd.OnDisabled += StatisticsLogger.StopLogBackWalking;
-        CurvedStart.OnDisabled += StatisticsLogger.StartLogCurvedWalking;
-        CurvedStart.OnDisabled += AttachLight;
-        CurvedEnd.OnDisabled += StatisticsLogger.StopLogCurvedWalking;
-        CurvedEnd.OnDisabled += DetachLight;
-        StartStairs.OnDisabled += StatisticsLogger.StartLogStair;
-        EndStairs.OnDisabled += StatisticsLogger.StopLogStair;
-        StarSlope.OnDisabled += StatisticsLogger.StartLogSlope;
-        EndSlope.OnDisabled += StatisticsLogger.StopLogSlope;
-        StartHalfStairs.OnDisabled += StatisticsLogger.StartLogHalfStairs;
-        StartHalfSlope.OnDisabled += StatisticsLogger.StartLogHalfSlope;
-        EndStairsSlope.OnDisabled += StatisticsLogger.StopLogStairsSlope;
-        FearStart.OnDisabled += StatisticsLogger.StartLogFear;
-        FearEnd.OnDisabled += OpenFearDoor;
-        FearEnd.OnDisabled += StatisticsLogger.StopLogFear;
-        LevelEnd.OnDisabled += EndGame;
+        StartDest.OnDisabled.AddListener(StartGrow);
+        BackEnd.OnDisabled.AddListener(StatisticsLogger.StopLogBackWalking);
+        CurvedStart.OnDisabled.AddListener(StatisticsLogger.StartLogCurvedWalking);
+        CurvedStart.OnDisabled.AddListener(AttachLight);
+        CurvedEnd.OnDisabled.AddListener(StatisticsLogger.StopLogCurvedWalking);
+        CurvedEnd.OnDisabled.AddListener(DetachLight);
+        StartStairs.OnDisabled.AddListener(StatisticsLogger.StartLogStair);
+        EndStairs.OnDisabled.AddListener(StatisticsLogger.StopLogStair);
+        StarSlope.OnDisabled.AddListener(StatisticsLogger.StartLogSlope);
+        EndSlope.OnDisabled.AddListener(StatisticsLogger.StopLogSlope);
+        StartHalfStairs.OnDisabled.AddListener(StatisticsLogger.StartLogHalfStairs);
+        StartHalfSlope.OnDisabled.AddListener(StatisticsLogger.StartLogHalfSlope);
+        EndStairsSlope.OnDisabled.AddListener(StatisticsLogger.StopLogStairsSlope);
+        FearStart.OnDisabled.AddListener(StatisticsLogger.StartLogFear);
+        FearEnd.OnDisabled.AddListener(OpenFearDoor);
+        FearEnd.OnDisabled.AddListener(StatisticsLogger.StopLogFear);
+        LevelEnd.OnDisabled.AddListener(EndGame);
     }
 
     private void EndGame(Destination d)

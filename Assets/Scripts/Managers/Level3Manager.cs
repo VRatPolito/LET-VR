@@ -54,26 +54,26 @@ public class Level3Manager : UnitySingleton<Level3Manager>
         Assert.IsNotNull(StatisticsLogger);
         Assert.IsNotNull(_lookAtMe);
 
-        StartUnc.OnDisabled += StatisticsLogger.StartLogUncoupledWalking;
-        EndUnc.OnDisabled += d => _lookAtMe.End();
-        EndUnc.OnDisabled += StatisticsLogger.StopLogUncoupledWalking;
-        StartPointHandFar.OnDisabled += StatisticsLogger.StartLogPointWalking;
-        StartPointHandFar.OnDisabled += StartRobotT2;
-        EndPointHandFar.OnDisabled += StatisticsLogger.StopLogPointWalking;
-        EndPointHandFar.OnDisabled += StopRobotT2;
-        StartWavingHand.OnDisabled += StatisticsLogger.StartLogWaveHandWalking;
-        StartWavingHand.OnDisabled += StartDronesT3;       
-        EndPointWavingHand.OnDisabled += EndGame;
+        StartUnc.OnDisabled.AddListener(StatisticsLogger.StartLogUncoupledWalking);
+        EndUnc.OnDisabled.AddListener(d => _lookAtMe.End());
+        EndUnc.OnDisabled.AddListener(StatisticsLogger.StopLogUncoupledWalking);
+        StartPointHandFar.OnDisabled.AddListener(StatisticsLogger.StartLogPointWalking);
+        StartPointHandFar.OnDisabled.AddListener(StartRobotT2);
+        EndPointHandFar.OnDisabled.AddListener(StatisticsLogger.StopLogPointWalking);
+        EndPointHandFar.OnDisabled.AddListener(StopRobotT2);
+        StartWavingHand.OnDisabled.AddListener(StatisticsLogger.StartLogWaveHandWalking);
+        StartWavingHand.OnDisabled.AddListener(StartDronesT3);       
+        EndPointWavingHand.OnDisabled.AddListener(EndGame);
 
-        Task1ToTask2DoorController.OnOpenGate += () =>
+        Task1ToTask2DoorController.OnOpenGate.AddListener(() =>
         {
             if (RobotsCoinCollectorController != null) RobotsCoinCollectorController.Introduce();
-        };
+        });
 
-        T2ToT3DoorController.OnOpenGate += () =>
+        T2ToT3DoorController.OnOpenGate.AddListener(() =>
         {
             if (DronesCoinCollectorController != null) DronesCoinCollectorController.Introduce();
-        };
+        });
     }
 
     private void StartRobotT2(Destination d)

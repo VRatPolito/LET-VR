@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using PrattiToolkit;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class DoorController : MonoBehaviour
 {
     #region Events
 
-    public event Action OnOpenGate,
+    public UnityEvent   OnOpenGate,
+                        OnOpenGateFirstTime,
                         OnCloseGate,
                         DoorClosedPermanently;
 
@@ -29,6 +31,7 @@ public class DoorController : MonoBehaviour
     protected Animator _animator;
     protected ColliderEventsListener _triggerEventsListener;
     protected bool _playerInRange = false;
+    private bool _firstTime = true;
 
     #endregion
 
@@ -95,7 +98,7 @@ public class DoorController : MonoBehaviour
     protected virtual void Start()
     {
         var b = _animator.GetBehaviours<AdvancedStateMachineBehaviour>();
-        b[0].StatePlayed += z => { DoorClosedPermanently.RaiseEvent(); };
+        b[0].StatePlayed += z => { DoorClosedPermanently?.Invoke(); };
     }
 
     protected virtual void Update()
@@ -112,9 +115,16 @@ public class DoorController : MonoBehaviour
     {
         _animator.SetBool("character_nearby", openOrClose);
         if (openOrClose)
-            OnOpenGate.RaiseEvent();
+        {
+            OnOpenGate?.Invoke();
+            if(_firstTime)
+            {
+                OnOpenGateFirstTime?.Invoke();
+                _firstTime = false;
+            }
+        }
         else
-            OnCloseGate.RaiseEvent();
+            OnCloseGate?.Invoke();
     }
 
     #endregion

@@ -2,10 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+
+[Serializable]
+public class DestinationEvent  : UnityEvent<Destination> {}
 
 public class Destination : MonoBehaviour {
 
-    public event Action<Destination> OnDisabled, OnEnabled;
+    public DestinationEvent OnDisabled, OnEnabled;
     public GameObject Next;
     // Use this for initialization
     public virtual void Start () {
@@ -21,12 +25,10 @@ public class Destination : MonoBehaviour {
     {
         if(Next != null)
             Next.SetActive(true);
-        if(OnDisabled != null)
-            OnDisabled.Invoke(this);
+        OnDisabled?.Invoke(this);
     }
     public virtual void OnEnable()
     {
-        if (OnEnabled != null)
-            OnEnabled.Invoke(this);
+        OnEnabled?.Invoke(this);
     }
 }

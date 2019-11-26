@@ -73,19 +73,19 @@ public class Level5Manager : UnitySingleton<Level5Manager>
         Assert.IsNotNull(Link);
         _tower = Cyan.GetComponent<TowerManager>();
 
-        StartGrab1.OnDisabled += StatisticsLogger.StartLogGrabbing;
-        StartGrab2.OnDisabled += StatisticsLogger.StartLogGrabbing;
-        StartGrab3.OnDisabled += StatisticsLogger.StartLogGrabbing;
+        StartGrab1.OnDisabled.AddListener(StatisticsLogger.StartLogGrabbing);
+        StartGrab2.OnDisabled.AddListener(StatisticsLogger.StartLogGrabbing);
+        StartGrab3.OnDisabled.AddListener(StatisticsLogger.StartLogGrabbing);
 
-        EndGrab1.OnDisabled += StatisticsLogger.StopLogGrabbing;
-        EndGrab2.OnDisabled += StatisticsLogger.StopLogGrabbing;
-        EndGrab3.OnDisabled += StatisticsLogger.StopLogGrabbing;
-        Red.OnDisabled += CountSnap;
-        Green.OnDisabled += CountSnap;
-        Blue.OnDisabled += CountSnap;
-        StartManipulation.OnDisabled += StatisticsLogger.StartLogManipulation;
-        EndManipulation.OnDisabled += StopManipulation;
-        StartMovingInteraction.OnDisabled += StartMovingInteractionLevel;
+        EndGrab1.OnDisabled.AddListener(StatisticsLogger.StopLogGrabbing);
+        EndGrab2.OnDisabled.AddListener(StatisticsLogger.StopLogGrabbing);
+        EndGrab3.OnDisabled.AddListener(StatisticsLogger.StopLogGrabbing);
+        Red.OnDisabled.AddListener(CountSnap);
+        Green.OnDisabled.AddListener(CountSnap);
+        Blue.OnDisabled.AddListener(CountSnap);
+        StartManipulation.OnDisabled.AddListener(StatisticsLogger.StartLogManipulation);
+        EndManipulation.OnDisabled.AddListener(StopManipulation);
+        StartMovingInteraction.OnDisabled.AddListener(StartMovingInteractionLevel);
         _drone.PlayerInRange.AddListener(PlayerInRange);
         _drone.PlayerInRange.AddListener(StatisticsLogger.PlayerInRange);
         _drone.PlayerOutRange.AddListener(StatisticsLogger.PlayerOutRange);
@@ -107,7 +107,7 @@ public class Level5Manager : UnitySingleton<Level5Manager>
 
     private void PlayerInRange()
     {
-        if(_firstTime)
+        if (_firstTime)
         {
             StatisticsLogger.StartLogMovingInteraction();
             _firstTime = false;
@@ -146,13 +146,16 @@ public class Level5Manager : UnitySingleton<Level5Manager>
         var antifall = Link.transform.GetChildRecursive("AntiFalling").gameObject;
         foreach (var c in antifall.GetComponents<BoxCollider>())
             c.enabled = true;
-        
-        LocomotionManager.Instance.StopLocomotion();
+
+        if(!LocomotionManager.Instance.IsAutoFreezable)
+            LocomotionManager.Instance.StopLocomotionPublic();
+
         LocomotionManager.Instance.CurrentPlayerController.parent = Link.transform;
         Link.transform.DOMoveY(3.5f, 5).SetEase(Ease.InOutQuad).OnComplete(() =>
         {
             LocomotionManager.Instance.CurrentPlayerController.parent = null;
-            LocomotionManager.Instance.StartLocomotion();
+            if (!LocomotionManager.Instance.IsAutoFreezable)
+                LocomotionManager.Instance.StartLocomotionPublic();
             antifall.SetActive(false);
         });
     }
@@ -165,6 +168,11 @@ public class Level5Manager : UnitySingleton<Level5Manager>
                 Invoke("Quit", 5);
         };
         StatisticsLogger.StopLogMovingInteraction();
+    }
+
+    private void Quit()
+    {
+        Application.Quit();
     }
 
     #endregion

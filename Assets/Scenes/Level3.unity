@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.48397493, g: 0.575722, b: 0.6801979, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5528,9 +5528,39 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114505818614940286, guid: a5b4a34f6cb01374e91ea03d44a0e136,
         type: 3}
+      propertyPath: OnDisabled.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114505818614940286, guid: a5b4a34f6cb01374e91ea03d44a0e136,
+        type: 3}
       propertyPath: Next
       value: 
       objectReference: {fileID: 1150492584}
+    - target: {fileID: 114505818614940286, guid: a5b4a34f6cb01374e91ea03d44a0e136,
+        type: 3}
+      propertyPath: OnDisabled.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114505818614940286, guid: a5b4a34f6cb01374e91ea03d44a0e136,
+        type: 3}
+      propertyPath: OnDisabled.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114505818614940286, guid: a5b4a34f6cb01374e91ea03d44a0e136,
+        type: 3}
+      propertyPath: OnDisabled.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 315638811}
+    - target: {fileID: 114505818614940286, guid: a5b4a34f6cb01374e91ea03d44a0e136,
+        type: 3}
+      propertyPath: OnDisabled.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: AutoFreeze
+      objectReference: {fileID: 0}
+    - target: {fileID: 114505818614940286, guid: a5b4a34f6cb01374e91ea03d44a0e136,
+        type: 3}
+      propertyPath: OnDisabled.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a5b4a34f6cb01374e91ea03d44a0e136, type: 3}
 --- !u!114 &166153562 stripped
@@ -14262,9 +14292,39 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114505818614940286, guid: a5b4a34f6cb01374e91ea03d44a0e136,
         type: 3}
+      propertyPath: OnDisabled.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114505818614940286, guid: a5b4a34f6cb01374e91ea03d44a0e136,
+        type: 3}
       propertyPath: Next
       value: 
       objectReference: {fileID: 789130224}
+    - target: {fileID: 114505818614940286, guid: a5b4a34f6cb01374e91ea03d44a0e136,
+        type: 3}
+      propertyPath: OnDisabled.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114505818614940286, guid: a5b4a34f6cb01374e91ea03d44a0e136,
+        type: 3}
+      propertyPath: OnDisabled.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114505818614940286, guid: a5b4a34f6cb01374e91ea03d44a0e136,
+        type: 3}
+      propertyPath: OnDisabled.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 315638811}
+    - target: {fileID: 114505818614940286, guid: a5b4a34f6cb01374e91ea03d44a0e136,
+        type: 3}
+      propertyPath: OnDisabled.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: AutoFreeze
+      objectReference: {fileID: 0}
+    - target: {fileID: 114505818614940286, guid: a5b4a34f6cb01374e91ea03d44a0e136,
+        type: 3}
+      propertyPath: OnDisabled.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a5b4a34f6cb01374e91ea03d44a0e136, type: 3}
 --- !u!114 &1139935130 stripped
@@ -22708,8 +22768,8 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: 69.34698, y: 0.1, z: 19.996494}
-  - {x: 88.02066, y: 0.1, z: 19.996494}
+  - {x: 69.34698, y: 0.100000024, z: 19.996494}
+  - {x: 88.02066, y: 0.100000024, z: 19.996494}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 0.20433933
