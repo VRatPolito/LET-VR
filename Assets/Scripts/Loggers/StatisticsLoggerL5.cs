@@ -27,7 +27,11 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
     private float _timeStart, _timeStop;
     private uint  _grabtask;
     private bool _grabbing;
+    private bool _movingInteraction;
     private int _itemCollisions;
+	private bool _playerInside = false;
+	private uint _counter = 0;
+	private uint _inside = 0;
     #endregion
 
     #region Properties
@@ -77,16 +81,20 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
     }
     public void StartLogMovingInteraction()
     {
+        _movingInteraction = true;
         _timeStart = Time.time;
-        //times player gets out of range
-        Collisions = 0;
         _errors = 0;
 
         StartMasterLog("MI");
     }
-    public void LogPlayerOutRange()
+    public void PlayerOutRange()
     {
-        Collisions++;
+		_playerInside = false;
+    }  
+	
+	public void PlayerInRange()
+    {
+		_playerInside = true;
     }
 
     public void LogInteractionError()
@@ -95,7 +103,7 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
     }
     private void LogDrop(GenericItem i)
     {
-        if (_grabbing)
+        if (_grabbing || _movingInteraction)
             _errors++;
     }
     public override void LogCollisions(HitType type)
@@ -163,12 +171,13 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
 
     public void StopLogMovingInteraction()
     {
+        _movingInteraction = false;
         _timeStop = Time.time - _timeStart;
         var values = new List<string>
         {
             "" + _timeStop,
             "" + _errors,
-            "" + Collisions,       //times player gets out of range
+            "" + GetPercTimeInside()       //times player gets out of range
         };
         WriteToCSV("MI", values, 3);
         StopMasterLog();
@@ -180,7 +189,12 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
 
     #endregion
 
-    #region Helper Methods      
+    #region Helper Methods     
+    private float GetPercTimeInside()
+    {
+        if (_inside == 0) return 0;
+        return ((float)_inside / (float)(_counter)) * 100;
+    }	
     protected float GetAvgPosSetupPrecision()
     {
         float v = 0.0f;
@@ -237,7 +251,12 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
             _speeds.Add(v);
             _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
         }
-
+		 if (_movingInteraction)
+        {
+            _counter++;
+            if (_playerInside)
+                _inside++;
+        }
 
         base.ComputeStatisticsStep();
     }

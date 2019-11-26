@@ -87,7 +87,8 @@ public class Level5Manager : UnitySingleton<Level5Manager>
         EndManipulation.OnDisabled += StopManipulation;
         StartMovingInteraction.OnDisabled += StartMovingInteractionLevel;
         _drone.PlayerInRange.AddListener(PlayerInRange);
-        _drone.PlayerOutRange.AddListener(StatisticsLogger.LogPlayerOutRange);
+        _drone.PlayerInRange.AddListener(StatisticsLogger.PlayerInRange);
+        _drone.PlayerOutRange.AddListener(StatisticsLogger.PlayerOutRange);
         _plate.InteractionError.AddListener(StatisticsLogger.LogInteractionError);
         _plate.AllInteractionsDone.AddListener(StopDrone);
         _plate.AllInteractionsDone.AddListener(EndLevel);
