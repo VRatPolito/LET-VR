@@ -528,7 +528,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4799242168009822}
-  - {fileID: 4829001374948722}
   - {fileID: 6058986187788768634}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -730,6 +729,7 @@ MonoBehaviour:
   VibrationThreshold: 90
   ManageCharacterController: 1
   KeepLimitAtGlobalZero: 0
+  _debug: 0
   CameraRig: {fileID: 4799242168009822}
   CameraEye: {fileID: 4273075588774084}
   LeftController: {fileID: 114116304637667092}
@@ -919,6 +919,7 @@ Transform:
   - {fileID: 4803709863885154}
   - {fileID: 4697872555308136}
   - {fileID: 4919362887535482}
+  - {fileID: 4829001374948722}
   m_Father: {fileID: 4659074361056676}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1027,14 +1028,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   generalScaleWorldUnitsToCameraRigScale: 0
   generalAutoAdjustFixedTimestep: 1
-  ArmSwingFallBackAvailable: 0
-  ForceArmSwingFallBack: 0
-  FootSwingNavigation: 1
   movementSpeedMultiplier: 1
   _footSwingLegTrackingDevice: 1
   _footSwingButton: 1
   _footSwingMode: 0
-  _armSwingFallBackMode: 3
   _footSwingDirectionMode: 0
   FootSwingControllerToMovementCurve:
     serializedVersion: 2
@@ -1109,8 +1106,8 @@ Transform:
   m_Children:
   - {fileID: 4295553737985428}
   - {fileID: 4235098307655530}
-  m_Father: {fileID: 4659074361056676}
-  m_RootOrder: 1
+  m_Father: {fileID: 4799242168009822}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!111 &111990395523469092
 Animation:
@@ -2166,7 +2163,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4659074361056676}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2463001549456541031
 MeshFilter:
