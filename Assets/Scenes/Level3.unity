@@ -6474,8 +6474,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e0e2936e18e38e42a920b083e215af7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _getLocomotionFromConfigFile: 0
-  _locomotion: 5
+  _getLocomotionFromConfigFile: 1
+  _locomotion: 0
   _playerControllers:
   - {fileID: 194631830}
   - {fileID: 1280543311}
@@ -10481,6 +10481,21 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 65372361913154154, guid: a96e20f031f0f3942a6b1e525137de92,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 0.77467185
+      objectReference: {fileID: 0}
+    - target: {fileID: 65372361913154154, guid: a96e20f031f0f3942a6b1e525137de92,
+        type: 3}
+      propertyPath: m_Center.x
+      value: -1.9585413e-15
+      objectReference: {fileID: 0}
+    - target: {fileID: 65372361913154154, guid: a96e20f031f0f3942a6b1e525137de92,
+        type: 3}
+      propertyPath: m_Center.z
+      value: 0.1910864
+      objectReference: {fileID: 0}
     - target: {fileID: 4309582677578760, guid: a96e20f031f0f3942a6b1e525137de92, type: 3}
       propertyPath: m_LocalPosition.x
       value: 68.25
@@ -10534,21 +10549,6 @@ PrefabInstance:
         type: 3}
       propertyPath: AutoClose
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 65372361913154154, guid: a96e20f031f0f3942a6b1e525137de92,
-        type: 3}
-      propertyPath: m_Size.z
-      value: 0.77467185
-      objectReference: {fileID: 0}
-    - target: {fileID: 65372361913154154, guid: a96e20f031f0f3942a6b1e525137de92,
-        type: 3}
-      propertyPath: m_Center.x
-      value: -1.9585413e-15
-      objectReference: {fileID: 0}
-    - target: {fileID: 65372361913154154, guid: a96e20f031f0f3942a6b1e525137de92,
-        type: 3}
-      propertyPath: m_Center.z
-      value: 0.1910864
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114436960994349900, guid: a96e20f031f0f3942a6b1e525137de92, type: 3}
@@ -11895,6 +11895,21 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 65372361913154154, guid: a96e20f031f0f3942a6b1e525137de92,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 0.77467185
+      objectReference: {fileID: 0}
+    - target: {fileID: 65372361913154154, guid: a96e20f031f0f3942a6b1e525137de92,
+        type: 3}
+      propertyPath: m_Center.x
+      value: -1.9585413e-15
+      objectReference: {fileID: 0}
+    - target: {fileID: 65372361913154154, guid: a96e20f031f0f3942a6b1e525137de92,
+        type: 3}
+      propertyPath: m_Center.z
+      value: 0.1910864
+      objectReference: {fileID: 0}
     - target: {fileID: 4309582677578760, guid: a96e20f031f0f3942a6b1e525137de92, type: 3}
       propertyPath: m_LocalPosition.x
       value: 89.75
@@ -11948,21 +11963,6 @@ PrefabInstance:
         type: 3}
       propertyPath: AutoClose
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 65372361913154154, guid: a96e20f031f0f3942a6b1e525137de92,
-        type: 3}
-      propertyPath: m_Size.z
-      value: 0.77467185
-      objectReference: {fileID: 0}
-    - target: {fileID: 65372361913154154, guid: a96e20f031f0f3942a6b1e525137de92,
-        type: 3}
-      propertyPath: m_Center.x
-      value: -1.9585413e-15
-      objectReference: {fileID: 0}
-    - target: {fileID: 65372361913154154, guid: a96e20f031f0f3942a6b1e525137de92,
-        type: 3}
-      propertyPath: m_Center.z
-      value: 0.1910864
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114436960994349900, guid: a96e20f031f0f3942a6b1e525137de92, type: 3}

@@ -2318,21 +2318,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: 180
       objectReference: {fileID: 0}
-    - target: {fileID: 135879911448141204, guid: 23b331d8a58ac6149b8e80410cf5240a,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 135380030899757722, guid: 23b331d8a58ac6149b8e80410cf5240a,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 208921763936404736, guid: 23b331d8a58ac6149b8e80410cf5240a,
-        type: 3}
-      propertyPath: m_Carve
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 23261738566282764, guid: 23b331d8a58ac6149b8e80410cf5240a,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -2343,6 +2328,21 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 382771153}
+    - target: {fileID: 208921763936404736, guid: 23b331d8a58ac6149b8e80410cf5240a,
+        type: 3}
+      propertyPath: m_Carve
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 135879911448141204, guid: 23b331d8a58ac6149b8e80410cf5240a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 135380030899757722, guid: 23b331d8a58ac6149b8e80410cf5240a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
     - {fileID: 0}
@@ -7970,16 +7970,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3007497752238505983, guid: b5945f92f8ca93e498154bf031c30317,
-        type: 3}
-      propertyPath: m_Radius
-      value: 0.02
-      objectReference: {fileID: 0}
-    - target: {fileID: 9085998704565069559, guid: b5945f92f8ca93e498154bf031c30317,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3007497752387251578, guid: b5945f92f8ca93e498154bf031c30317,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -7990,16 +7980,6 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 982130873}
-    - target: {fileID: 3007497750966608937, guid: b5945f92f8ca93e498154bf031c30317,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3007497752377188286, guid: b5945f92f8ca93e498154bf031c30317,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2164327462032671854, guid: b5945f92f8ca93e498154bf031c30317,
         type: 3}
       propertyPath: _teleportPoints.Array.size
@@ -8035,6 +8015,26 @@ PrefabInstance:
       propertyPath: _teleportPoints.Array.data[5]
       value: 
       objectReference: {fileID: 1999744928}
+    - target: {fileID: 3007497752238505983, guid: b5945f92f8ca93e498154bf031c30317,
+        type: 3}
+      propertyPath: m_Radius
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 9085998704565069559, guid: b5945f92f8ca93e498154bf031c30317,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3007497750966608937, guid: b5945f92f8ca93e498154bf031c30317,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3007497752377188286, guid: b5945f92f8ca93e498154bf031c30317,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b5945f92f8ca93e498154bf031c30317, type: 3}
 --- !u!4 &1232009231 stripped
@@ -9235,8 +9235,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e0e2936e18e38e42a920b083e215af7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _getLocomotionFromConfigFile: 0
-  _locomotion: 1
+  _getLocomotionFromConfigFile: 1
+  _locomotion: 0
   _playerControllers:
   - {fileID: 298989869}
   - {fileID: 33636196}
@@ -18391,16 +18391,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: 180
       objectReference: {fileID: 0}
-    - target: {fileID: 135335520613793780, guid: ce38f897769ae704d9895c265292231a,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 135487635190056380, guid: ce38f897769ae704d9895c265292231a,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 23609467881871334, guid: ce38f897769ae704d9895c265292231a,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -18411,6 +18401,16 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1061148094}
+    - target: {fileID: 135335520613793780, guid: ce38f897769ae704d9895c265292231a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 135487635190056380, guid: ce38f897769ae704d9895c265292231a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
     - {fileID: 0}

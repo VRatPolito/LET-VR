@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.48397493, g: 0.575722, b: 0.6801979, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -38999,7 +38999,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e0e2936e18e38e42a920b083e215af7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _getLocomotionFromConfigFile: 0
+  _getLocomotionFromConfigFile: 1
   _locomotion: 0
   _playerControllers:
   - {fileID: 427331216}
@@ -56583,10 +56583,6 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1918707143519122, guid: a96e20f031f0f3942a6b1e525137de92, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 65372361913154154, guid: a96e20f031f0f3942a6b1e525137de92,
         type: 3}
       propertyPath: m_Size.x
@@ -56660,16 +56656,20 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 0.94672155
       objectReference: {fileID: 0}
-    - target: {fileID: 114436960994349900, guid: a96e20f031f0f3942a6b1e525137de92,
-        type: 3}
-      propertyPath: AutoClose
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1374996212243516, guid: a96e20f031f0f3942a6b1e525137de92, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1034674543356360, guid: a96e20f031f0f3942a6b1e525137de92, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114436960994349900, guid: a96e20f031f0f3942a6b1e525137de92,
+        type: 3}
+      propertyPath: AutoClose
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1918707143519122, guid: a96e20f031f0f3942a6b1e525137de92, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
