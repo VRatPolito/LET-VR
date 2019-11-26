@@ -196,7 +196,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 2
   m_Height: 2
-  m_Radius: 0.25
+  m_Radius: 0.3
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -1617,7 +1617,7 @@ CapsuleCollider:
   m_Radius: 0.3
   m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &4831570720936307009
 GameObject:
   m_ObjectHideFlags: 0
@@ -1889,10 +1889,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1555481234553108784}
     m_Modifications:
-    - target: {fileID: 100000, guid: d5d1c10c359db3248bc83c8df11d0314, type: 3}
-      propertyPath: m_Name
-      value: Arrow
-      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: d5d1c10c359db3248bc83c8df11d0314, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0
@@ -1948,6 +1944,10 @@ PrefabInstance:
     - target: {fileID: 400000, guid: d5d1c10c359db3248bc83c8df11d0314, type: 3}
       propertyPath: m_LocalScale.z
       value: 0.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: d5d1c10c359db3248bc83c8df11d0314, type: 3}
+      propertyPath: m_Name
+      value: Arrow
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d5d1c10c359db3248bc83c8df11d0314, type: 3}
