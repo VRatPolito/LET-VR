@@ -153,7 +153,8 @@ public class Level5Manager : UnitySingleton<Level5Manager>
         if(!LocomotionManager.Instance.IsAutoFreezable)
             LocomotionManager.Instance.StopLocomotionPublic();
 
-        LocomotionManager.Instance.CurrentPlayerController.parent = Link.transform;
+        Link.GetComponent<MakePlayerChild>()._makePlayerChild = true;
+        //LocomotionManager.Instance.CurrentPlayerController.parent = Link.transform;
         Link.transform.DOMoveY(3.5f, 5).SetEase(Ease.InOutQuad).OnComplete(() =>
         {
             LocomotionManager.Instance.CurrentPlayerController.parent = null;
