@@ -604,7 +604,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4805245973122842}
-  - {fileID: 2574132056451054288}
   - {fileID: 5769318393011010162}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -806,6 +805,7 @@ MonoBehaviour:
   VibrationThreshold: 90
   ManageCharacterController: 1
   KeepLimitAtGlobalZero: 0
+  _debug: 0
   CameraRig: {fileID: 4805245973122842}
   CameraEye: {fileID: 4250648592018274}
   LeftController: {fileID: 114161010146535260}
@@ -870,6 +870,7 @@ Transform:
   - {fileID: 4619035086287708}
   - {fileID: 4527666754867092}
   - {fileID: 4601250105788378}
+  - {fileID: 2574132056451054288}
   m_Father: {fileID: 4513388610173514}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1745,8 +1746,8 @@ Transform:
   m_Children:
   - {fileID: 399114004200464210}
   - {fileID: 1644112341493519558}
-  m_Father: {fileID: 4513388610173514}
-  m_RootOrder: 1
+  m_Father: {fileID: 4805245973122842}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!111 &7303353492498851375
 Animation:
@@ -1906,7 +1907,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4513388610173514}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1950786800538410689
 MeshFilter:

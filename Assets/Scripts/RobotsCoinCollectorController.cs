@@ -204,7 +204,7 @@ public class RobotsCoinCollectorController : MonoBehaviour
         yield return new WaitForFixedUpdate();
 
         _leftRobot.position = _lastLeftRobotPosition;
-        _leftRobot.position = _lastRightRobotPosition;
+        _rightRobot.position = _lastRightRobotPosition;
         _leftRobot.rotation = _rightRobot.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
 
         yield return new WaitForFixedUpdate();

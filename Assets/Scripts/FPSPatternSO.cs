@@ -23,6 +23,7 @@ public struct Bullet
     [Range(0, 10)] public float LoadingTime;
     [Range(0, 2)] public float AimingTime;
     [Range(0, 2)] public float CoolDownTime;
+    public int Id;
     //public Color Color;
 
     /// <summary>

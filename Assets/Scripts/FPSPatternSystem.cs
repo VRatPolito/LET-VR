@@ -46,6 +46,7 @@ public class FPSPatternSystem : MonoBehaviour
     private int _hitsCounter = 0;
     private bool _bulletFinished = false;
     private List<GameObject> _spawnedBullets = new List<GameObject>();
+    private List<GameObject> _expiredBullets = new List<GameObject>();
 
     #endregion
 
@@ -149,6 +150,7 @@ public class FPSPatternSystem : MonoBehaviour
         }
 
         _spawnedBullets.Clear();
+        _expiredBullets.Clear();
     }
 
     private IEnumerator FollowPlayer()
@@ -247,11 +249,14 @@ public class FPSPatternSystem : MonoBehaviour
             destroy.Play();
         }
 
+
+        _expiredBullets.Add(collisionDetect.gameObject);
         collisionDetect.ResetHitEventListener();
-        if (_bulletIdx == _bulletPattern.Bullets.Count)
+        if (_expiredBullets.Count == _bulletPattern.Bullets.Count && _bulletIdx == _bulletPattern.Bullets.Count)
         {
             _followPlayer = false;
             OnLastBulletExpired.RaiseEvent();
+            _expiredBullets.Clear();
         }
     }
 
