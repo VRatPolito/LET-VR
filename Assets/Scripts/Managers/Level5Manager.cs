@@ -121,7 +121,10 @@ public class Level5Manager : UnitySingleton<Level5Manager>
     #endregion
 
     #region Helper Methods
-
+    public static void EnableDestination(Destination d)
+    {
+        d.gameObject.SetActive(true);
+    }
     #endregion
 
     #region Events Callbacks

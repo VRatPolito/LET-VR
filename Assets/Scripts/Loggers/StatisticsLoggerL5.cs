@@ -49,9 +49,8 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
     {
         if (_grabtask == 0)
         {
-            LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>().OnDrop += LogDrop;
-
             StartMasterLog("G");
+            LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>().OnDrop += LogDrop;
         }
 
         _timeStart = Time.time;
@@ -132,10 +131,7 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
         };
         WriteToCSV("G"+_grabtask, values, 1);
         if (_grabtask == 3)
-        {
-            LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>().OnDrop -= LogDrop;
             StopMasterLog();
-        }
 
         _grabbing = false;
     }
