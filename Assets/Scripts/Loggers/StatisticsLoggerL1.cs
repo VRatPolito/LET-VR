@@ -56,6 +56,17 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
         StopMasterLog();
     }
 
+    public override void LogCollisions(HitType type)
+    {
+        if (_running)
+        {
+            if (type == HitType.Player)
+                Collisions++;
+            LocomotionManager.Instance.LeftController.GetComponent<VibrationController>().ShortVibration(.5f);
+            LocomotionManager.Instance.RightController.GetComponent<VibrationController>().ShortVibration(.5f);
+        }
+    }
+
     public void StartLogOvershooting(OvershootingDestination target)
     {
         if (_overshoots == 0)
@@ -111,6 +122,7 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
         {
             "" + _timeStop,
             "" + GetAverageSpeed(),
+            "" + Collisions
         };
         WriteToCSV("R", values, 4);
         this.OnLogFinalized += (ix) =>
