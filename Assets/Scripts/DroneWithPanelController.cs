@@ -21,6 +21,7 @@ public class DroneWithPanelController : MonoBehaviour
     [SerializeField] [Range(0, 20)] private float _warningRadius = 5f;
     [SerializeField] private float _escapeSpeed = 3;
     [SerializeField] private float _rotateSpeed = 15;
+    [SerializeField] private float _boostFactor = 3;
 
     [SerializeField] private GameObject _dummyPlayer, _target;
 
@@ -43,7 +44,7 @@ public class DroneWithPanelController : MonoBehaviour
 
     public Transform actualPlayer
     {
-        get => LocomotionManager.Instance.CurrentPlayerController;
+        get => LocomotionManager.Instance.CameraEye;
     }
 
     #endregion
@@ -70,7 +71,8 @@ public class DroneWithPanelController : MonoBehaviour
 
     private void Start()
     {
-        _playingCoreo = WaitForPlayerCoreo();
+        End();
+        //_playingCoreo = WaitForPlayerCoreo();
     }
 
     private void FixedUpdate()
@@ -93,7 +95,7 @@ public class DroneWithPanelController : MonoBehaviour
 
         if (_pGap < _aheadOfPlayer) //InCloseRange
         {
-            _boost = (1 + Mathf.InverseLerp(_aheadOfPlayer, 0, _pGap)).Remap(1, 2, 1, _escapeSpeed);
+            _boost = (1 + Mathf.InverseLerp(_aheadOfPlayer, 0, _pGap)).Remap(1, 2, 1, _boostFactor);
             _currSpeed = Mathf.Lerp(_currSpeed, _targetSpeed, .5f);
             transform.Translate(_pDir * _boost * _currSpeed * Time.fixedDeltaTime, Space.World);
             _lastDir = _pDir;
@@ -143,19 +145,18 @@ public class DroneWithPanelController : MonoBehaviour
         _pDir = (transform.position - actualPlayer.position).normalized;
         _pDir.y = 0;
         _pDir.Normalize();
+        var look = actualPlayer.position;
+        look.y = transform.position.y;
 
-        shutdownSequence.Append(transform.DORotateQuaternion(Quaternion.LookRotation(_pDir, Vector3.up), 1f));
-        shutdownSequence.Append(transform.DOBlendableLocalMoveBy(Vector3.forward * 100, 6).SetEase(Ease.InCubic));
+        shutdownSequence.Append(transform.DOLookAt(look, 1f));
+        shutdownSequence.Append(transform.DOLocalMove(transform.forward * 100, 6).SetEase(Ease.InCubic));
+        shutdownSequence.AppendCallback(() => seq2.Play());
         shutdownSequence.Join(transform.DOScale(Vector3.zero, 8).SetEase(Ease.InCubic));
-        shutdownSequence.OnComplete(() =>
-        {
-           
-        });
         shutdownSequence.Play();
 
         seq2.Append(_panel.transform.DORotate(_panel.transform.eulerAngles + new Vector3(1, 0, 0) * 20, .25f).SetEase(Ease.InOutSine));
         seq2.SetLoops(-1, LoopType.Yoyo);
-        seq2.Play();
+        seq2.Pause();
     }
 
     #endregion
