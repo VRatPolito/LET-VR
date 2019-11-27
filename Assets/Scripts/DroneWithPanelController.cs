@@ -43,7 +43,7 @@ public class DroneWithPanelController : MonoBehaviour
 
     public Transform actualPlayer
     {
-        get => LocomotionManager.Instance.CurrentPlayerController;
+        get => LocomotionManager.Instance.CameraEye;
     }
 
     #endregion
