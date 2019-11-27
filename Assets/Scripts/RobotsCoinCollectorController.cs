@@ -117,7 +117,6 @@ public class RobotsCoinCollectorController : MonoBehaviour
     public void Introduce()
     {
         _introducingSequence.Play();
-        IsCollecting = false;
     }
 
     public void StartCollecting()

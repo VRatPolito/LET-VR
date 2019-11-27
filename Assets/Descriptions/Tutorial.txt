@@ -3,6 +3,7 @@ L'obiettivo di questo livello e quello di farti sentire a tuo agio con il sistem
 - Raggiungi la prima destinazione indicata con il cerchio verde
 - Prova qalche volta a puntare verso una direzione diversa
 - Adesso dirigiti verso la nuova destinazione più velocemente di come hai fatto prima
+- Adesso prova a dosare la velocità mentre raggiungi una destinazione
 - Vai alla prossima destinazione nel minor tempo possibile, come se stessi correndo
 - Vai alla prossima destinazione camminando all'indietro
 - Vai alla prossima destinazione camminando mentre guardi in una direzione diversa da quella del movimento
