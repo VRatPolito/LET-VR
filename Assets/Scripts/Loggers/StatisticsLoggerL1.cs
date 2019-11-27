@@ -225,7 +225,7 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
                     _errorCounted = true;
                 }
             }
-            else
+            else if (LocomotionManager.Instance.CurrentPlayerController.position != _prevpos)
             {
                 _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
                 _errorCounted = false;

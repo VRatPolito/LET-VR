@@ -17,6 +17,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
 
     #region Editor Visible
     [SerializeField] private float _speedThreshold = 0;
+    [SerializeField] private float _dirWalkingDistThreshold = 0.5f;
     [SerializeField] private PathDevAxis _pathDevAxis = PathDevAxis.X;
     #endregion
 
@@ -367,7 +368,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
             _estpathlength += d;
             if (d > 0 && _recalltime == -1)
                 _recalltime = Time.time - _timeStart;
-            if (_estpathlength >= 1 && _angularerror == -1)
+            if (_estpathlength >= _dirWalkingDistThreshold && _angularerror == -1)
             {
                 var v1 = LocomotionManager.Instance.CurrentPlayerController.position - _prevpos;
                 Vector3 v2 = Vector3.zero;
