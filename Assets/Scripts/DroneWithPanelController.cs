@@ -140,6 +140,9 @@ public class DroneWithPanelController : MonoBehaviour
         var seq2 = DOTween.Sequence();
 
         _shootdown = true;
+        _pDir = (transform.position - actualPlayer.position).normalized;
+        _pDir.y = 0;
+        _pDir.Normalize();
 
         shutdownSequence.Append(transform.DORotateQuaternion(Quaternion.LookRotation(_pDir, Vector3.up), 1f));
         shutdownSequence.Append(transform.DOBlendableLocalMoveBy(Vector3.forward * 100, 6).SetEase(Ease.InCubic));

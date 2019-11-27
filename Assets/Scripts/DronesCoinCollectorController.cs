@@ -117,7 +117,7 @@ public class DronesCoinCollectorController : MonoBehaviour
     public void Introduce()
     {
         _introducingSequence.Play();
-        IsCollecting = false;
+        //IsCollecting = false;
     }
 
     public void StartCollecting()

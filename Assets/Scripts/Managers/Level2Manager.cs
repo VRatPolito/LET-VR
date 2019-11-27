@@ -147,18 +147,20 @@ public class Level2Manager : UnitySingleton<Level2Manager>
             _pathController.Hide();
         };
 
-        Instance.BackwardItem.InteractiveItem.OnOut += () =>
-        {
-            if (_closeDoorCoroutineRef != null) StopCoroutine(_closeDoorCoroutineRef);
-            _closeDoorCoroutineRef = StartCoroutine(CloseDoorCoroutine());
-        };
-        Instance.BackwardItem.InteractiveItem.OnOver += () =>
-        {
-            if (_closeDoorCoroutineRef != null) StopCoroutine(_closeDoorCoroutineRef);
-            var dc = Instance.CurvedDoor;
-            if (!dc.SensorEnabled && !Instance.BackwardItem.IsLocked)
-                dc.ForceOpenDoor();
-        };
+        _closeDoorCoroutineRef = StartCoroutine(BackwardDoorCoroutine());
+
+        //Instance.BackwardItem.InteractiveItem.OnOut += () =>
+        //{
+        //    if (_closeDoorCoroutineRef != null) StopCoroutine(_closeDoorCoroutineRef);
+        //    _closeDoorCoroutineRef = StartCoroutine(CloseDoorCoroutine());
+        //};
+        //Instance.BackwardItem.InteractiveItem.OnOver += () =>
+        //{
+        //    if (_closeDoorCoroutineRef != null) StopCoroutine(_closeDoorCoroutineRef);
+        //    var dc = Instance.CurvedDoor;
+        //    if (!dc.SensorEnabled && !Instance.BackwardItem.IsLocked)
+        //        dc.ForceOpenDoor();
+        //};
     }
 
     #endregion
@@ -196,6 +198,34 @@ public class Level2Manager : UnitySingleton<Level2Manager>
         var dc = Level2Manager.Instance.CurvedDoor;
         if (!dc.SensorEnabled)
             dc.ForceCloseDoor();
+        _closeDoorCoroutineRef = null;
+    }
+
+    IEnumerator BackwardDoorCoroutine()
+    {
+        var dc = Instance.CurvedDoor;
+        bool lastOver = false;
+
+        while (Instance.BackwardItem.IsLockable)
+        {
+            if (Instance.BackwardItem.InteractiveItem.IsOver && !lastOver)
+            {
+                lastOver = Instance.BackwardItem.InteractiveItem.IsOver; 
+                //open
+                if (!dc.SensorEnabled && !Instance.BackwardItem.IsLocked)
+                    dc.ForceOpenDoor();
+            }
+            else if (!Instance.BackwardItem.InteractiveItem.IsOver && lastOver)
+            {
+                lastOver = Instance.BackwardItem.InteractiveItem.IsOver;
+                //close
+                yield return new WaitForSeconds(1);
+                if (!dc.SensorEnabled)
+                    dc.ForceCloseDoor();
+                _closeDoorCoroutineRef = null;
+            }
+            yield return null;
+        }
         _closeDoorCoroutineRef = null;
     }
 
