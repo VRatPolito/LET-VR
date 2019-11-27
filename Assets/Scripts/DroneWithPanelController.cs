@@ -35,6 +35,7 @@ public class DroneWithPanelController : MonoBehaviour
     private Quaternion _rot;
     private float _currSpeed = 0, _targetSpeed = 0, _boost = 1, _pGap;
     private Sequence[] _playingCoreo;
+    private bool _shootdown = false;
 
     #endregion
 
@@ -69,7 +70,6 @@ public class DroneWithPanelController : MonoBehaviour
 
     private void Start()
     {
-        //End();
         _playingCoreo = WaitForPlayerCoreo();
     }
 
@@ -84,9 +84,12 @@ public class DroneWithPanelController : MonoBehaviour
             }
         }
 
+
         _pGap = Vector3.Distance(actualPlayer.position.vector3XZOnly(), transform.position.vector3XZOnly());
         _pDir = (transform.position - actualPlayer.position).normalized;
         _pDir.y = 0;
+
+        if(_shootdown) return;
 
         if (_pGap < _aheadOfPlayer) //InCloseRange
         {
@@ -136,6 +139,9 @@ public class DroneWithPanelController : MonoBehaviour
         var shutdownSequence = DOTween.Sequence();
         var seq2 = DOTween.Sequence();
 
+        _shootdown = true;
+
+        shutdownSequence.Append(transform.DORotateQuaternion(Quaternion.LookRotation(_pDir, Vector3.up), 1f));
         shutdownSequence.Append(transform.DOBlendableLocalMoveBy(Vector3.forward * 100, 6).SetEase(Ease.InCubic));
         shutdownSequence.Join(transform.DOScale(Vector3.zero, 8).SetEase(Ease.InCubic));
         shutdownSequence.OnComplete(() =>

@@ -1,5 +1,19 @@
-- Per aprire la porta ed andare oltre, usa il componente posto sul tavolo e inseriscilo nella struttura di aggancio che trovi alla destra della porta.
+- Per aprire la porta ed andare oltre, usa il componente posto sul tavolo e inseriscilo nella struttura di aggancio che trovi alla destra della porta. Per confermare l'inserimento rilascia il trigger.
 - Come prima ma per aprire la porta serviranno 2 componenti. Aiutati con le loro dimensioni e colore per inserirle nel loro unico corrispettivo a fianco della porta. Puoi anche portarli entrambi contemporaneamente con te, ma non è obbligatorio.
-- Al di là del labirinto si trova una porta che dovrai aprire allo stesso modo di come hai appena fatto. Evita di andare a sbattere con le pareti del labirinto, perchè questo è considerato come un errore.
-- Posiziona i componenti che trovi nella stanza nei corrispettivi spazi che trovi sui tavoli, facendo corrispondere i colori delle aree con quelli dei componenti. 
--- Successivamente, impila i componenti per costruire una torre nell’area che apparirà sul tavolo CENTRALE. Quando ritieni ti senti soddisfatto della tua creazione (ed è stabile) raggiungi la destinazione alle tue spalle.
+- Al di là del labirinto si trova una porta che dovrai aprire allo stesso modo di come hai appena fatto. Evita di andare a sbattere o di far sbattere gli oggetti con le pareti del labirinto, perchè questo è considerato come un errore.
+- Posiziona con precisione i componenti che trovi nella stanza nei corrispettivi spazi che trovi sui tavoli, occhio anche al verso. 
+-- Successivamente, impila i componenti per costruire una torre nell’area che apparirà sul tavolo CENTRALE. Quando ritieni di aver finito, raggiungi la destinazione alle tue spalle.
+- Entra nell'ascensore e ti trasporterà al piano di sopra
+-- Afferra la batteria fluttuante, e inizia ad inseguire il robot, quando ti troverai vicino dovrai eseguire delle interazioni.
+
+Il robot tenderà ad allontanarsi da te, non cercare di superarlo, ma mantieni una velocità che ti permetta di interagire.
+
+
+Per la batteria vale il funzionamento di prima, mentre per le altre interazioni tocca prima con il controller l'oggetto con cui vuoi interagire, quando si illumina premi quindi il grilletto, ed infine esegui il movimento richiesto (e.s: dall'alto verso il basso per i bottoni, da te verso il robot per la leva), se allontani la mano dall'oggetto durante l'interazione essa verrà annullata.
+
+
+L'ordine da seguire per le interazioni è il seguente:
+1) premi il pulsante verde
+2) inserisci la batteria nel socket
+3) spingi la leva
+4) premi il pulsante rosso

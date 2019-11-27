@@ -194,6 +194,7 @@ MonoBehaviour:
   - {fileID: 1472068259}
   - {fileID: 1921064915}
   - {fileID: 2966357632210042778}
+  _autoFreezable: 1
   _freezePalyerKeyCode: 102
   _calibrationData:
     _controllerDistance: 1.5
@@ -550,6 +551,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 397cf43b41bda51408d3ea5250dedc26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 1192640717}
 --- !u!1 &197916728
 GameObject:
@@ -756,6 +763,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 397cf43b41bda51408d3ea5250dedc26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 164664973}
 --- !u!1001 &419986910
 PrefabInstance:
@@ -1023,6 +1036,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 397cf43b41bda51408d3ea5250dedc26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 355382275}
 --- !u!1001 &639191864
 PrefabInstance:
@@ -1404,6 +1423,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36355fd1eb6fba942b8eb03c7d264a2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 0}
   _items:
   - {fileID: 639191865}
@@ -1834,6 +1859,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 397cf43b41bda51408d3ea5250dedc26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDisabled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnabled:
+    m_PersistentCalls:
+      m_Calls: []
   Next: {fileID: 585658135}
 --- !u!1001 &1287760740
 PrefabInstance:

@@ -5,6 +5,8 @@ L'obiettivo di questo livello e quello di farti sentire a tuo agio con il sistem
 - Adesso dirigiti verso la nuova destinazione più velocemente di come hai fatto prima
 - Vai alla prossima destinazione nel minor tempo possibile, come se stessi correndo
 - Vai alla prossima destinazione camminando all'indietro
+- Vai alla prossima destinazione camminando mentre guardi in una direzione diversa da quella del movimento
+- Vai alla prossima destinazione camminando mentre tieni le braccia aperte al massimo
 - Puoi continuare ad esercitarti raggiungendo le destinazioni fin quando non ti senti a tuo agio nel muoverti e avrai la sensazione di controllo sul sistema di locomozione
 - Vai alla destinazione in giallo al centro della stanza così calibriamo il sistema con le tue misure del corpo. Mettiti in T-Pose.
 - In un angolo della stanza in cui ti trovi sono stati posizionati degli oggetti, raggiungili e prova ad afferrarne qualcuno
