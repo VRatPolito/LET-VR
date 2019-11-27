@@ -52,7 +52,7 @@ public class TeleportPlayer : MonoBehaviour
     {
         if (c.CompareTag("Player"))
         {
-            c.transform.position = new Vector3(transform.position.x- 1, transform.position.y, transform.position.z-1);
+            LocomotionManager.Instance.CurrentPlayerController.position = new Vector3(transform.position.x- 1, transform.position.y, transform.position.z-1);
             OnPlayerFallenDown?.Invoke();
         }
     }
