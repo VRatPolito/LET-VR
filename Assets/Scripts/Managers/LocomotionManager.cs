@@ -191,7 +191,7 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
     #region Public Methods
     public void AutoFreeze()
     {
-        if(_autoFreezable)
+        if(_autoFreezable && !Application.isEditor)
             IsPlayerFreezed = true;
     }
 

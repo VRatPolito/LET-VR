@@ -25,6 +25,8 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
 
     private bool _walking = false, _running = false, _chasing = false;
     private uint _overshoots, _inside = 0;
+    private bool _stopped = false;
+    private bool _errorCounted = false;
     private OvershootingDestination _overshotingtarget = null;
 
     #endregion
@@ -138,13 +140,15 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
         _timeStart = Time.time;
         _timeStop = float.MinValue;
         _chasing = true;
-        _errors = 0;
+        _errors = -1;
         _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
     }
     public void StopLogChasing()
     {
         _chasing = false;
         _timeStop = Time.time - _timeStart;
+        if (_errors == -1)
+            _errors = 0;
         var values = new List<string>
         {
             "" + GetPercTimeInside(),
@@ -211,19 +215,20 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
         }
         else if (_chasing)
         {
-            if (LocomotionManager.Instance.CurrentPlayerController.position == _prevpos)
+            if (LocomotionManager.Instance.CurrentPlayerController.position == _prevpos && !_errorCounted)
             {
                 if (_timeStop == float.MinValue)
                     _timeStop = Time.time;
                 else if (Time.time >= _timeStop + Level1Manager.Instance.TimeToStop)
                 {
                     _errors++;
-                    _timeStop = float.MinValue;
+                    _errorCounted = true;
                 }
             }
             else
             {
                 _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
+                _errorCounted = false;
             }
         }
         else if (_running)
