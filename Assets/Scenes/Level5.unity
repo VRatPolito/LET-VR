@@ -19523,7 +19523,7 @@ PrefabInstance:
     - target: {fileID: 2724447825322628163, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
         type: 3}
       propertyPath: _aheadOfPlayer
-      value: 1.14
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2724447825322628163, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
         type: 3}
