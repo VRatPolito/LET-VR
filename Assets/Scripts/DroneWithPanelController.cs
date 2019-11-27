@@ -2,6 +2,8 @@
  * Custom template by F. Gabriele Pratticò {filippogabriele.prattico@polito.it}
  */
 
+using System;
+using Boo.Lang;
 using DG.Tweening;
 using PrattiToolkit;
 using UnityEngine;
@@ -11,6 +13,13 @@ using Valve.VR.InteractionSystem;
 
 public class DroneWithPanelController : MonoBehaviour
 {
+    [Serializable]
+    struct TimeFactor
+    {
+        public float FromTime;
+        public float Factor;
+    }
+
     #region Events
     public UnityEvent PlayerInRange, PlayerOutRange;
     #endregion
@@ -24,6 +33,7 @@ public class DroneWithPanelController : MonoBehaviour
     [SerializeField] private float _boostFactor = 3;
 
     [SerializeField] private GameObject _dummyPlayer, _target;
+    [SerializeField] private TimeFactor[] _speedScalingFactorOnTimeElapsed;
 
     #endregion
 
@@ -34,9 +44,10 @@ public class DroneWithPanelController : MonoBehaviour
     private CharacterController _controller;
     private Vector3 _lastDir, _dir, _pDir, _rDir;
     private Quaternion _rot;
-    private float _currSpeed = 0, _targetSpeed = 0, _boost = 1, _pGap;
+    private float _currSpeed = 0, _targetSpeed = 0, _targetAhead = 0, _boost = 1, _pGap;
     private Sequence[] _playingCoreo;
     private bool _shootdown = false;
+    private float _startChasingTime = 0;
 
     #endregion
 
@@ -60,7 +71,8 @@ public class DroneWithPanelController : MonoBehaviour
         _lastDir = transform.forward;
         _rot = transform.rotation;
         _targetSpeed = _escapeSpeed;
-        _aheadOfPlayer = (LocomotionManager.Instance.CalibrationData.ControllerDistance * 0.605f).Clamp(0.90f, 1.25f);
+        _targetAhead = (LocomotionManager.Instance.CalibrationData.ControllerDistance * 0.605f).Clamp(0.90f, 1.25f);
+        ;
 
 
         PlayerInRange.AddListener(() =>
@@ -95,9 +107,11 @@ public class DroneWithPanelController : MonoBehaviour
 
         if(_shootdown) return;
 
-        if (_pGap < _aheadOfPlayer) //InCloseRange
+        CorrectSpeedFactor();
+
+        if (_pGap < _targetAhead) //InCloseRange
         {
-            _boost = (1 + Mathf.InverseLerp(_aheadOfPlayer, 0, _pGap)).Remap(1, 2, 1, _boostFactor);
+            _boost = (1 + Mathf.InverseLerp(_targetAhead, 0, _pGap)).Remap(1, 2, 1, _boostFactor);
             _currSpeed = Mathf.Lerp(_currSpeed, _targetSpeed, .5f);
             transform.Translate(_pDir * _boost * _currSpeed * Time.fixedDeltaTime, Space.World);
             _lastDir = _pDir;
@@ -165,6 +179,21 @@ public class DroneWithPanelController : MonoBehaviour
 
     #region Helper Methods   
 
+    private void CorrectSpeedFactor()
+    {
+        if(_startChasingTime < 0.1f) return;
+
+        foreach (var th in _speedScalingFactorOnTimeElapsed)
+        {
+            if ((Time.time - _startChasingTime) > th.FromTime)
+            {
+                _targetSpeed = _escapeSpeed * th.Factor;
+                _targetAhead = (LocomotionManager.Instance.CalibrationData.ControllerDistance * 0.605f * th.Factor).Clamp(0.90f*th.Factor, 1.25f);
+            }
+        }
+        
+    }
+
     private Sequence[] WaitForPlayerCoreo()
     {
         var currPos = transform.position;
@@ -173,6 +202,7 @@ public class DroneWithPanelController : MonoBehaviour
         {
             transform.position = currPos;
             _panel.transform.rotation = currBillRot;
+            _startChasingTime = Time.deltaTime;
         });
 
         var seq1 = DOTween.Sequence();

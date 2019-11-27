@@ -10,7 +10,7 @@
 
 Il robot tenderà ad allontanarsi da te, NON cercare di superarlo, ma dosa la tua velocità in modo da interagire con esso.
 
-Il robot ha un pannello con vari oggetti con cui interagire: una batteria, una leva e due bottoni. Per la batteria vale il funzionamento di prima, mentre per le altre interazioni tocca prima con il controller l'oggetto con cui vuoi interagire, quando si illumina premi quindi il grilletto, ed infine esegui il movimento richiesto (e.s: dall'alto verso il basso per i bottoni, da te verso il robot per la leva), se allontani la mano dall'oggetto durante l'interazione essa verrà annullata.
+Il robot ha un pannello con vari oggetti con cui interagire: una batteria, una leva e due bottoni. Per la batteria vale il funzionamento di prima, mentre per le altre interazioni tocca prima con il controller l'oggetto con cui vuoi interagire, quando si illumina premi quindi il grilletto, ed infine esegui il movimento richiesto (e.s: dall'alto verso il basso per i bottoni, da te verso il robot per la leva), se allontani la mano dall'oggetto durante l'interazione essa verrà annullata. Non come un click quindi ma accompagnando gli oggetti
 
 
 L'ordine da seguire per le interazioni è il seguente:

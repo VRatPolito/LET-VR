@@ -1936,7 +1936,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh340002
+  m_Name: pb_Mesh42996
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -16303,7 +16303,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh340742
+  m_Name: pb_Mesh43736
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -19486,6 +19486,11 @@ PrefabInstance:
       objectReference: {fileID: 825743868}
     - target: {fileID: 2724447825322628163, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
         type: 3}
+      propertyPath: _speedScalingFactorOnTimeElapsed.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2724447825322628163, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
+        type: 3}
       propertyPath: ArenaTrigger
       value: 
       objectReference: {fileID: 0}
@@ -19538,6 +19543,46 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2724447825322628163, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
+        type: 3}
+      propertyPath: _speedScalingFactorOnTimeElapsed.Array.data[0].UpToTime
+      value: 240
+      objectReference: {fileID: 0}
+    - target: {fileID: 2724447825322628163, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
+        type: 3}
+      propertyPath: _speedScalingFactorOnTimeElapsed.Array.data[0].Factor
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2724447825322628163, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
+        type: 3}
+      propertyPath: _speedScalingFactorOnTimeElapsed.Array.data[1].UpToTime
+      value: 360
+      objectReference: {fileID: 0}
+    - target: {fileID: 2724447825322628163, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
+        type: 3}
+      propertyPath: _speedScalingFactorOnTimeElapsed.Array.data[2].Factor
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2724447825322628163, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
+        type: 3}
+      propertyPath: _speedScalingFactorOnTimeElapsed.Array.data[1].Factor
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2724447825322628163, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
+        type: 3}
+      propertyPath: _speedScalingFactorOnTimeElapsed.Array.data[0].FromTime
+      value: 240
+      objectReference: {fileID: 0}
+    - target: {fileID: 2724447825322628163, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
+        type: 3}
+      propertyPath: _speedScalingFactorOnTimeElapsed.Array.data[1].FromTime
+      value: 360
+      objectReference: {fileID: 0}
+    - target: {fileID: 2724447825322628163, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
+        type: 3}
+      propertyPath: _speedScalingFactorOnTimeElapsed.Array.data[2].FromTime
+      value: 600
       objectReference: {fileID: 0}
     - target: {fileID: 4747679086044089639, guid: 3a4a9c4076e09a64fbd8cc476c8e273d,
         type: 3}

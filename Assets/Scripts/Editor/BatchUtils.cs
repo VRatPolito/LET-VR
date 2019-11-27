@@ -32,7 +32,7 @@ public class BatchUtils : MonoBehaviour
             {
                
                 case BuildResult.Succeeded:
-                    Debug.Log($"Build {Path.GetFileNameWithoutExtension(EditorBuildSettings.scenes[i].path)} succeeded: " + summary.totalSize + " bytes");
+                    Debug.Log($"Build {Path.GetFileNameWithoutExtension(EditorBuildSettings.scenes[i].path)} succeeded: {summary.totalSize} bytes");
                     break;
                 case BuildResult.Failed:
                 case BuildResult.Unknown:
@@ -42,7 +42,7 @@ public class BatchUtils : MonoBehaviour
 
             }
         }
-        Debug.Log("Build Processes Finished");
+        Debug.Log("[Build Finished]: ALL LEVELS!");
     }
 
     #endregion
