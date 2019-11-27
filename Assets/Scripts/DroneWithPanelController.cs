@@ -71,8 +71,8 @@ public class DroneWithPanelController : MonoBehaviour
 
     private void Start()
     {
-        End();
-        //_playingCoreo = WaitForPlayerCoreo();
+        //End();
+        _playingCoreo = WaitForPlayerCoreo();
     }
 
     private void FixedUpdate()
