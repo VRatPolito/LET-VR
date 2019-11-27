@@ -19,6 +19,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
     [SerializeField] private float _speedThreshold = 0;
     [SerializeField] private float _dirWalkingDistThreshold = 0.5f;
     [SerializeField] private PathDevAxis _pathDevAxis = PathDevAxis.X;
+    [SerializeField] private PathDevAxis _avoidanceAxis = PathDevAxis.X;
     #endregion
 
     #region Private Members and Constants
@@ -358,9 +359,9 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
 
             _speeds.Add(v);
 
-            if (LocomotionManager.Instance.CurrentPlayerController.position.x <= Level2Manager.Instance.Edge.position.x)
+            if (LocomotionManager.Instance.CurrentPlayerController.position.x <= Level2Manager.Instance._avoidanceRef.position.x)
             {
-                var diff = Math.Abs(LocomotionManager.Instance.CurrentPlayerController.position.x - Level2Manager.Instance.Edge.position.x);
+                var diff = GetPathDev(Level2Manager.Instance._avoidanceRef, _avoidanceAxis);
                 _avoidance += diff * (1 / StatisticsLoggerData.SamplingRate);
             }
 
