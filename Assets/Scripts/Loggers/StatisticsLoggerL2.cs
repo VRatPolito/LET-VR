@@ -25,6 +25,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
 
     private float _timeStart, _timeStop, _avoidance;
     float _estpathlength, _angularerror, _recalltime, _timesover;
+    private bool _errorCounted = false;
     private bool _backWalking = false, _curvedWalking = false, _fear = false, _dirWalking = false, _stairslopeWalking = false;
     private string _choice;
     // private OvershootingDestination _overshotingtarget = null; ???
@@ -309,9 +310,14 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
             var t = (Time.time - _lastsample); // compute delta time
             var d = Mathf.Abs(Vector3.Distance(LocomotionManager.Instance.CurrentPlayerController.position, _prevpos)); // compute distance traveled
             var v = d / t; //compute speed
-            if (!Level2Manager.Instance.BackwardItem.InteractiveItem.IsOver)
+            if (!Level2Manager.Instance.BackwardItem.InteractiveItem.IsOver && !_errorCounted)
             {
                 _errors++;
+                _errorCounted = true;
+            }
+            else if (Level2Manager.Instance.BackwardItem.InteractiveItem.IsOver)
+            {
+                _errorCounted = false;
             }
            
             _speeds.Add(v);
