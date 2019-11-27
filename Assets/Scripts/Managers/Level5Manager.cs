@@ -85,6 +85,7 @@ public class Level5Manager : UnitySingleton<Level5Manager>
         Blue.OnDisabled.AddListener(CountSnap);
         StartManipulation.OnDisabled.AddListener(StatisticsLogger.StartLogManipulation);
         EndManipulation.OnDisabled.AddListener(StopManipulation);
+        EndManipulation.OnDisabled.AddListener(src => EnableDestination(StartMovingInteraction));
         StartMovingInteraction.OnDisabled.AddListener(StartMovingInteractionLevel);
         _drone.PlayerInRange.AddListener(PlayerInRange);
         _drone.PlayerInRange.AddListener(StatisticsLogger.PlayerInRange);

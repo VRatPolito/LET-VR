@@ -60,6 +60,8 @@ public class DroneWithPanelController : MonoBehaviour
         _lastDir = transform.forward;
         _rot = transform.rotation;
         _targetSpeed = _escapeSpeed;
+        _aheadOfPlayer = (LocomotionManager.Instance.CalibrationData.ControllerDistance * 0.605f).Clamp(0.90f, 1.25f);
+
 
         PlayerInRange.AddListener(() =>
         {
@@ -142,19 +144,19 @@ public class DroneWithPanelController : MonoBehaviour
         var seq2 = DOTween.Sequence();
 
         _shootdown = true;
-        _pDir = (transform.position - actualPlayer.position).normalized;
+        _pDir = (actualPlayer.position- transform.position).normalized;
         _pDir.y = 0;
         _pDir.Normalize();
         var look = actualPlayer.position;
         look.y = transform.position.y;
 
         shutdownSequence.Append(transform.DOLookAt(look, 1f));
-        shutdownSequence.Append(transform.DOLocalMove(transform.forward * 100, 6).SetEase(Ease.InCubic));
         shutdownSequence.AppendCallback(() => seq2.Play());
+        shutdownSequence.Append(this.transform.DOMove(transform.position + _pDir*100, 7).SetEase(Ease.InCubic));
         shutdownSequence.Join(transform.DOScale(Vector3.zero, 8).SetEase(Ease.InCubic));
         shutdownSequence.Play();
 
-        seq2.Append(_panel.transform.DORotate(_panel.transform.eulerAngles + new Vector3(1, 0, 0) * 20, .25f).SetEase(Ease.InOutSine));
+        seq2.Append(_panel.transform.DOLocalRotateQuaternion(_panel.transform.localRotation * Quaternion.AngleAxis(20, Vector3.right), .25f).SetEase(Ease.InOutSine));
         seq2.SetLoops(-1, LoopType.Yoyo);
         seq2.Pause();
     }
@@ -179,7 +181,7 @@ public class DroneWithPanelController : MonoBehaviour
         seq1.SetLoops(-1, LoopType.Yoyo);
         seq1.OnKill(endCall);
 
-        seq2.Append(_panel.transform.DORotate(_panel.transform.eulerAngles + new Vector3(1, 0, 0) * 20, .75f).SetEase(Ease.InOutSine));
+        seq2.Append(_panel.transform.DOLocalRotateQuaternion(_panel.transform.localRotation * Quaternion.AngleAxis(20, Vector3.right), .75f).SetEase(Ease.InOutSine));
         seq2.SetLoops(-1, LoopType.Yoyo);
         seq2.OnKill(endCall);
         return new Sequence[] { seq1, seq2 };

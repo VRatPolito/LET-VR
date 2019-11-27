@@ -1,5 +1,5 @@
 In questo primo task dovrai seguire un percorso, visualizzato tramite una linea, che si snoderà fra le opere d’arte.
-- Per far apparire il nuovo tratto di percorso, guarda l'opera d'arte interessata fino allo spegnimento della sua luce/faretto. Poi girati e dirigiti verso la successiva.
+- Dopo essere entrato nella prima destinazione, per far apparire il nuovo tratto di percorso, guarda l'opera d'arte interessata fino allo spegnimento della sua luce/faretto. Poi girati e dirigiti verso la successiva.
 - Dopo aver ragginto la destinazione, esci dalla porta a destra, per aprirla devi mantenere lo sguardo fisso sull’ultima opera d’arte rimasta se non lo fai la porta si chiude. Per raggiungere e oltrepassare la porta dovrai quindi camminare all’indietro.
 - Raggiungi la destinazione alla fine del tunnel evitando le collisioni con le pareti cercando di NON NON fermarti. Vai oltre la porta.
 - Raggiungi la cima dell’edificio utilizzando prima le scale, poi la rampa, e successivamente scegliendo la strada che preferisci/trovi più comoda.

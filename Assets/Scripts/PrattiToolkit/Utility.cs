@@ -683,6 +683,11 @@ namespace PrattiToolkit
 
     public static class NumericExtender
     {
+        public static float Clamp(this float value, float min, float max)
+        {
+            return Mathf.Clamp(value, min, max);
+        }
+
         /// <summary>
         /// Remap this value from a range to another one
         /// </summary>
