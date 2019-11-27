@@ -57,12 +57,6 @@ public class GrabDestination : Destination
 
     public float GetRotDiff()
     {
-        /*var dir1 = _item.transform.up;
-        var dir2 = _referenceItem.up;
-        dir1 = new Vector3(dir1.x, 0, dir1.z).normalized;
-        dir2 = new Vector3(dir2.x, 0, dir2.z).normalized;
-        var angle = Vector3.Angle(dir1, dir2);*/
-
         var angle = Quaternion.Angle(_item.transform.rotation, _referenceItem.transform.rotation);
         angle = angle % 360;
         if (angle > 180)
@@ -76,36 +70,33 @@ public class GrabDestination : Destination
     }
     private void OnTriggerStay(Collider other)
     {
-        if(_item.transform.position != _lastPos || _item.transform.rotation != _lastRot)
+        if (_itemInRange)
         {
-            _lastPos = _item.transform.position;
-            _lastRot = _item.transform.rotation;
-            _timeStop = Time.time + _timeStillForStop;
-        }
-        else if (Time.time >= _timeStop)
-        {
-            var p = _item.Player;
-            if (_makeKinematic)
-                _item.IsKinematic = true;
-            if (p != null)
-                p.DropItem(_item.transform, true);
-            if (_makeItemUngrabbable)
-                _item.CanInteract(false, LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>());
-            if (_autoDisable)
-                gameObject.SetActive(false);
+            if (_item.transform.position != _lastPos || _item.transform.rotation != _lastRot)
+            {
+                _lastPos = _item.transform.position;
+                _lastRot = _item.transform.rotation;
+                _timeStop = Time.time + _timeStillForStop;
+            }
+            else if (Time.time >= _timeStop)
+            {
+                var p = _item.Player;
+                if (_makeKinematic)
+                    _item.IsKinematic = true;
+                if (p != null)
+                    p.DropItem(_item.transform, true);
+                if (_makeItemUngrabbable)
+                    _item.CanInteract(false, LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>());
+                if (_autoDisable)
+                    gameObject.SetActive(false);
+            }
         }
     }
 
     public override void Update()
     {
         if(_debugDifference && _itemInRange)
-        {
-            /*var dir1 = _item.transform.up;
-            var dir2 = _referenceItem.up;
-            dir1 = new Vector3(dir1.x, 0, dir1.z).normalized;
-            dir2 = new Vector3(dir2.x, 0, dir2.z).normalized;
-            var angle = Vector3.Angle(dir1, dir2);*/
-            
+        {            
             var angle = Quaternion.Angle(_item.transform.rotation, _referenceItem.transform.rotation);
             var angle2 = angle % 360;
             if (angle2 > 180)
