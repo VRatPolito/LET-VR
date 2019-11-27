@@ -222,7 +222,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh57872
+  m_Name: pb_Mesh105600
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -1553,6 +1553,7 @@ Transform:
   - {fileID: 587189332}
   - {fileID: 984463951}
   - {fileID: 1932246003}
+  - {fileID: 1056403094}
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2590,7 +2591,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4309582677578760, guid: a96e20f031f0f3942a6b1e525137de92, type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114436960994349900, guid: a96e20f031f0f3942a6b1e525137de92, type: 3}
@@ -3267,6 +3268,7 @@ MonoBehaviour:
   _runTimer: {fileID: 1122560631}
   _timeToStop: 0.5
   _doortochase: {fileID: 984463952}
+  _pathDevRef: {fileID: 1056403094}
 --- !u!4 &747482273
 Transform:
   m_ObjectHideFlags: 0
@@ -4259,6 +4261,36 @@ MonoBehaviour:
   _sensorEnabled: 0
   _allowOverride: 0
   _toggleGateKeyCode: 100
+--- !u!1 &1056403093
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1056403094}
+  m_Layer: 0
+  m_Name: PathDeviationReference
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1056403094
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1056403093}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -2.5, y: 0, z: -45}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 154178397}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1067824221 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4925883297266940, guid: ce38f897769ae704d9895c265292231a,
@@ -4550,7 +4582,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh57930
+  m_Name: pb_Mesh105658
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -4847,7 +4879,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh57734
+  m_Name: pb_Mesh105462
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -5508,7 +5540,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh57614
+  m_Name: pb_Mesh105334
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2

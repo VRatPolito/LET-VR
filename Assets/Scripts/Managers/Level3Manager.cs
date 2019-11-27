@@ -28,6 +28,9 @@ public class Level3Manager : UnitySingleton<Level3Manager>
     public RobotsCoinCollectorController RobotsCoinCollectorController;
     public DronesCoinCollectorController DronesCoinCollectorController;
     public DoorController Task1ToTask2DoorController, T2ToT3DoorController;
+    [SerializeField] internal Transform _pathDevRef1;
+    [SerializeField] internal Transform _pathDevRef2;
+    [SerializeField] internal Transform _pathDevRef3;
 
     #endregion
 

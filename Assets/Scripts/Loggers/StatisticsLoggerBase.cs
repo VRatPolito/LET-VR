@@ -14,6 +14,8 @@ using PrattiToolkit;
 using UnityEngine;
 
 
+public enum PathDevAxis { X, Y, Z };
+
 public interface IStatisticsLogger
 {
     void Ticker();
@@ -334,6 +336,20 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
 
     public virtual void LogCollisions(HitType type)
     {
+    }
+
+    public static float GetPathDev(Transform reference, PathDevAxis axis)
+    {
+        switch(axis)
+        {
+            case PathDevAxis.X:
+                return Math.Abs(LocomotionManager.Instance.CurrentPlayerController.position.x - reference.position.x);
+            case PathDevAxis.Y:
+                return Math.Abs(LocomotionManager.Instance.CurrentPlayerController.position.y - reference.position.y);
+            case PathDevAxis.Z:
+                return Math.Abs(LocomotionManager.Instance.CurrentPlayerController.position.z - reference.position.z);
+        }
+        return -1;
     }
 
     #endregion

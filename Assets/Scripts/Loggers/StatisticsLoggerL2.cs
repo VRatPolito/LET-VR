@@ -17,6 +17,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
 
     #region Editor Visible
     [SerializeField] private float _speedThreshold = 0;
+    [SerializeField] private PathDevAxis _pathDevAxis = PathDevAxis.X;
     #endregion
 
     #region Private Members and Constants
@@ -218,7 +219,9 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
             "" + _timeStop,
             "" + GetAverageSpeed(),
             "" + _errors,
-            "" + (100 - (_errors / _speeds.Count * 100))
+            "" + (100 - (_errors / _speeds.Count * 100)),
+            "" + _maxwalkdist,
+            "" + _diffsum
         };
         WriteToCSV("B", values, 2);
         StopMasterLog();
@@ -295,6 +298,13 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
     {
         if (_backWalking)
         {
+            var diff = GetPathDev(Level2Manager.Instance._pathDevRef, _pathDevAxis);
+            _diffsum += diff * (1 / StatisticsLoggerData.SamplingRate);
+            if (diff > _maxwalkdist)
+                _maxwalkdist = diff;
+            else if (diff < _minwalkdist)
+                _minwalkdist = diff;
+
             var t = (Time.time - _lastsample); // compute delta time
             var d = Mathf.Abs(Vector3.Distance(LocomotionManager.Instance.CurrentPlayerController.position, _prevpos)); // compute distance traveled
             var v = d / t; //compute speed

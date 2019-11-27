@@ -36,6 +36,7 @@ public class Level2Manager : UnitySingleton<Level2Manager>
     public Transform Edge;
     public DisableOnContactDestination StartDest, StartStairs, EndStairs, StarSlope, EndSlope, StartHalfStairs, StartHalfSlope, EndStairsSlope, FearStart, FearEnd, LevelEnd;
     [SerializeField] private Transform _fearDoor;
+    [SerializeField] internal Transform _pathDevRef;
     #endregion
 
     #region Private Members and Constants

@@ -16,7 +16,7 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
     #endregion
 
     #region Editor Visible
-
+    [SerializeField] private PathDevAxis _pathDevAxis = PathDevAxis.X;
     #endregion
 
     #region Private Members and Constants
@@ -49,7 +49,6 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
         {
             "" + _timeStop,
             "" + _maxwalkdist,
-            "" + _minwalkdist,
             "" + _diffsum
         };
         WriteToCSV("W", values, 1);
@@ -175,7 +174,7 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
     {
         if (_walking)
         {
-            var diff = Math.Abs(LocomotionManager.Instance.CurrentPlayerController.position.x - Level1Manager.Instance.transform.position.x);
+            var diff = GetPathDev(Level1Manager.Instance._pathDevRef, _pathDevAxis);
             _diffsum += diff * (1 / StatisticsLoggerData.SamplingRate);
             if (diff > _maxwalkdist)
                 _maxwalkdist = diff;

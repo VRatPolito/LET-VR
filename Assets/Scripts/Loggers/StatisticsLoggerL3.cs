@@ -20,12 +20,13 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
     #region Editor Visible
 
     [SerializeField] private float _anglethreshold = 45;
+    [SerializeField] private PathDevAxis _pathDevAxis = PathDevAxis.X;
     #endregion
 
     #region Private Members and Constants
 
     private float _timeStart, _timeStop;
-    private bool _uncoupledWalking = false, _pointWalking = false;
+    private bool _uncoupledWalking = false, _pointWalking = false, _waveWalking = false;
     private uint _count;
     private List<float> _angles;
     private Vector3 _stopPos = Vector3.negativeInfinity;
@@ -123,7 +124,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
         StartMasterLog("WH");
         _timeStart = Time.time;
         _uncoupledWalking = false;
-        _pointWalking = true;
+        _waveWalking = true;
         _timeStop = float.MinValue;
         _stopPos = Vector3.negativeInfinity;
         _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
@@ -137,7 +138,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
     }
     public void StopLogWaveHandWalking(Destination d)
     {
-        _pointWalking = false;
+        _waveWalking = false;
         _timeStop = Time.time - _timeStart;
         var values = new List<string>
         {
@@ -168,7 +169,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
         if (_uncoupledWalking)
         {
             // compute Path Deviation metrics
-            var diff = Math.Abs(LocomotionManager.Instance.CurrentPlayerController.position.z - Level3Manager.Instance.StartUnc.transform.position.z);
+            var diff = GetPathDev(Level3Manager.Instance._pathDevRef1, _pathDevAxis);
             _diffsum += diff * (1 / StatisticsLoggerData.SamplingRate);
             if (diff > _maxwalkdist)
                 _maxwalkdist = diff;
@@ -221,7 +222,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
         {
 
             // compute Path Deviation metrics
-            var diff = Math.Abs(LocomotionManager.Instance.CurrentPlayerController.position.z - Level3Manager.Instance.StartUnc.transform.position.z);
+            var diff = GetPathDev(Level3Manager.Instance._pathDevRef2, _pathDevAxis);
             _diffsum += diff * (1 / StatisticsLoggerData.SamplingRate);
             if (diff > _maxwalkdist)
                 _maxwalkdist = diff;
@@ -262,6 +263,53 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
 
 
             _speeds.Add(v);
+        }
+        else if (_waveWalking)
+        {
+
+            // compute Path Deviation metrics
+            var diff = GetPathDev(Level3Manager.Instance._pathDevRef3, _pathDevAxis);
+            _diffsum += diff * (1 / StatisticsLoggerData.SamplingRate);
+            if (diff > _maxwalkdist)
+                _maxwalkdist = diff;
+            else if (diff < _minwalkdist)
+                _minwalkdist = diff;
+
+            // compute speed
+            var t = Time.time - _lastsample;
+            var d = Mathf.Abs(Vector3.Distance(LocomotionManager.Instance.CurrentPlayerController.position, _prevpos));
+            var v = d / t;
+
+            var cl = LocomotionManager.Instance.LeftController.transform.position;
+            var cr = LocomotionManager.Instance.RightController.transform.position;
+            var hd = Vector3.Distance(cl, cr);
+            if (hd > .6f * LocomotionManager.Instance.CalibrationData.ControllerDistance)
+                _count++;
+            _angles.Add(hd / LocomotionManager.Instance.CalibrationData.ControllerDistance);
+
+            var currpos = LocomotionManager.Instance.CurrentPlayerController.position;
+            if (currpos == _prevpos)
+            {
+                if (_timeStop == float.MinValue)
+                    _timeStop = Time.time;
+                else if (Time.time >= _timeStop + Level3Manager.Instance.TimeToStop)
+                {
+                    if (UnityExtender.NearlyEqual(_stopPos, Vector3.negativeInfinity))
+                    {
+                        _errors++;
+                        _stopPos = currpos;
+                    }
+                }
+            }
+            else
+            {
+                _timeStop = float.MinValue;
+                _stopPos = Vector3.negativeInfinity;
+            }
+
+
+            _speeds.Add(v);
+
         }
         _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
 

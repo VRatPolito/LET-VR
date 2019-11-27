@@ -38,6 +38,7 @@ public class Level1Manager : UnitySingleton<Level1Manager>
     [SerializeField] private RunTimer _runTimer;
     [SerializeField] private float _timeToStop = .5f;
     [SerializeField] private DoorController _doortochase;
+    [SerializeField] internal Transform _pathDevRef;
     #endregion
 
     #region Private Members and Constants
