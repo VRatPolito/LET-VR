@@ -150,7 +150,7 @@ public class Level5Manager : UnitySingleton<Level5Manager>
         foreach (var c in antifall.GetComponents<BoxCollider>())
             c.enabled = true;
 
-        if(!LocomotionManager.Instance.IsAutoFreezable)
+        if(!LocomotionManager.Instance.IsAutoFreezable || Application.isEditor)
             LocomotionManager.Instance.StopLocomotionPublic();
 
         Link.GetComponent<MakePlayerChild>()._makePlayerChild = true;
@@ -158,7 +158,7 @@ public class Level5Manager : UnitySingleton<Level5Manager>
         Link.transform.DOMoveY(3.5f, 5).SetEase(Ease.InOutQuad).OnComplete(() =>
         {
             LocomotionManager.Instance.CurrentPlayerController.parent = null;
-            if (!LocomotionManager.Instance.IsAutoFreezable)
+            if (!LocomotionManager.Instance.IsAutoFreezable || Application.isEditor)
                 LocomotionManager.Instance.StartLocomotionPublic();
             antifall.SetActive(false);
         });
