@@ -27,7 +27,7 @@ public class DroneWithPanelController : MonoBehaviour
 
     #region Editor Visible
 
-    [SerializeField] [Range(0, 3)] private float _aheadOfPlayer = 1.5f;
+    //[SerializeField] [Range(0, 3)] private float _aheadOfPlayer = 1.5f;
     [SerializeField] [Range(0, 20)] private float _warningRadius = 5f;
     [SerializeField] private float _escapeSpeed = 3;
     [SerializeField] private float _rotateSpeed = 15;
@@ -68,12 +68,11 @@ public class DroneWithPanelController : MonoBehaviour
         _controller = GetComponent<CharacterController>();
         _panel = transform.GetChildRecursive("Panel").gameObject;
         Assert.IsNotNull(_panel);
-        Assert.IsTrue(_aheadOfPlayer < _warningRadius);
         _lastDir = transform.forward;
         _rot = transform.rotation;
         _targetSpeed = _escapeSpeed;
-        _targetAhead = (LocomotionManager.Instance.CalibrationData.ControllerDistance * 0.605f).Clamp(0.90f, 1.25f);
-        ;
+        _targetAhead = (LocomotionManager.Instance.CalibrationData.ControllerDistance * 0.5f).Clamp(0.90f, 1.25f);
+        
 
 
         PlayerInRange.AddListener(() =>
@@ -188,7 +187,7 @@ public class DroneWithPanelController : MonoBehaviour
             if ((Time.time - _startChasingTime) > th.FromTime)
             {
                 _targetSpeed = _escapeSpeed * th.Factor;
-                _targetAhead = (LocomotionManager.Instance.CalibrationData.ControllerDistance * 0.605f * th.Factor).Clamp(0.90f*th.Factor, 1.25f);
+                _targetAhead = (LocomotionManager.Instance.CalibrationData.ControllerDistance * 0.5f * th.Factor).Clamp(0.90f*th.Factor, 1.25f);
             }
         }
         
@@ -238,7 +237,7 @@ public class DroneWithPanelController : MonoBehaviour
         Physics.Raycast(ray, out hitH, rayLength, layerMask);
         Debug.DrawRay(ray.origin, ray.direction, Color.red,5);
 
-        newPos.y = hitH.point.y + (LocomotionManager.Instance.CalibrationData.HeadHeight * 0.7f).Clamp(0.5f, 1.8f);
+        newPos.y = hitH.point.y + (LocomotionManager.Instance.CalibrationData.HeadHeight * 0.8f).Clamp(0.5f, 1.8f) + (transform.position.y-_panel.transform.position.y);
         transform.position = newPos;
 
         Debug.Log($"Floor Y = {hitH.point.y}, Drone height From floor = {newPos.y - hitH.point.y}");

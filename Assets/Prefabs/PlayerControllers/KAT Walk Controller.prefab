@@ -883,6 +883,7 @@ GameObject:
   - component: {fileID: 82378853500579728}
   - component: {fileID: 114971199150360942}
   - component: {fileID: 54332753102720754}
+  - component: {fileID: 7474639956227428670}
   m_Layer: 8
   m_Name: KAT Walk Controller
   m_TagString: Player
@@ -1116,6 +1117,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &7474639956227428670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1466082546111762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e899b2204c6a2654c8d4077710151fb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LeftController: {fileID: 1722877803167076}
+  RightController: {fileID: 1138642988940550}
 --- !u!1 &1707791192249798
 GameObject:
   m_ObjectHideFlags: 0

@@ -585,6 +585,7 @@ GameObject:
   - component: {fileID: 82566320380452098}
   - component: {fileID: 3866126388157082125}
   - component: {fileID: 54789370578963178}
+  - component: {fileID: 114674213936415640}
   m_Layer: 8
   m_Name: Arm Swing Controller
   m_TagString: Player
@@ -835,6 +836,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &114674213936415640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1504883346079692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e899b2204c6a2654c8d4077710151fb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LeftController: {fileID: 1380632003020670}
+  RightController: {fileID: 1658180417744100}
 --- !u!1 &1566240698378012
 GameObject:
   m_ObjectHideFlags: 0
