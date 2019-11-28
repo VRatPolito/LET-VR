@@ -72,8 +72,8 @@ public class DroneWithPanelController : MonoBehaviour
         _lastDir = transform.forward;
         _rot = transform.rotation;
         _targetSpeed = _escapeSpeed;
-        _targetAhead = (LocomotionManager.Instance.CalibrationData.ControllerDistance * 0.605f).Clamp(0.90f, 1.25f);
-        ;
+        _targetAhead = (LocomotionManager.Instance.CalibrationData.ControllerDistance * 0.55f).Clamp(0.90f, 1.25f);
+        Debug.Log($"Drone ahead of {_targetAhead}");
 
 
         PlayerInRange.AddListener(() =>
@@ -188,7 +188,7 @@ public class DroneWithPanelController : MonoBehaviour
             if ((Time.time - _startChasingTime) > th.FromTime)
             {
                 _targetSpeed = _escapeSpeed * th.Factor;
-                _targetAhead = (LocomotionManager.Instance.CalibrationData.ControllerDistance * 0.605f * th.Factor).Clamp(0.90f*th.Factor, 1.25f);
+                _targetAhead = (LocomotionManager.Instance.CalibrationData.ControllerDistance * 0.55f * th.Factor).Clamp(0.90f*th.Factor, 1.25f);
             }
         }
         
@@ -238,7 +238,7 @@ public class DroneWithPanelController : MonoBehaviour
         Physics.Raycast(ray, out hitH, rayLength, layerMask);
         Debug.DrawRay(ray.origin, ray.direction, Color.red,5);
 
-        newPos.y = hitH.point.y + (LocomotionManager.Instance.CalibrationData.HeadHeight * 0.7f).Clamp(0.5f, 1.8f);
+        newPos.y = hitH.point.y + (LocomotionManager.Instance.CalibrationData.HeadHeight * 0.8f).Clamp(0.5f, 1.8f) + (transform.position.y-_panel.transform.position.y);
         transform.position = newPos;
 
         Debug.Log($"Floor Y = {hitH.point.y}, Drone height From floor = {newPos.y - hitH.point.y}");

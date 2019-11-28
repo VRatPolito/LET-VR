@@ -3324,11 +3324,18 @@ MonoBehaviour:
       m_Calls: []
   _aheadOfPlayer: 1
   _warningRadius: 4
-  _escapeSpeed: 2
-  _rotateSpeed: 10
-  _boostFactor: 3
+  _escapeSpeed: 1.9
+  _rotateSpeed: 5.5
+  _boostFactor: 1.8
   _dummyPlayer: {fileID: 0}
   _target: {fileID: 0}
+  _speedScalingFactorOnTimeElapsed:
+  - FromTime: 240
+    Factor: 0.7
+  - FromTime: 360
+    Factor: 0.5
+  - FromTime: 600
+    Factor: 0.25
 --- !u!1 &7211918441912809975
 GameObject:
   m_ObjectHideFlags: 0
@@ -3478,11 +3485,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 11
       objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: b687864613874f54f95b24dc1c9db256, type: 3}
+    - target: {fileID: 100002, guid: b687864613874f54f95b24dc1c9db256, type: 3}
       propertyPath: m_Layer
       value: 11
       objectReference: {fileID: 0}
-    - target: {fileID: 100002, guid: b687864613874f54f95b24dc1c9db256, type: 3}
+    - target: {fileID: 100000, guid: b687864613874f54f95b24dc1c9db256, type: 3}
       propertyPath: m_Layer
       value: 11
       objectReference: {fileID: 0}

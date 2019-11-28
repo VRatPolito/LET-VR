@@ -32,7 +32,7 @@ public class BatchUtils : MonoBehaviour
             {
                
                 case BuildResult.Succeeded:
-                    Debug.Log($"Build {Path.GetFileNameWithoutExtension(EditorBuildSettings.scenes[i].path)} succeeded: {summary.totalSize} bytes");
+                    Debug.Log($"Build {Path.GetFileNameWithoutExtension(EditorBuildSettings.scenes[i].path)} succeeded: {summary.totalSize/(Mathf.Pow(2,20))} MB");
                     break;
                 case BuildResult.Failed:
                 case BuildResult.Unknown:
