@@ -3,6 +3,7 @@
  */
 
 using System;
+using System.Collections;
 using Boo.Lang;
 using DG.Tweening;
 using PrattiToolkit;
@@ -85,8 +86,7 @@ public class DroneWithPanelController : MonoBehaviour
 
     private void Start()
     {
-        //End();
-        _playingCoreo = WaitForPlayerCoreo();
+        StartCoroutine(HeightCalibration());
     }
 
     private void FixedUpdate()
@@ -224,6 +224,29 @@ public class DroneWithPanelController : MonoBehaviour
     #endregion
 
     #region Coroutines
+
+    private IEnumerator HeightCalibration()
+    {
+        yield return new WaitForFixedUpdate();
+
+        var newPos = transform.position;
+        float rayLength = 30;
+        int layerMask = LayerMask.GetMask(new[] { "Default" });
+        RaycastHit hitH;
+
+        var ray = new Ray(this.transform.position, Vector3.down);
+        Physics.Raycast(ray, out hitH, rayLength, layerMask);
+        Debug.DrawRay(ray.origin, ray.direction, Color.red,5);
+
+        newPos.y = hitH.point.y + (LocomotionManager.Instance.CalibrationData.HeadHeight * 0.7f).Clamp(0.5f, 1.8f);
+        transform.position = newPos;
+
+        Debug.Log($"Floor Y = {hitH.point.y}, Drone height From floor = {newPos.y - hitH.point.y}");
+
+        yield return null;
+
+        _playingCoreo = WaitForPlayerCoreo();
+    }
 
     #endregion
 }
