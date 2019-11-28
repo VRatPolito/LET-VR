@@ -27,7 +27,7 @@ public class DroneWithPanelController : MonoBehaviour
 
     #region Editor Visible
 
-    [SerializeField] [Range(0, 3)] private float _aheadOfPlayer = 1.5f;
+    //[SerializeField] [Range(0, 3)] private float _aheadOfPlayer = 1.5f;
     [SerializeField] [Range(0, 20)] private float _warningRadius = 5f;
     [SerializeField] private float _escapeSpeed = 3;
     [SerializeField] private float _rotateSpeed = 15;
@@ -68,12 +68,11 @@ public class DroneWithPanelController : MonoBehaviour
         _controller = GetComponent<CharacterController>();
         _panel = transform.GetChildRecursive("Panel").gameObject;
         Assert.IsNotNull(_panel);
-        Assert.IsTrue(_aheadOfPlayer < _warningRadius);
         _lastDir = transform.forward;
         _rot = transform.rotation;
         _targetSpeed = _escapeSpeed;
         _targetAhead = (LocomotionManager.Instance.CalibrationData.ControllerDistance * 0.55f).Clamp(0.90f, 1.25f);
-        Debug.Log($"Drone ahead of {_targetAhead}");
+        
 
 
         PlayerInRange.AddListener(() =>
@@ -108,7 +107,7 @@ public class DroneWithPanelController : MonoBehaviour
         if(_shootdown) return;
 
         CorrectSpeedFactor();
-
+       
         if (_pGap < _targetAhead) //InCloseRange
         {
             _boost = (1 + Mathf.InverseLerp(_targetAhead, 0, _pGap)).Remap(1, 2, 1, _boostFactor);
@@ -129,7 +128,9 @@ public class DroneWithPanelController : MonoBehaviour
         {
             _currSpeed = Mathf.Lerp(_currSpeed, _targetSpeed, .5f);
             transform.Translate(_lastDir * _currSpeed * Time.fixedDeltaTime, Space.World);
-            transform.rotation = Quaternion.Slerp(transform.rotation, _rot, Time.fixedDeltaTime * _rotateSpeed);
+            _lastDir = _pDir;
+            _rot = Quaternion.LookRotation(_lastDir, Vector3.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, _rot, Time.fixedDeltaTime * _rotateSpeed / 2);
             if (!_inRange)
             {
                 _inRange = true;
@@ -140,12 +141,19 @@ public class DroneWithPanelController : MonoBehaviour
         {
             _currSpeed = Mathf.Lerp(_currSpeed, 0, .01f);
             transform.Translate(_lastDir * _currSpeed * Time.fixedDeltaTime, Space.World);
+            transform.rotation = Quaternion.Slerp(transform.rotation, _rot, Time.fixedDeltaTime * _rotateSpeed);
             if (_inRange)
             {
                 _inRange = false;
                 PlayerOutRange?.Invoke();
             }
         }
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = _pGap<_targetAhead?Color.red:Color.green;
+        Gizmos.DrawWireSphere(transform.position, _targetAhead);
     }
 
     #endregion
@@ -202,7 +210,7 @@ public class DroneWithPanelController : MonoBehaviour
         {
             transform.position = currPos;
             _panel.transform.rotation = currBillRot;
-            _startChasingTime = Time.deltaTime;
+            _startChasingTime = Time.time;
         });
 
         var seq1 = DOTween.Sequence();
