@@ -150,6 +150,10 @@ public class Level4Manager : UnitySingleton<Level4Manager>
     {
         _bodyShooter.enabled = true;
         _headShooter.HitsCounter = 0;
+        LocomotionManager.Instance.RightController.GetComponent<Collider>().enabled = true;
+        LocomotionManager.Instance.LeftController.GetComponent<Collider>().enabled = true;
+        LocomotionManager.Instance.RightController.GetComponent<Collider>().isTrigger = false;
+        LocomotionManager.Instance.LeftController.GetComponent<Collider>().isTrigger = false;
         StatisticsLogger.StartLogBodyShooter();
     }
 
@@ -163,8 +167,9 @@ public class Level4Manager : UnitySingleton<Level4Manager>
                 Invoke("Quit", 5);
         };
         StatisticsLogger.StopLogBodyShooter();
-        LocomotionManager.Instance.RightController.GetComponent<Collider>().enabled = true;
-        LocomotionManager.Instance.LeftController.GetComponent<Collider>().enabled = true;
+        LocomotionManager.Instance.RightController.GetComponent<Collider>().isTrigger = true;
+        LocomotionManager.Instance.LeftController.GetComponent<Collider>().isTrigger = true;
+
     }
 
     private void Quit()
