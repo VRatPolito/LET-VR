@@ -25,7 +25,7 @@ public class DronesCoinCollectorController : MonoBehaviour
     [SerializeField] private Transform _leftCoinRow, _rightCoinRow;
     [SerializeField] private Rigidbody _leftDrone, _rightDrone;
     [SerializeField] private TextMeshPro _coinsCollectedVisualizerText;
-    [SerializeField] [Range(0, 3)] private float _aheadOfPlayer = 1;
+    [SerializeField] [Range(1, 5)] private float _aheadOfPlayer = 2;
     [SerializeField] [Range(0, 1)] private float _robotMoveSmoothing = 0.3f;
 
     #endregion
