@@ -112,8 +112,8 @@ public class RealWalkToolset : MonoBehaviour
             _currPoint++;
             if (_currPoint > _teleportPoints.Count - 1)
                 _currPoint = _teleportPoints.Count - 1;
-            transform.position = _teleportPoints[_currPoint].position;
-            transform.rotation = _teleportPoints[_currPoint].rotation;
+            LocomotionManager.Instance.CurrentPlayerController.position = _teleportPoints[_currPoint].position;
+            LocomotionManager.Instance.CurrentPlayerController.rotation = _teleportPoints[_currPoint].rotation;
         }
     }
 
@@ -122,18 +122,18 @@ public class RealWalkToolset : MonoBehaviour
         _currPoint--;
         if (_currPoint < 0)
             _currPoint = 0;
-        transform.position = _teleportPoints[_currPoint].position;
-        transform.rotation = _teleportPoints[_currPoint].rotation;
+        LocomotionManager.Instance.CurrentPlayerController.position = _teleportPoints[_currPoint].position;
+        LocomotionManager.Instance.CurrentPlayerController.rotation = _teleportPoints[_currPoint].rotation;
     }
 
     private void Rotate(float a)
     {
-        transform.Rotate(new Vector3(0, a, 0));
+        LocomotionManager.Instance.CurrentPlayerController.Rotate(new Vector3(0, a, 0));
     }
 
     private void Translate2D(float x, float z)
     {
         var p = _cVR.CameraEye.localToWorldMatrix * new Vector3(x, 0, z);
-        transform.Translate(new Vector3(p.x, 0, p.z), Space.World);
+        LocomotionManager.Instance.CurrentPlayerController.Translate(new Vector3(p.x, 0, p.z), Space.World);
     }
 }

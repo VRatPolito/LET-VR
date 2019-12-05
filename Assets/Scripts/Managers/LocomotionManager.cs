@@ -189,6 +189,7 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
     #endregion
 
     #region Public Methods
+
     public void AutoFreeze()
     {
         if(_autoFreezable && !Application.isEditor)
