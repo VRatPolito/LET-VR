@@ -59,6 +59,6 @@ public class TowerManager : MonoBehaviour
 
         angle = Mathf.Abs((Mathf.Abs(angle) - 90));
 
-        return (1 - (Mathf.Abs(angle) / 90)) * 100;
+        return (Mathf.Abs(angle) / 90) * 100;
     }
 }

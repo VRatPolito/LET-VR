@@ -66,7 +66,7 @@ public class GrabDestination : Destination
 
         angle = Mathf.Abs((Mathf.Abs(angle) - 90));
 
-        return (1 - (Mathf.Abs(angle) / 90)) * 100;
+        return (Mathf.Abs(angle) / 90) * 100;
     }
     private void OnTriggerStay(Collider other)
     {
