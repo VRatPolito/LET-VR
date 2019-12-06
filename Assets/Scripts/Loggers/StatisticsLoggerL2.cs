@@ -29,6 +29,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
     private bool _errorCounted = false;
     private bool _backWalking = false, _curvedWalking = false, _fear = false, _dirWalking = false, _stairslopeWalking = false;
     private string _choice;
+	private int _counter = 0;
     // private OvershootingDestination _overshotingtarget = null; ???
     private Transform _prevTarget;
     protected List<float> _hdr;
@@ -99,6 +100,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
         _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
         _speeds.Clear();
         _errors = 0;
+		_counter = 0;
     }
 
 
@@ -222,7 +224,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
             "" + _timeStop,
             "" + GetAverageSpeed(),
             "" + _errors,
-            "" + (100 - (_errors / _speeds.Count * 100)),
+            "" + (100 - (_counter / _speeds.Count * 100)),
             "" + _maxwalkdist,
             "" + _diffsum
         };
@@ -311,12 +313,16 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
             var t = (Time.time - _lastsample); // compute delta time
             var d = Mathf.Abs(Vector3.Distance(LocomotionManager.Instance.CurrentPlayerController.position, _prevpos)); // compute distance traveled
             var v = d / t; //compute speed
-            if (!Level2Manager.Instance.BackwardItem.InteractiveItem.IsOver && !_errorCounted)
+            if (!Level2Manager.Instance.BackwardItem.InteractiveItem.IsOver)
             {
-                _errors++;
-                _errorCounted = true;
+				_counter++;
+				if(!_errorCounted)
+					{
+					_errors++;
+					_errorCounted = true;
+					}
             }
-            else if (Level2Manager.Instance.BackwardItem.InteractiveItem.IsOver)
+            else
             {
                 _errorCounted = false;
             }
