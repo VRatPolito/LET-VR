@@ -51,7 +51,8 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
         {
             "" + _timeStop,
             "" + _maxwalkdist,
-            "" + _diffsum
+            "" + _diffsum,
+            "" + Collisions
         };
         WriteToCSV("W", values, 1);
         StopMasterLog();
@@ -59,7 +60,7 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
 
     public override void LogCollisions(HitType type)
     {
-        if (_running)
+        if (_running || _walking)
         {
             if (type == HitType.Player)
                 Collisions++;
@@ -113,6 +114,7 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
         StartMasterLog("R");
         _timeStart = Time.time;
         _running = true;
+        Collisions = 0;
         _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
     }
     public void StopLogRunning(Destination d)
