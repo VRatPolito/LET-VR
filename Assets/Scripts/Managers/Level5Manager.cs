@@ -42,13 +42,13 @@ public class Level5Manager : UnitySingleton<Level5Manager>
     [SerializeField] protected BillBoardManager _plate;
     public List<GenericItem> ManipulationStuff;
 
-
     #endregion
 
     #region Private Members and Constants
 
     private uint _snaps = 0;
     private bool _firstTime = true;
+
     #endregion
 
     #region Properties
@@ -89,6 +89,8 @@ public class Level5Manager : UnitySingleton<Level5Manager>
         StartMovingInteraction.OnDisabled.AddListener(StartMovingInteractionLevel);
         _drone.PlayerInRange.AddListener(PlayerInRange);
         _drone.PlayerInRange.AddListener(StatisticsLogger.PlayerInRange);
+        _drone.ChasingTimeout.AddListener(StopDrone);
+        _drone.ChasingTimeout.AddListener(EndLevel);
         _drone.PlayerOutRange.AddListener(StatisticsLogger.PlayerOutRange);
         _plate.InteractionError.AddListener(StatisticsLogger.LogInteractionError);
         _plate.AllInteractionsDone.AddListener(StopDrone);
@@ -122,10 +124,12 @@ public class Level5Manager : UnitySingleton<Level5Manager>
     #endregion
 
     #region Helper Methods
+
     public void EnableDestination(Destination d)
     {
         d.gameObject.SetActive(true);
     }
+
     #endregion
 
     #region Events Callbacks
@@ -133,7 +137,7 @@ public class Level5Manager : UnitySingleton<Level5Manager>
     private void CountSnap(Destination d)
     {
         _snaps++;
-        GrabDestination gd = (GrabDestination)d;
+        GrabDestination gd = (GrabDestination) d;
         StatisticsLogger.LogSetupPrecision(gd.GetPosDiff(), gd.GetRotDiff());
         if (_snaps == 3)
         {
@@ -151,7 +155,7 @@ public class Level5Manager : UnitySingleton<Level5Manager>
         foreach (var c in antifall.GetComponents<BoxCollider>())
             c.enabled = true;
 
-        if(!LocomotionManager.Instance.IsAutoFreezable || Application.isEditor)
+        if (!LocomotionManager.Instance.IsAutoFreezable || Application.isEditor)
             LocomotionManager.Instance.StopLocomotionPublic();
 
         Link.GetComponent<MakePlayerChild>()._makePlayerChild = true;

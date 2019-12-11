@@ -3322,6 +3322,9 @@ MonoBehaviour:
   PlayerOutRange:
     m_PersistentCalls:
       m_Calls: []
+  ChasingTimeout:
+    m_PersistentCalls:
+      m_Calls: []
   _warningRadius: 4
   _escapeSpeed: 1.7
   _rotateSpeed: 2.5
@@ -3335,8 +3338,12 @@ MonoBehaviour:
     Factor: 0.7
   - FromTime: 360
     Factor: 0.5
-  - FromTime: 600
+  - FromTime: 420
     Factor: 0.3
+  - FromTime: 540
+    Factor: 0.15
+  - FromTime: 600
+    Factor: -1
 --- !u!1 &7211918441912809975
 GameObject:
   m_ObjectHideFlags: 0
@@ -3486,11 +3493,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 11
       objectReference: {fileID: 0}
-    - target: {fileID: 100002, guid: b687864613874f54f95b24dc1c9db256, type: 3}
+    - target: {fileID: 100000, guid: b687864613874f54f95b24dc1c9db256, type: 3}
       propertyPath: m_Layer
       value: 11
       objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: b687864613874f54f95b24dc1c9db256, type: 3}
+    - target: {fileID: 100002, guid: b687864613874f54f95b24dc1c9db256, type: 3}
       propertyPath: m_Layer
       value: 11
       objectReference: {fileID: 0}

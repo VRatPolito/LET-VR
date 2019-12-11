@@ -25,8 +25,10 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
 
     [SerializeField] private bool _getLocomotionFromConfigFile = true;
     [SerializeField] private ControllerType _locomotion;
-    [SerializeField] private List<Transform> _playerControllers;
+    [SerializeField] private bool _getAutoFreezableFromConfigFile = true;
     [SerializeField] private bool _autoFreezable = true;
+    [SerializeField] private List<Transform> _playerControllers;
+
     [SerializeField] private KeyCode _freezePalyerKeyCode = KeyCode.F;
     //[Expandable]
     [SerializeField] private LocomotionCalibrationData _calibrationData;
@@ -102,6 +104,9 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
     {
         if (_getLocomotionFromConfigFile)
             Locomotion = Configuration.GetEnum("LocomotionMethod", Locomotion);
+        if (_getAutoFreezableFromConfigFile)
+            _autoFreezable = Configuration.GetBool("AutoFreeze", _autoFreezable);
+
         _calibrationData = GetOrCreateCalibrationData();
         Assert.IsNotNull(_calibrationData);
         _startingKATmultiply = _playerControllers[(int)ControllerType.KatWalk].GetComponentInChildren<KATDevice>().multiply;

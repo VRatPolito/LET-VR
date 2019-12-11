@@ -22,7 +22,7 @@ public class DroneWithPanelController : MonoBehaviour
     }
 
     #region Events
-    public UnityEvent PlayerInRange, PlayerOutRange;
+    public UnityEvent PlayerInRange, PlayerOutRange, ChasingTimeout;
     #endregion
 
     #region Editor Visible
@@ -195,6 +195,11 @@ public class DroneWithPanelController : MonoBehaviour
         {
             if ((Time.time - _startChasingTime) > th.FromTime)
             {
+                if (th.Factor < -0.1f)
+                {
+                    ChasingTimeout?.Invoke();
+                    return;
+                }
                 _targetSpeed = _escapeSpeed * th.Factor;
                 _targetAhead = (LocomotionManager.Instance.CalibrationData.ControllerDistance * 0.55f * th.Factor).Clamp(0.90f*th.Factor, 1.25f);
             }

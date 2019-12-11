@@ -67,7 +67,7 @@ public class Level2Manager : UnitySingleton<Level2Manager>
 
 
         StartDest.OnDisabled.AddListener(StartGrow);
-        BackEnd.OnDisabled.AddListener(StatisticsLogger.StopLogBackWalking);
+        BackEnd.OnDisabled.AddListener(StopBackwardWalking);
         CurvedStart.OnDisabled.AddListener(StatisticsLogger.StartLogCurvedWalking);
         CurvedStart.OnDisabled.AddListener(AttachLight);
         CurvedEnd.OnDisabled.AddListener(StatisticsLogger.StopLogCurvedWalking);
@@ -85,30 +85,6 @@ public class Level2Manager : UnitySingleton<Level2Manager>
         LevelEnd.OnDisabled.AddListener(EndGame);
     }
 
-    private void EndGame(Destination d)
-    {
-        Application.Quit();
-    }
-
-    private void OpenFearDoor(Destination d)
-    {
-        var seq = DOTween.Sequence();
-        seq.Append(_fearDoor.DOMoveX(15.02f, 1.5f));
-        seq.Play();
-    }
-
-    private void DetachLight(Destination d)
-    {
-        _headlight.transform.parent = null;
-        _headlight.GetComponent<Light>().enabled = false;
-    }
-
-    private void AttachLight(Destination d)
-    {
-        _headlight.transform.parent = LocomotionManager.Instance.CameraEye;
-        _headlight.transform.localPosition = Vector3.zero;
-        _headlight.GetComponent<Light>().enabled = true;
-    }
 
     void Start()
     {
@@ -144,7 +120,9 @@ public class Level2Manager : UnitySingleton<Level2Manager>
     {
         Instance.StatisticsLogger.StartLogBackWalking();
         Instance.BackwardItem.IsLockable = true;
-        Instance.BackwardItem.OnLocked += () => { Instance.CurvedDoor.SensorEnabled = true; CurvedDoor.ForceCloseDoor();
+        Instance.BackwardItem.OnLocked += () => {
+            Instance.CurvedDoor.SensorEnabled = false;
+            CurvedDoor.ForceCloseDoor();
             _pathController.Hide();
         };
 
@@ -168,10 +146,6 @@ public class Level2Manager : UnitySingleton<Level2Manager>
 
     #region Helper Methods
 
-    #endregion
-
-    #region Events Callbacks
-
     private void OnLockedItem()
     {
         var lm = _lockableMuseumItems[_lmi_Idx++];
@@ -183,6 +157,43 @@ public class Level2Manager : UnitySingleton<Level2Manager>
         _pathController.GrowHead();
 
     }
+
+    private void EndGame(Destination d)
+    {
+        Application.Quit();
+    }
+
+    #endregion
+
+    #region Events Callbacks
+
+    private void StopBackwardWalking(Destination d)
+    {
+        StatisticsLogger.StopLogBackWalking(d);
+        BackwardItem.IsLocked = true;
+    }
+    
+
+    private void OpenFearDoor(Destination d)
+    {
+        var seq = DOTween.Sequence();
+        seq.Append(_fearDoor.DOMoveX(15.02f, 1.5f));
+        seq.Play();
+    }
+
+    private void DetachLight(Destination d)
+    {
+        _headlight.transform.parent = null;
+        _headlight.GetComponent<Light>().enabled = false;
+    }
+
+    private void AttachLight(Destination d)
+    {
+        _headlight.transform.parent = LocomotionManager.Instance.CameraEye;
+        _headlight.transform.localPosition = Vector3.zero;
+        _headlight.GetComponent<Light>().enabled = true;
+    }
+    
 
     public void OnPlayerFallen()
     {

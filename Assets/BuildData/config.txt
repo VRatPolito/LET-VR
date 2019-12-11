@@ -1,2 +1,3 @@
 #SetLocomotion Method among {ArmSwing, FootSwing, CVirtualizer, KatWalk, RealWalk, Joystick}
 LocomotionMethod=ArmSwing
+AutoFreeze=true

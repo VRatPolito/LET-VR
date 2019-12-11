@@ -98,7 +98,6 @@ public class Level3Manager : UnitySingleton<Level3Manager>
         if(DronesCoinCollectorController != null) DronesCoinCollectorController.Outro();
     }
 
-
     private void EndGame(Destination d)
     {
         StopDronesT3(d);
