@@ -44,7 +44,6 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
     protected Vector3 _prevpos;
     protected float _lastsample = float.MinValue;
     protected float _pathDev = 0.0f;
-    protected float _prevvel = 0;
     protected List<Vector3> _positions, _rotations, _headpositions, _headrotations, _lefthandpositions, _lefthandrotations, _righthandpositions, _righthandrotations, _dirtrackpositions, _dirtrackrotations, _leftlegpositions, _leftlegrotations, _rightlegpositions, _rightlegrotations, _targetpositions;
     protected List<float> _gazewalkangles;
     protected List<object> _locks;

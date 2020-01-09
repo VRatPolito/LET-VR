@@ -28,7 +28,7 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
     private bool _stopped = false;
     private bool _errorCounted = false;
     private OvershootingDestination _overshotingtarget = null;
-
+    private int _numExits = 0;
     private int _numInterr = 0;
     private int _numWallColl = 0;
     #endregion
@@ -75,10 +75,7 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
         if (_overshoots == 0)
             StartMasterLog("O");
         _overshotingtarget = target;
-        _numInterr = 0;
         _timeStart = Time.time;
-        _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
-        _prevvel = 0;
         _overshoots++;
     }
     public void StopLogOvershooting()
@@ -89,7 +86,7 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
         {
         "" + ComplTime,
         "" + TargetDist,
-        "" + _numInterr
+        "" + _numExits
         };
 
         WriteToCSV("O" + _overshoots, values, 2);
@@ -161,7 +158,7 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
 
     public void LogOvershootError()
     {
-        _numInterr++;
+        _numExits++;
     }
 
     protected override void ComputeStatisticsStep()
