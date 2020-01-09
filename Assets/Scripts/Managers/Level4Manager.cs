@@ -55,12 +55,12 @@ public class Level4Manager : UnitySingleton<Level4Manager>
         Assert.IsNotNull(StatisticsLogger);
 
 
-        _agilityStart.OnDisabled.AddListener((Destination d) => { StatisticsLogger.StartLogAgility(); });
+        _agilityStart.OnDisabled.AddListener((Destination d) => { StatisticsLogger.StartLogDynamicAgility(); });
         _agilityEnd.OnDisabled.AddListener((Destination d) =>
         {
             _pOPSystem.GetComponent<ProceduralObstacleSpawnerSystem>().DestroyRenderedElements();
             _pOPSystem.SetActive(false);
-            StatisticsLogger.StopLogAgility();
+            StatisticsLogger.StopLogDynamicAgility();
         });
         _headShooterStart.OnDisabled.AddListener(OnHeadShooterStartOnDisabled);
         _headShooter.OnLastBulletExpired += OnLastBulletHeadShooterBulletExpired;
@@ -112,13 +112,13 @@ public class Level4Manager : UnitySingleton<Level4Manager>
         LocomotionManager.Instance.CameraEye.GetComponent<SphereCollider>().enabled = true;
         LocomotionManager.Instance.RightController.GetComponent<Collider>().enabled = false;
         LocomotionManager.Instance.LeftController.GetComponent<Collider>().enabled = false;
-        StatisticsLogger.StartLogHeadShooter();
+        StatisticsLogger.StartLogStationaryAgility();
     }
 
     private void OnLastBulletHeadShooterBulletExpired()
     {
         _headShooter.Shutdown();
-        StatisticsLogger.StopLogHeadShooter();
+        StatisticsLogger.StopLogStationaryAgility();
         LocomotionManager.Instance.CameraEye.GetComponent<SphereCollider>().enabled = false;
     }
 

@@ -21,14 +21,16 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
 
     #region Private Members and Constants
 
-    private float _timeStart, _timeStop;
-
-    private bool _walking = false, _running = false, _chasing = false;
+    private float _timeStart;
+    private float _timeStop = float.MinValue;
+    private bool _strLineWalking = false, _sprinting = false, _chasing = false;
     private uint _overshoots, _inside = 0;
     private bool _stopped = false;
     private bool _errorCounted = false;
     private OvershootingDestination _overshotingtarget = null;
 
+    private int _numInterr = 0;
+    private int _numWallColl = 0;
     #endregion
 
     #region Properties
@@ -37,33 +39,32 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
 
     #region MonoBehaviour
 
-    public void StartLogWalking(Destination d)
+    public void StartLogStrLineWalking(Destination d)
     {
-        StartMasterLog("W");
+        StartMasterLog("SW");
         _timeStart = Time.time;
-        _walking = true;
+        _strLineWalking = true;
     }
-    public void StopLogWalking(Destination d)
+    public void StopLogStrLineWalking(Destination d)
     {
-        _walking = false;
-        _timeStop = Time.time - _timeStart;
+        _strLineWalking = false;
+        var ComplTime = Time.time - _timeStart;
         var values = new List<string>
         {
-            "" + _timeStop,
-            "" + _maxwalkdist,
-            "" + _diffsum,
-            "" + Collisions
+            "" + ComplTime,
+            "" + _pathDev,
+            "" + _numWallColl
         };
-        WriteToCSV("W", values, 1);
+        WriteToCSV("SW", values, 1);
         StopMasterLog();
     }
 
     public override void LogCollisions(HitType type)
     {
-        if (_running || _walking)
+        if (_sprinting || _strLineWalking)
         {
             if (type == HitType.Player)
-                Collisions++;
+                _numWallColl++;
             LocomotionManager.Instance.LeftController.GetComponent<VibrationController>().ShortVibration(.5f);
             LocomotionManager.Instance.RightController.GetComponent<VibrationController>().ShortVibration(.5f);
         }
@@ -74,10 +75,7 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
         if (_overshoots == 0)
             StartMasterLog("O");
         _overshotingtarget = target;
-        _peakvel = _peakacc = 0;
-        _peakdec = 0;
-        _distpeakvel = _distpeakacc = _distpeakdec = -1;
-        _errors = 0;
+        _numInterr = 0;
         _timeStart = Time.time;
         _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
         _prevvel = 0;
@@ -85,20 +83,13 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
     }
     public void StopLogOvershooting()
     {
-        _timeStop = Time.time - _timeStart;
+        var ComplTime = Time.time - _timeStart;
+        var TargetDist = Mathf.Abs(Vector3.Distance(_overshotingtarget.transform.position, LocomotionManager.Instance.CurrentPlayerController.position));
         var values = new List<string>
         {
-
-        "" + _timeStop,
-        "" + Mathf.Abs(Vector3.Distance(_overshotingtarget.transform.position, LocomotionManager.Instance.CurrentPlayerController.position)),
-        "" + _peakvel,
-        "" + _peakacc,
-        "" + _peakdec,
-        "" + _distpeakvel / _peakvel,
-        "" + _distpeakacc / _peakacc,
-        "" + _distpeakdec / _peakdec,
-        "" + (_timetopeakvel - _timeStart) / _timeStop * 100,
-        "" + _errors
+        "" + ComplTime,
+        "" + TargetDist,
+        "" + _numInterr
         };
 
         WriteToCSV("O" + _overshoots, values, 2);
@@ -109,55 +100,52 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
         }
     }
 
-    public void StartLogRunning()
-    {
-        StartMasterLog("R");
-        _timeStart = Time.time;
-        _running = true;
-        Collisions = 0;
-        _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
-    }
-    public void StopLogRunning(Destination d)
-    {
-        _running = false;
-        _timeStop = Time.time - _timeStart;
-        var values = new List<string>
-        {
-            "" + _timeStop,
-            "" + GetAverageSpeed(),
-            "" + Collisions
-        };
-        WriteToCSV("R", values, 4);
-        this.OnLogFinalized += (ix) =>
-        {
-            if (ix == 0)
-                Invoke("Quit",5);
-        };
-        StopMasterLog();
-    }
-
     public void StartLogChasing()
     {
         StartMasterLog("C");
         _timeStart = Time.time;
-        _timeStop = float.MinValue;
         _chasing = true;
-        _errors = -1;
+        _numInterr = -1;
         _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
     }
     public void StopLogChasing()
     {
         _chasing = false;
-        _timeStop = Time.time - _timeStart;
-        if (_errors == -1)
-            _errors = 0;
+        if (_numInterr == -1)
+            _numInterr = 0;
         var values = new List<string>
         {
             "" + GetPercTimeInside(),
             "" + GetAverageDist(),
-            "" + _errors,
+            "" + _numInterr,
         };
         WriteToCSV("C", values, 3);
+        StopMasterLog();
+    }
+
+    public void StartLogSprinting()
+    {
+        StartMasterLog("S");
+        _timeStart = Time.time;
+        _sprinting = true;
+        _numWallColl = 0;
+        _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
+    }
+    public void StopLogSprinting(Destination d)
+    {
+        _sprinting = false;
+        var ComplTime = Time.time - _timeStart;
+        var values = new List<string>
+        {
+            "" + ComplTime,
+            "" + _numWallColl
+        };
+        WriteToCSV("S", values, 4);
+        this.OnLogFinalized += (ix) =>
+        {
+            if (ix == 0)
+                Invoke("Quit",5);
+        };
         StopMasterLog();
     }
 
@@ -173,47 +161,15 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
 
     public void LogOvershootError()
     {
-        _errors++;
+        _numInterr++;
     }
 
     protected override void ComputeStatisticsStep()
     {
-        if (_walking)
+        if (_strLineWalking)
         {
             var diff = GetPathDev(Level1Manager.Instance._pathDevRef, _pathDevAxis);
-            _diffsum += diff * (1 / StatisticsLoggerData.SamplingRate);
-            if (diff > _maxwalkdist)
-                _maxwalkdist = diff;
-            else if (diff < _minwalkdist)
-                _minwalkdist = diff;
-        }
-        else if (_overshotingtarget != null)
-        {
-            var t = (Time.time - _lastsample);
-            var d = Mathf.Abs(Vector3.Distance(LocomotionManager.Instance.CurrentPlayerController.position, _prevpos));
-            var v = d / t;
-
-            if (_peakvel < v)
-            {
-                _peakvel = v;
-                _timetopeakvel = Time.time;
-                _distpeakvel = Mathf.Abs(Vector3.Distance(LocomotionManager.Instance.CurrentPlayerController.position, _overshotingtarget.transform.position));
-            }
-
-            var a = (v - _prevvel) / t;
-            if (a > 0 && _peakacc < a)
-            {
-                _peakacc = a;
-                _distpeakacc = Mathf.Abs(Vector3.Distance(LocomotionManager.Instance.CurrentPlayerController.position, _overshotingtarget.transform.position));
-            }
-            else if (a < 0 && _peakdec > a)
-            {
-                _peakdec = a;
-                _distpeakdec = Mathf.Abs(Vector3.Distance(LocomotionManager.Instance.CurrentPlayerController.position, _overshotingtarget.transform.position));
-            }
-
-            _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
-            _prevvel = v;
+            _pathDev += diff * (1 / StatisticsLoggerData.SamplingRate);
         }
         else if (_chasing)
         {
@@ -223,7 +179,7 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
                     _timeStop = Time.time;
                 else if (Time.time >= _timeStop + Level1Manager.Instance.TimeToStop)
                 {
-                    _errors++;
+                    _numInterr++;
                     _errorCounted = true;
                 }
             }
@@ -232,15 +188,6 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
                 _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
                 _errorCounted = false;
             }
-        }
-        else if (_running)
-        {
-            var t = (Time.time - _lastsample);
-            var d = Mathf.Abs(Vector3.Distance(LocomotionManager.Instance.CurrentPlayerController.position, _prevpos));
-            var v = d / t;
-
-            _speeds.Add(v);
-            _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
         }
 
         if (_chasing && _masterlog)
@@ -255,6 +202,16 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
     #endregion
 
     #region Helper Methods
+    protected float GetAverageDist()
+    {
+        float v = 0.0f;
+        for (int i = 0; i < _positions.Count; i++)
+        {
+            v += Mathf.Abs(Vector3.Distance(_positions[i], _targetpositions[i]));
+        }
+        return v / _positions.Count;
+    }
+
 
     protected void Quit()
     {

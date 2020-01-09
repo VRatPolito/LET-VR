@@ -28,7 +28,7 @@ public class StartRunningDestination : WalkingDestination
 	
    public override void OnDisable()
     {
-        Level1Manager.Instance.StatisticsLogger.StartLogRunning();
+        Level1Manager.Instance.StatisticsLogger.StartLogSprinting();
         Level1Manager.Instance.OpenAllDoors();
         base.OnDisable();
     }

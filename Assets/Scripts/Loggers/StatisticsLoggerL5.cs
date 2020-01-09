@@ -19,19 +19,20 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
     #endregion
 
     #region Private Members and Constants
+    protected List<float> _setupPrecision = new List<float>();
     protected List<float> _towerPrecision = new List<float>();
-    protected List<float> _rotSetupPrecision = new List<float>();
-    protected List<float> _posSetupPrecision = new List<float>();
-    protected List<float> _rotTowerPrecision = new List<float>();
-    protected List<float> _posTowerPrecision = new List<float>();
     private float _timeStart, _timeStop;
     private uint  _grabtask;
     private bool _grabbing;
     private bool _movingInteraction;
-    private int _itemCollisions;
 	private bool _playerInside = false;
 	private uint _counter = 0;
-	private uint _inside = 0;
+	private uint _inCounter = 0;
+    private int _numItemFalls = 0;
+    private int _numItemColl = 0;
+    private int _numBodyColl = 0;
+    private int _numIntErrors = 0;
+
     #endregion
 
     #region Properties
@@ -54,19 +55,18 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
         }
 
         _timeStart = Time.time;
-        Collisions = 0;
-        _itemCollisions = 0;
+        _numBodyColl = 0;
+        _numItemColl = 0;
         switch (_grabtask)
         {
             case 0:
-                _errors = -1;
+                _numItemFalls = -1;
                 break;
             case 1:
             case 2:
-                _errors = -2;
+                _numItemFalls = -2;
                 break;
         }
-        _speeds.Clear();
         _grabtask++;
         _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
         _grabbing = true;
@@ -75,16 +75,7 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
     public void StartLogManipulation(Destination d)
     {
         _timeStart = Time.time;
-        _speeds.Clear();
         StartMasterLog("M");
-    }
-    public void StartLogMovingInteraction()
-    {
-        _movingInteraction = true;
-        _timeStart = Time.time;
-        _errors = 0;
-
-        StartMasterLog("MI");
     }
     public void PlayerOutRange()
     {
@@ -98,21 +89,21 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
 
     public void LogInteractionError()
     {
-        _errors++;
+        _numIntErrors++;
     }
     private void LogDrop(GenericItem i)
     {
         if (_grabbing || _movingInteraction)
-            _errors++;
+            _numItemFalls++;
     }
     public override void LogCollisions(HitType type)
     {
         if (_grabbing)
         {
             if (type == HitType.Player)
-                Collisions++;
+                _numBodyColl++;
             else if (type == HitType.Item)
-                _itemCollisions++;
+                _numItemColl++;
         }
         LocomotionManager.Instance.LeftController.GetComponent<VibrationController>().ShortVibration(.5f);
         LocomotionManager.Instance.RightController.GetComponent<VibrationController>().ShortVibration(.5f);
@@ -124,10 +115,9 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
         var values = new List<string>
         {
             "" + _timeStop,
-            "" + GetAverageSpeed(),
-            "" + _errors,
-            "" + Collisions,
-            "" + _itemCollisions
+            "" + _numItemFalls,
+            "" + _numBodyColl,
+            "" + _numItemColl
         };
         WriteToCSV("G"+_grabtask, values, 1);
         if (_grabtask == 3)
@@ -135,18 +125,17 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
 
         _grabbing = false;
     }
+
     public void StopLogManipulation(Destination d)
     {
         _timeStop = Time.time - _timeStart;
+        var SetupPrecision = GetAvgSetupPrecision();
+        var TowerPrecision = GetAvgTowerPrecision();
         var values = new List<string>
         {
             "" + _timeStop,
-            "" + GetAvgPosSetupPrecision(),     //avg pos setup precision
-            "" + GetAvgRotSetupPrecision(),     //avg rot setup precision
-            "" + GetAvgPosTowerPrecision(),     //avg pos tower precision
-            "" + GetAvgRotTowerPrecision(),     //avg rot tower precision
-            "" + GetAverageSpeed(),             //avg setup precision
-            "" + GetAvgTowerPrecision()         //avg tower precision
+            "" + SetupPrecision,
+            "" + TowerPrecision
         };
         WriteToCSV("M", values, 2);
         StopMasterLog();
@@ -154,28 +143,35 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
 
     internal void LogSetupPrecision(float pos, float rot)
     {
-        _posSetupPrecision.Add(pos);
-        _rotSetupPrecision.Add(rot);
-        _speeds.Add((pos + rot) /2);
+        _setupPrecision.Add((pos + rot) / 2);
     }
     internal void LogTowerPrecision(float pos, float rot)
     {
-        _posTowerPrecision.Add(pos);
-        _rotTowerPrecision.Add(rot);        
         _towerPrecision.Add((pos + rot) / 2);
     }
 
-    public void StopLogMovingInteraction()
+    public void StartLogInteractionInMotion()
+    {
+        _movingInteraction = true;
+        _timeStart = Time.time;
+        _numItemFalls = 0;
+
+        StartMasterLog("IM");
+    }
+
+    public void StopLogInteractionInMotion()
     {
         _movingInteraction = false;
         _timeStop = Time.time - _timeStart;
+        var TimeClose = GetPercTimeClose();
+        var NumErrors = _numItemFalls + _numIntErrors;
         var values = new List<string>
         {
             "" + _timeStop,
-            "" + _errors,
-            "" + GetPercTimeInside()       //times player gets out of range
+            "" + TimeClose,
+            "" + NumErrors
         };
-        WriteToCSV("MI", values, 3);
+        WriteToCSV("IM", values, 3);
         StopMasterLog();
     }
 
@@ -186,47 +182,21 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
     #endregion
 
     #region Helper Methods     
-    private float GetPercTimeInside()
+    private float GetPercTimeClose()
     {
-        if (_inside == 0) return 0;
-        return ((float)_inside / (float)(_counter)) * 100;
+        if (_inCounter == 0) return 0;
+        return ((float)_inCounter / (float)(_counter)) * 100;
     }	
-    protected float GetAvgPosSetupPrecision()
+    protected float GetAvgSetupPrecision()
     {
         float v = 0.0f;
-        foreach (var s in _posSetupPrecision)
+        foreach (var s in _setupPrecision)
         {
             v += s;
         }
-        return v / _posSetupPrecision.Count;
-    }
-    protected float GetAvgRotSetupPrecision()
-    {
-        float v = 0.0f;
-        foreach (var s in _rotSetupPrecision)
-        {
-            v += s;
-        }
-        return v / _rotSetupPrecision.Count;
-    }
-    protected float GetAvgPosTowerPrecision()
-    {
-        float v = 0.0f;
-        foreach (var s in _posTowerPrecision)
-        {
-            v += s;
-        }
-        return v / _posTowerPrecision.Count;
-    }
-    protected float GetAvgRotTowerPrecision()
-    {
-        float v = 0.0f;
-        foreach (var s in _rotTowerPrecision)
-        {
-            v += s;
-        }
-        return v / _rotTowerPrecision.Count;
-    }
+        return v / _setupPrecision.Count;
+    }  
+ 
     protected float GetAvgTowerPrecision()
     {
         float v = 0.0f;
@@ -238,22 +208,12 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
     }
     protected override void ComputeStatisticsStep()
     {
-        if (_grabbing)
-        {
-            var t = (Time.time - _lastsample); // compute delta time
-            var d = Mathf.Abs(Vector3.Distance(LocomotionManager.Instance.CurrentPlayerController.position, _prevpos)); // compute distance traveled
-            var v = d / t; //compute speed
-
-            _speeds.Add(v);
-            _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
-        }
-		 if (_movingInteraction)
+		if (_movingInteraction)
         {
             _counter++;
             if (_playerInside)
-                _inside++;
+                _inCounter++;
         }
-
         base.ComputeStatisticsStep();
     }
 

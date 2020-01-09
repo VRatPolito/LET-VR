@@ -86,9 +86,9 @@ public class Level1Manager : UnitySingleton<Level1Manager>
         _end.OnDisabled.AddListener((Destination d) => { _runTimer.Running = false; });
         _runTimer.gameObject.SetActive(false);
 
-        _start.OnDisabled.AddListener(Instance.StatisticsLogger.StartLogWalking);
-        _stopWalk.OnDisabled.AddListener(Instance.StatisticsLogger.StopLogWalking);
-        _end.OnDisabled.AddListener(Instance.StatisticsLogger.StopLogRunning);
+        _start.OnDisabled.AddListener(Instance.StatisticsLogger.StartLogStrLineWalking);
+        _stopWalk.OnDisabled.AddListener(Instance.StatisticsLogger.StopLogStrLineWalking);
+        _end.OnDisabled.AddListener(Instance.StatisticsLogger.StopLogSprinting);
         _doortochase.OnOpenGate.AddListener(EnableChasingDest);
         _chasingDest.OnEnabled.AddListener((Destination d) => _robotRotateAndPointSequence.Play());
     }

@@ -3,11 +3,8 @@
  * Custom template by Gabriele P.
  */
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using PrattiToolkit;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Level3Manager))]
@@ -25,9 +22,12 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
 
     #region Private Members and Constants
 
-    private float _timeStart, _timeStop;
-    private bool _uncoupledWalking = false, _pointWalking = false, _waveWalking = false;
-    private uint _count;
+    private float _timeStart;
+    private bool _decoupledGaze = false, _strOutHands = false, _decoupledHands = false;
+    private int _numInterr = 0;
+    private int _count = 0;
+    private int _inCount = 0;
+    private float _timeStop = float.MinValue;
     private List<float> _angles;
     private Vector3 _stopPos = Vector3.negativeInfinity;
 
@@ -45,111 +45,80 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
         base.Initialize();
     }
 
-    public void StartLogUncoupledWalking(Destination d)
+    public void StartLogDecoupledGaze(Destination d)
     {
-        StartMasterLog("UW");
+        StartMasterLog("DG");
         _timeStart = Time.time;
-        _uncoupledWalking = true;
-        _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
-        _speeds.Clear();
-        _timeStop = float.MinValue;
+        _decoupledGaze = true;
         _stopPos = Vector3.negativeInfinity;
-        _errors = 0;
     }
-    public void StopLogUncoupledWalking(Destination d)
+    public void StopLogDecoupledGaze(Destination d)
     {
-        _uncoupledWalking = false;
-        _timeStop = Time.time - _timeStart;
+        _decoupledGaze = false;
+        var ComplTime = Time.time - _timeStart;
+        var TimeGazeUnc = ((float)_inCount / (float)_count * 100);
         var values = new List<string>
         {
-            "" + _timeStop,
-            "" + GetAverageSpeed(),
-            "" + _maxwalkdist,
-            "" + _diffsum,
-            "" + _errors,
-            "" + ((float)_count / (float)_angles.Count * 100),
-            "" + GetAvgGazeWalkAngle()
+            "" + ComplTime,
+            "" + _pathDev,
+            "" + TimeGazeUnc,
+            "" + _numInterr
         };
-        WriteToCSV("UW", values, 1);
+        WriteToCSV("DG", values, 1);
         StopMasterLog();
     }
 
-    private float GetAvgGazeWalkAngle()
+    public void StartLogStrcOutHands(Destination d)
     {
-        float v = 0.0f;
-        foreach (var s in _angles)
-        {
-            v += s;
-        }
-        return v / _angles.Count;
-    }
-
-    public void StartLogPointWalking(Destination d)
-    {
-        StartMasterLog("PW");
+        StartMasterLog("SH");
         _timeStart = Time.time;
-        _uncoupledWalking = false;
-        _pointWalking = true;
-        _timeStop = float.MinValue;
+        _decoupledGaze = false;
+        _strOutHands = true;
         _stopPos = Vector3.negativeInfinity;
         _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
-        _speeds.Clear();
-        _angles.Clear();
         _count = 0;
-        _errors = 0;
+        _inCount = 0;
+        _numInterr = 0;
     }
-    public void StopLogPointWalking(Destination d)
+    public void StopLogStrcOutHands(Destination d)
     {
-        _pointWalking = false;
-        _timeStop = Time.time - _timeStart;
+        _strOutHands = false;
+        var ComplTime = Time.time - _timeStart;
+        var TimStrOut = ((float)_inCount / (float)_count * 100);
         var values = new List<string>
         {
-            "" + _timeStop,
-            "" + GetAverageSpeed(),
-            "" + _maxwalkdist,
-            "" + _diffsum,
-            "" + _errors,
-            "" + ((float)_count / (float)_angles.Count * 100),
-            "" + GetAvgGazeWalkAngle() * 100,                             //just joking, it's hand to hand avg dist %
-            "" + Level3Manager.Instance.RobotsCoinCollectorController.Score
+            "" + ComplTime,
+            "" + _pathDev,
+            "" + TimStrOut,
+            "" + _numInterr
         };
-        WriteToCSV("PW", values, 2);
+        WriteToCSV("SH", values, 2);
         StopMasterLog();
     }
        
-    public void StartLogWaveHandWalking(Destination d)
+    public void StartLogDecoupledHands(Destination d)
     {
-        StartMasterLog("WH");
+        StartMasterLog("DH");
         _timeStart = Time.time;
-        _uncoupledWalking = false;
-        _waveWalking = true;
-        _timeStop = float.MinValue;
+        _decoupledGaze = false;
+        _decoupledHands = true;
         _stopPos = Vector3.negativeInfinity;
         _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
-        _maxwalkdist = 0;
-        _minwalkdist = 0;
-        _diffsum = 0;
-        _speeds.Clear();
-        _angles.Clear();
-        _count = 0;
-        _errors = 0;
+        _pathDev = 0;
+        _numInterr = 0;
     }
-    public void StopLogWaveHandWalking(Destination d)
+    public void StopLogDecoupledHands(Destination d)
     {
-        _waveWalking = false;
-        _timeStop = Time.time - _timeStart;
+        _decoupledHands = false;
+        var ComplTime = Time.time - _timeStart;
         var values = new List<string>
         {
-            "" + _timeStop,
-            "" + GetAverageSpeed(),
-            "" + _maxwalkdist,
-            "" + _diffsum,
-            "" + _errors,
-            "" + ((float)_count / (float)_angles.Count * 100),
-            "" + GetAvgGazeWalkAngle() * 100,
-            "" + Level3Manager.Instance.DronesCoinCollectorController.Score
+            "" + ComplTime,
+            "" + _pathDev,
+            "" + Level3Manager.Instance.DronesCoinCollectorController.Score,
+            "" + _numInterr
         };
-        WriteToCSV("WH", values, 3);
+        WriteToCSV("DH", values, 3);
         StopMasterLog();
     }
 
@@ -163,35 +132,20 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
 
     protected override void ComputeStatisticsStep()
     {
-        if (_uncoupledWalking)
+        if (_decoupledGaze)
         {
             // compute Path Deviation metrics
             var diff = GetPathDev(Level3Manager.Instance._pathDevRef1, _pathDevAxis);
-            _diffsum += diff * (1 / StatisticsLoggerData.SamplingRate);
-            if (diff > _maxwalkdist)
-                _maxwalkdist = diff;
-            else if (diff < _minwalkdist)
-                _minwalkdist = diff;
-
-            // compute speed
-            var t = Time.time - _lastsample;
-            var d = Mathf.Abs(Vector3.Distance(LocomotionManager.Instance.CurrentPlayerController.position, _prevpos));
-            var v = d / t;
-
-            if (v > 0)
-            {
-                var v1 = LocomotionManager.Instance.CurrentPlayerController.position - _prevpos;
-                var v2 = LocomotionManager.Instance.CameraEye.forward;
-                var a = Vector3.Angle(v1, v2);
-                if (a > _anglethreshold)
-                    _count++;
-                _angles.Add(a);
-                if(_masterlog)
-                    _gazewalkangles.Add(a);
-                    
-            }
-            else
-                _gazewalkangles.Add(float.NegativeInfinity);
+            _pathDev += diff * (1 / StatisticsLoggerData.SamplingRate);
+                       
+            var v1 = LocomotionManager.Instance.CurrentPlayerController.position - _prevpos;
+            var v2 = LocomotionManager.Instance.CameraEye.forward;
+            var a = Vector3.Angle(v1, v2);
+            if (a > _anglethreshold)
+                _inCount++;
+            _count++;
+            if(_masterlog)
+                _gazewalkangles.Add(a);
 
             var currpos = LocomotionManager.Instance.CurrentPlayerController.position;
             if (currpos == _prevpos)
@@ -202,7 +156,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
                 {
                     if (UnityExtender.NearlyEqual(_stopPos, Vector3.negativeInfinity))
                     {
-                        _errors++;
+                        _numInterr++;
                         _stopPos = currpos;
                     }
                 }
@@ -212,31 +166,19 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
                 _timeStop = float.MinValue;
                 _stopPos = Vector3.negativeInfinity;
             }
-
-            _speeds.Add(v);
         }
-        else if (_pointWalking)
+        else if (_strOutHands)
         {
-
             // compute Path Deviation metrics
             var diff = GetPathDev(Level3Manager.Instance._pathDevRef2, _pathDevAxis);
-            _diffsum += diff * (1 / StatisticsLoggerData.SamplingRate);
-            if (diff > _maxwalkdist)
-                _maxwalkdist = diff;
-            else if (diff < _minwalkdist)
-                _minwalkdist = diff;
-
-            // compute speed
-            var t = Time.time - _lastsample;
-            var d = Mathf.Abs(Vector3.Distance(LocomotionManager.Instance.CurrentPlayerController.position, _prevpos));
-            var v = d / t;
-
+            _pathDev += diff * (1 / StatisticsLoggerData.SamplingRate);
+            
             var cl = LocomotionManager.Instance.LeftController.transform.position;
             var cr = LocomotionManager.Instance.RightController.transform.position;
             var hd = Vector3.Distance(cl, cr);
             if (hd > .6f* LocomotionManager.Instance.CalibrationData.ControllerDistance)
-                _count++;
-            _angles.Add(hd / LocomotionManager.Instance.CalibrationData.ControllerDistance);
+                _inCount++;
+            _count++;
 
             var currpos = LocomotionManager.Instance.CurrentPlayerController.position;
             if (currpos == _prevpos)
@@ -247,7 +189,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
                 {
                     if (UnityExtender.NearlyEqual(_stopPos, Vector3.negativeInfinity))
                     {
-                        _errors++;
+                        _numInterr++;
                         _stopPos = currpos;
                     }
                 }
@@ -256,34 +198,15 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
             {
                 _timeStop = float.MinValue;
                 _stopPos = Vector3.negativeInfinity;
-            }
-
-
-            _speeds.Add(v);
+            }            
         }
-        else if (_waveWalking)
+        else if (_decoupledHands)
         {
 
             // compute Path Deviation metrics
             var diff = GetPathDev(Level3Manager.Instance._pathDevRef3, _pathDevAxis);
-            _diffsum += diff * (1 / StatisticsLoggerData.SamplingRate);
-            if (diff > _maxwalkdist)
-                _maxwalkdist = diff;
-            else if (diff < _minwalkdist)
-                _minwalkdist = diff;
-
-            // compute speed
-            var t = Time.time - _lastsample;
-            var d = Mathf.Abs(Vector3.Distance(LocomotionManager.Instance.CurrentPlayerController.position, _prevpos));
-            var v = d / t;
-
-            var cl = LocomotionManager.Instance.LeftController.transform.position;
-            var cr = LocomotionManager.Instance.RightController.transform.position;
-            var hd = Vector3.Distance(cl, cr);
-            if (hd > .6f * LocomotionManager.Instance.CalibrationData.ControllerDistance)
-                _count++;
-            _angles.Add(hd / LocomotionManager.Instance.CalibrationData.ControllerDistance);
-
+            _pathDev += diff * (1 / StatisticsLoggerData.SamplingRate);
+            
             var currpos = LocomotionManager.Instance.CurrentPlayerController.position;
             if (currpos == _prevpos)
             {
@@ -293,7 +216,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
                 {
                     if (UnityExtender.NearlyEqual(_stopPos, Vector3.negativeInfinity))
                     {
-                        _errors++;
+                        _numInterr ++;
                         _stopPos = currpos;
                     }
                 }
@@ -303,9 +226,6 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
                 _timeStop = float.MinValue;
                 _stopPos = Vector3.negativeInfinity;
             }
-
-
-            _speeds.Add(v);
 
         }
         _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;

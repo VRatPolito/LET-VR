@@ -112,7 +112,7 @@ public class Level5Manager : UnitySingleton<Level5Manager>
     {
         if (_firstTime)
         {
-            StatisticsLogger.StartLogMovingInteraction();
+            StatisticsLogger.StartLogInteractionInMotion();
             _firstTime = false;
         }
     }
@@ -176,7 +176,7 @@ public class Level5Manager : UnitySingleton<Level5Manager>
             if (ix == 0)
                 Invoke("Quit", 5);
         };
-        StatisticsLogger.StopLogMovingInteraction();
+        StatisticsLogger.StopLogInteractionInMotion();
     }
 
     private void Quit()

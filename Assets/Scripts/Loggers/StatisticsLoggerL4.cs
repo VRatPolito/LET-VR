@@ -20,8 +20,9 @@ public class StatisticsLoggerL4 : StatisticsLoggerBase
 
     #region Private Members and Constants
     private float _timeStart, _timeStop;
-    private bool _agility = false, _headShooter = false, _bodyShooter = false;
+    private bool _dynamicAgility = false, _stationaryAgility = false, _evasion = false;
     private Vector3 _stopPos = Vector3.negativeInfinity;
+    private int _numObsColl = 0;
     #endregion
 
     #region Properties
@@ -30,66 +31,65 @@ public class StatisticsLoggerL4 : StatisticsLoggerBase
 
     #region MonoBehaviour
 
-    public void StartLogAgility()
+    public void StartLogDynamicAgility()
     {
-        StartMasterLog("AG");
+        StartMasterLog("DA");
         _timeStart = Time.time;
-        _agility = true;
+        _dynamicAgility = true;
         _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
-        _speeds.Clear();
     }
-    public void StopLogAgility()
+    public void StopLogDynamicAgility()
     {
-        _agility = false;
+        _dynamicAgility = false;
         _timeStop = Time.time - _timeStart;
         var values = new List<string>
         {
             "" + _timeStop,
-            "" + GetAverageSpeed(),
-            "" + _errors,
-            "" + Collisions
+            "" + _numObsColl
         };
-        WriteToCSV("AG", values, 1);
+        WriteToCSV("DA", values, 1);
         StopMasterLog();        
     }
 
-    public void StartLogHeadShooter()
+    public void StartLogStationaryAgility()
     {
-        StartMasterLog("HS");
-        _headShooter = true;
+        StartMasterLog("SA");
+        _stationaryAgility = true;
     }
 
-    public void StopLogHeadShooter()
+    public void StopLogStationaryAgility()
     {
-        _headShooter = false;
+        _stationaryAgility = false;
+        var NumHits = Level4Manager.Instance.HeadShooterHits;
         var values = new List<string>
         { 
-            "" + Level4Manager.Instance.HeadShooterHits
+            "" + NumHits
         };
-        WriteToCSV("HS", values, 2);
+        WriteToCSV("SA", values, 2);
         StopMasterLog();
     }
 
     public void StartLogBodyShooter()
     {
-        StartMasterLog("BS");
-        _bodyShooter = true;
+        StartMasterLog("E");
+        _evasion = true;
     }
 
     public void StopLogBodyShooter()
     {
-        _bodyShooter = false;
+        _evasion = false;
+        var NumHits = Level4Manager.Instance.BodyShooterHits;
         var values = new List<string>
         {
-            "" + Level4Manager.Instance.BodyShooterHits
+            "" + NumHits
         };
-        WriteToCSV("BS", values, 3);
+        WriteToCSV("E", values, 3);
         StopMasterLog();
     }
 
     public override void LogCollisions(HitType type)
     {
-        Collisions++;
+        _numObsColl++;
         LocomotionManager.Instance.LeftController.GetComponent<VibrationController>().ShortVibration(.7f);
         LocomotionManager.Instance.RightController.GetComponent<VibrationController>().ShortVibration(.7f);
     }
@@ -101,44 +101,6 @@ public class StatisticsLoggerL4 : StatisticsLoggerBase
     #endregion
 
     #region Helper Methods
-
-    protected override void ComputeStatisticsStep()
-    {
-        if (_agility)
-        {
-            // compute speed
-            var t = (Time.time - _lastsample);
-            var d = Mathf.Abs(Vector3.Distance(LocomotionManager.Instance.CurrentPlayerController.position, _prevpos));
-            var v = d / t;
-            _speeds.Add(v);
-
-            var currpos = LocomotionManager.Instance.CurrentPlayerController.position;
-            if (currpos == _prevpos)
-            {
-                if (_timeStop == float.MinValue)
-                    _timeStop = Time.time;
-                else if (Time.time >= _timeStop + Level4Manager.Instance.TimeToStop)
-                {
-                    if (UnityExtender.NearlyEqual(_stopPos, Vector3.negativeInfinity))
-                    {
-                        _errors++;
-                        _stopPos = currpos;
-                    }
-                }
-            }
-            else
-            {
-                _timeStop = float.MinValue;
-                _stopPos = Vector3.negativeInfinity;
-            }
-
-            _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
-            
-        }
-
-        base.ComputeStatisticsStep();
-
-    }
 
     #endregion
 

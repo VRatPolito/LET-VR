@@ -57,14 +57,14 @@ public class Level3Manager : UnitySingleton<Level3Manager>
         Assert.IsNotNull(StatisticsLogger);
         Assert.IsNotNull(_lookAtMe);
 
-        StartUnc.OnDisabled.AddListener(StatisticsLogger.StartLogUncoupledWalking);
+        StartUnc.OnDisabled.AddListener(StatisticsLogger.StartLogDecoupledGaze);
         EndUnc.OnDisabled.AddListener(d => _lookAtMe.End());
-        EndUnc.OnDisabled.AddListener(StatisticsLogger.StopLogUncoupledWalking);
-        StartPointHandFar.OnDisabled.AddListener(StatisticsLogger.StartLogPointWalking);
+        EndUnc.OnDisabled.AddListener(StatisticsLogger.StopLogDecoupledGaze);
+        StartPointHandFar.OnDisabled.AddListener(StatisticsLogger.StartLogStrcOutHands);
         StartPointHandFar.OnDisabled.AddListener(StartRobotT2);
-        EndPointHandFar.OnDisabled.AddListener(StatisticsLogger.StopLogPointWalking);
+        EndPointHandFar.OnDisabled.AddListener(StatisticsLogger.StopLogStrcOutHands);
         EndPointHandFar.OnDisabled.AddListener(StopRobotT2);
-        StartWavingHand.OnDisabled.AddListener(StatisticsLogger.StartLogWaveHandWalking);
+        StartWavingHand.OnDisabled.AddListener(StatisticsLogger.StartLogDecoupledHands);
         StartWavingHand.OnDisabled.AddListener(StartDronesT3);       
         EndPointWavingHand.OnDisabled.AddListener(EndGame);
 
@@ -108,7 +108,7 @@ public class Level3Manager : UnitySingleton<Level3Manager>
                 Invoke("Quit", 5);
         };
         //StatisticsLogger.StopLogPointWalking();
-        StatisticsLogger.StopLogWaveHandWalking(d); //TODO SURE??
+        StatisticsLogger.StopLogDecoupledHands(d); //TODO SURE??
     }
 
     private void Quit()

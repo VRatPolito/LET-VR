@@ -24,20 +24,21 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
 
     #region Private Members and Constants
 
-    private float _timeStart, _timeStop, _avoidance;
-    float _estpathlength, _angularerror, _recalltime, _timesover;
+    private float _timeStart, _avoidance;
+    float _estPathLen, _initAngErr, _recallTime, _timesover;
     private bool _errorCounted = false;
-    private bool _backWalking = false, _curvedWalking = false, _fear = false, _dirWalking = false, _stairslopeWalking = false;
+    private bool _backWalking = false, _curvedWalking = false, _fear = false, _multiStrLineWalking = false, _stairsRamp = false;
     private string _choice;
-	private int _counter = 0;
-    // private OvershootingDestination _overshotingtarget = null; ???
+	private int _inCount = 0;
+    private int _count = 0;
+    private int _numLookOut = 0;
+    private int _numInterr = 0;
+    private int _numFalls = 0;
+    private float _timeStop = float.MinValue;
     private Transform _prevTarget;
-    protected List<float> _hdr;
     private uint _dirTargets = 0;
     private GazeDestination _currDest = null;
     private Vector3 _stopPos = Vector3.negativeInfinity;
-
-
 
     #endregion
 
@@ -46,45 +47,40 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
     #endregion
 
     #region MonoBehaviour
-    protected override void Initialize()
-    {
-        _hdr = new List<float>();
-        base.Initialize();
-    }
-    public void StartLogDirWalking(GazeDestination g)
+    public void StartLogMultiStrLineWalking(GazeDestination g)
     {
         if (_dirTargets == 0)
         {
-            StartMasterLog("DW");
-            _dirWalking = true;
+            StartMasterLog("MW");
+            _multiStrLineWalking = true;
         }
         _timeStart = Time.time;
         _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
-        _estpathlength = 0;
-        _recalltime = -1;
-        _angularerror = -1;
+        _estPathLen = 0;
+        _recallTime = -1;
+        _initAngErr = -1;
         _currDest = g;
 
     }
-    public void StopLogDirWalking(GazeDestination g)
+    public void StopLogMultiStrLineWalking(GazeDestination g)
     {
         if (_currDest == g)
         {
             _dirTargets++;
 
-            _timeStop = Time.time - _timeStart;
+            var ComplTime = Time.time - _timeStart;
             var values = new List<string>
             {
-                "" + _timeStop,
-                "" + _angularerror,
-                "" + _estpathlength,
-                "" + _recalltime
+                "" + ComplTime,
+                "" + _initAngErr,
+                "" + _estPathLen,
+                "" + _recallTime
             };
-            WriteToCSV("DW" + _dirTargets, values, 1);
+            WriteToCSV("MW" + _dirTargets, values, 1);
             if (_dirTargets == 6)
             {
                 StopMasterLog();
-                _dirWalking = false;
+                _multiStrLineWalking = false;
             }
 
             _prevTarget = _currDest.transform;
@@ -94,36 +90,71 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
 
     public void StartLogBackWalking()
     {
-        StartMasterLog("B");
+        StartMasterLog("BW");
         _timeStart = Time.time;
         _backWalking = true;
         _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
-        _speeds.Clear();
-        _errors = 0;
-		_counter = 0;
+		_inCount = 0;
     }
 
+    public void StopLogBackWalking(Destination d)
+    {
+        _backWalking = false;
+        var ComplTime = Time.time - _timeStart;
+        var TimeLookAt = (100 - ((float)_inCount / (float)_count * 100));
+        var values = new List<string>
+        {
+            "" + ComplTime,
+            "" + _numLookOut,
+            "" + TimeLookAt,
+            "" + _pathDev
+        };
+        WriteToCSV("BW", values, 2);
+        StopMasterLog();
+    }
+
+    public void StartLogCurvedWalking(Destination d)
+    {
+        StartMasterLog("CW");
+        _timeStart = Time.time;
+        _curvedWalking = true;
+        _stopPos = Vector3.negativeInfinity;
+        _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
+        _numInterr = 0;
+    }
+    public void StopLogCurvedWalking(Destination d)
+    {
+        _curvedWalking = false;
+        var ComplTime = Time.time - _timeStart;
+        var values = new List<string>
+        {
+            "" + ComplTime,
+            "" + _numInterr
+        };
+        WriteToCSV("CW", values, 3);
+        StopMasterLog();
+    }
+
+    internal void StartLogStair(Destination d)
+    {
+        StartMasterLog("STL");
+        _stairsRamp = true;
+    }
+
+    internal void StopLogStair(Destination d)
+    {
+        _stairsRamp = false;
+    }
 
     internal void StartLogSlope(Destination d)
     {
-        _timeStop = float.MinValue;
         _timeStart = Time.time;
-        _stopPos = Vector3.negativeInfinity;
-        _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
-        _errors = 0;
-        _stairslopeWalking = true;
+        _stairsRamp = true;
     }
 
     internal void StopLogSlope(Destination d)
     {
-        _timeStop = Time.time - _timeStart;
-        _stairslopeWalking = false;
-        var values = new List<string>
-        {
-            "" + _timeStop,
-            "" + _errors
-        };
-        WriteToCSV("SL", values, 4);
+        _stairsRamp = false;
         Level2Manager.Instance.StartHalfSlope.gameObject.SetActive(true);
         Level2Manager.Instance.StartHalfStairs.gameObject.SetActive(true);
     }
@@ -131,29 +162,37 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
     internal void StartLogHalfStairs(Destination d)
     {
         _choice = "ST";
-        _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
-        if (_stairslopeWalking)
+        if (_stairsRamp)
         {
             Level2Manager.Instance.StartHalfSlope.gameObject.SetActive(true);
         }
         else
         {
-            _stairslopeWalking = true;
+            _stairsRamp = true;
             Level2Manager.Instance.EndStairsSlope.gameObject.SetActive(true);
-            _errors = 0;
+        }
+    }
+
+    internal void StartLogHalfSlope(Destination d)
+    {
+        _choice = "SL";
+        if (_stairsRamp)
+        {
+            Level2Manager.Instance.StartHalfStairs.gameObject.SetActive(true);
+        }
+        else
+        {
+            _stairsRamp = true;
+            Level2Manager.Instance.EndStairsSlope.gameObject.SetActive(true);
         }
     }
 
     internal void StopLogStairsSlope(Destination d)
     {
-        _timeStop = Time.time - _timeStart;
-        _stairslopeWalking = false;
-
+        _stairsRamp = false;
         var values = new List<string>
         {
-            "" + _timeStop,
-            "" + _choice,
-            "" + _errors
+            "" + _choice
         };
         WriteToCSV("STL", values, 4);
         if (Level2Manager.Instance.StartHalfSlope.gameObject.activeSelf)
@@ -168,116 +207,27 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
         }
 
         StopMasterLog();
-    }
-
-    internal void StartLogHalfSlope(Destination d)
-    {
-        _choice = "SL";
-        _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
-        if (_stairslopeWalking)
-        {
-            Level2Manager.Instance.StartHalfStairs.gameObject.SetActive(true);
-        }
-        else
-        {
-            _stairslopeWalking = true;
-            Level2Manager.Instance.EndStairsSlope.gameObject.SetActive(true);
-            _errors = 0;
-        }
-    }
-
-    internal void StopLogStair(Destination d)
-    {
-        _timeStop = Time.time - _timeStart;
-        var values = new List<string>
-        {
-            "" + _timeStop,
-            "" + _errors
-        };
-        WriteToCSV("ST", values, 4);
-        _stairslopeWalking = false;
-    }
-
-    internal void StartLogStair(Destination d)
-    {
-        StartMasterLog("S");
-        _timeStart = Time.time;
-        _timeStop = float.MinValue;
-        _stopPos = Vector3.negativeInfinity;
-        _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
-        _errors = 0;
-        _stairslopeWalking = true;
-    }
-
-    internal void PlayerFallen()
-    {
-        if (_fear)
-            _errors++;
-    }
-
-    public void StopLogBackWalking(Destination d)
-    {
-        _backWalking = false;
-        _timeStop = Time.time - _timeStart;
-        var values = new List<string>
-        {
-            "" + _timeStop,
-            "" + GetAverageSpeed(),
-            "" + _errors,
-            "" + (100 - (_counter / _speeds.Count * 100)),
-            "" + _maxwalkdist,
-            "" + _diffsum
-        };
-        WriteToCSV("B", values, 2);
-        StopMasterLog();
-    }
-
-    public void StartLogCurvedWalking(Destination d)
-    {
-        StartMasterLog("CW");
-        _timeStart = Time.time;
-        _curvedWalking = true;
-        _timeStop = float.MinValue;
-        _stopPos = Vector3.negativeInfinity;
-        _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
-        _speeds.Clear();
-        _errors = 0; // # walking interruptions
-    }
-    public void StopLogCurvedWalking(Destination d)
-    {
-        _curvedWalking = false;
-        _timeStop = Time.time - _timeStart;
-        var values = new List<string>
-        {
-            "" + _timeStop,
-            "" + GetAverageSpeed(),
-            "" + _errors
-        };
-        WriteToCSV("CW", values, 3);
-        StopMasterLog();
-    }
+    }   
 
     public void StartLogFear(Destination d)
     {
         StartMasterLog("F");
         _timeStart = Time.time;
         _fear = true;
-        _errors = 0;
+        _numFalls = 0;
         _avoidance = 0;
         _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
-        _speeds.Clear();
     }
+
     public void StopLogFear(Destination d)
     {
         _fear = false;
-        _timeStop = Time.time - _timeStart;
+        var ComplTime = Time.time - _timeStart;
         var values = new List<string>
         {
-            "" + _timeStop,
-            "" + GetAverageSpeed(),
-            "" + GetAvgHDR(),
+            "" + ComplTime,
             "" + _avoidance,
-            "" + _errors
+            "" + _numFalls
         };
         WriteToCSV("F", values, 5);
         StopMasterLog();
@@ -290,35 +240,26 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
     #endregion
 
     #region Helper Methods    
-    public float GetAvgHDR()
+
+    internal void PlayerFallen()
     {
-        float v = 0.0f;
-        foreach (var s in _hdr)
-        {
-            v += s;
-        }
-        return v / _hdr.Count;
+        if (_fear)
+            _numFalls++;
     }
+
     protected override void ComputeStatisticsStep()
     {
         if (_backWalking)
         {
             var diff = GetPathDev(Level2Manager.Instance._pathDevRef, _pathDevAxis);
-            _diffsum += diff * (1 / StatisticsLoggerData.SamplingRate);
-            if (diff > _maxwalkdist)
-                _maxwalkdist = diff;
-            else if (diff < _minwalkdist)
-                _minwalkdist = diff;
-
-            var t = (Time.time - _lastsample); // compute delta time
-            var d = Mathf.Abs(Vector3.Distance(LocomotionManager.Instance.CurrentPlayerController.position, _prevpos)); // compute distance traveled
-            var v = d / t; //compute speed
+            _pathDev += diff * (1 / StatisticsLoggerData.SamplingRate);
+            
             if (!Level2Manager.Instance.BackwardItem.InteractiveItem.IsOver)
             {
-				_counter++;
+				_inCount++;
 				if(!_errorCounted)
 					{
-					_errors++;
+                    _numLookOut++;
 					_errorCounted = true;
 					}
             }
@@ -326,8 +267,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
             {
                 _errorCounted = false;
             }
-           
-            _speeds.Add(v);
+            _count++;
         }
         else if (_curvedWalking)
         {
@@ -341,7 +281,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
                 {
                     if (UnityExtender.NearlyEqual(_stopPos, Vector3.negativeInfinity))
                     {
-                        _errors++;
+                        _numInterr++;
                         _stopPos = currpos;
                     }
                 }
@@ -351,37 +291,22 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
                 _timeStop = float.MinValue;
                 _stopPos = Vector3.negativeInfinity;
             }
-
-            var d = Mathf.Abs(Vector3.Distance(LocomotionManager.Instance.CurrentPlayerController.position, _prevpos));
-            var v = d / t; //compute speed
-
-            _speeds.Add(v);
         }
         else if (_fear)
         {
-            var t = (Time.time - _lastsample); // compute delta time
-            var d = Mathf.Abs(Vector3.Distance(LocomotionManager.Instance.CurrentPlayerController.position, _prevpos));
-            var v = d / t; //compute speed
-
-            _speeds.Add(v);
-
             if (LocomotionManager.Instance.CurrentPlayerController.position.x <= Level2Manager.Instance._avoidanceRef.position.x)
             {
                 var diff = GetPathDev(Level2Manager.Instance._avoidanceRef, _avoidanceAxis);
                 _avoidance += diff * (1 / StatisticsLoggerData.SamplingRate);
             }
-
-            var x = LocomotionManager.Instance.CameraEye.eulerAngles.x;
-            if (x > 0)
-                _hdr.Add(x);
         }
-        else if (_dirWalking)
+        else if (_multiStrLineWalking)
         {
             var d = Mathf.Abs(Vector3.Distance(LocomotionManager.Instance.CurrentPlayerController.position, _prevpos));
-            _estpathlength += d;
-            if (d > 0 && _recalltime == -1)
-                _recalltime = Time.time - _timeStart;
-            if (_estpathlength >= _dirWalkingDistThreshold && _angularerror == -1)
+            _estPathLen += d;
+            if (d > 0 && _recallTime == -1)
+                _recallTime = Time.time - _timeStart;
+            if (_estPathLen >= _dirWalkingDistThreshold && _initAngErr == -1)
             {
                 var v1 = LocomotionManager.Instance.CurrentPlayerController.position - _prevpos;
                 Vector3 v2 = Vector3.zero;
@@ -389,39 +314,12 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
                     v2 = _currDest.transform.position - Level2Manager.Instance.StartDest.transform.position;
                 else
                     v2 = _currDest.transform.position - _prevTarget.transform.position;
-                _angularerror = Vector3.Angle(v1, v2);
+                _initAngErr = Vector3.Angle(v1, v2);
             }
 
         }
-        else if (_stairslopeWalking)
-        {
-            var t = (Time.time - _lastsample);
-            var d = Mathf.Abs(Vector3.Distance(LocomotionManager.Instance.CurrentPlayerController.position, _prevpos));
-            var v = d / t; //compute speed
-
-            var currpos = LocomotionManager.Instance.CurrentPlayerController.position;
-            if (currpos == _prevpos)
-            {
-                if (_timeStop == float.MinValue)
-                    _timeStop = Time.time;
-                else if (Time.time >= _timeStop + Level2Manager.Instance.TimeToStop)
-                {
-                    if (UnityExtender.NearlyEqual(_stopPos, Vector3.negativeInfinity))
-                    {
-                        _errors++;
-                        _stopPos = currpos;
-                    }
-                }
-            }
-            else
-            {
-                _timeStop = float.MinValue;
-                _stopPos = Vector3.negativeInfinity;
-            }
-
-        }
+        else 
         _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
-
 
         base.ComputeStatisticsStep();
     }

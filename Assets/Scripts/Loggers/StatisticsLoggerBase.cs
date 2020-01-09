@@ -41,21 +41,14 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
     private List<String> _logFilePaths = new List<string>();
     protected bool _masterlog = false;
     protected string _masterlogtype = "";
-    protected List<float> _speeds;
     protected Vector3 _prevpos;
     protected float _lastsample = float.MinValue;
-    protected float _diffsum = 0.0f;
-    protected float _minwalkdist = float.MaxValue;
-    protected float _maxwalkdist = float.MinValue;
+    protected float _pathDev = 0.0f;
     protected float _prevvel = 0;
-    protected float _peakvel = 0;
-    protected float _peakacc = 0, _peakdec = 0, _distpeakvel = -1, _distpeakacc = -1, _distpeakdec = -1, _errors = 0;
-    protected float _timetopeakvel = -1;
     protected List<Vector3> _positions, _rotations, _headpositions, _headrotations, _lefthandpositions, _lefthandrotations, _righthandpositions, _righthandrotations, _dirtrackpositions, _dirtrackrotations, _leftlegpositions, _leftlegrotations, _rightlegpositions, _rightlegrotations, _targetpositions;
     protected List<float> _gazewalkangles;
     protected List<object> _locks;
     private List<List<string>> _allValues;
-    protected int Collisions;
 
     #endregion
 
@@ -107,27 +100,7 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
         _locks = new List<object>();
         for (int i = 0; i < StatisticsLoggerData.LogFileNames.Count; i++)
             _locks.Add(new object());
-
-
-
-        _speeds = new List<float>();
-        _targetpositions = new List<Vector3>();
-        _positions = new List<Vector3>();
-        _rotations = new List<Vector3>();
-        _headpositions = new List<Vector3>();
-        _headrotations = new List<Vector3>();
-        _lefthandpositions = new List<Vector3>();
-        _lefthandrotations = new List<Vector3>();
-        _righthandpositions = new List<Vector3>();
-        _righthandrotations = new List<Vector3>();
-        _dirtrackpositions = new List<Vector3>();
-        _dirtrackrotations = new List<Vector3>();
-        _leftlegpositions = new List<Vector3>();
-        _leftlegrotations = new List<Vector3>();
-        _rightlegpositions = new List<Vector3>();
-        _rightlegrotations = new List<Vector3>();
-        _gazewalkangles = new List<float>();
-
+        
         Debug.Log($"Logger {this.name} Initialized");
 
     }
@@ -198,24 +171,14 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
         _masterlogtype = type;
     }
 
-    protected float GetAverageDist()
+    protected float GetAverageFloat(ref List<float> list)
     {
         float v = 0.0f;
-        for (int i = 0; i < _positions.Count; i++)
-        {
-            v += Mathf.Abs(Vector3.Distance(_positions[i], _targetpositions[i]));
-        }
-        return v / _positions.Count;
-    }
-
-    protected float GetAverageSpeed()
-    {
-        float v = 0.0f;
-        foreach (var s in _speeds)
+        foreach (var s in list)
         {
             v += s;
         }
-        return v / _speeds.Count;
+        return v / list.Count;
     }
 
     protected void StopMasterLog()
@@ -282,7 +245,7 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
                 values.Add("" + _targetpositions[i].y);
                 values.Add("" + _targetpositions[i].z);
             }
-            else if (_masterlogtype == "UW")
+            else if (_masterlogtype == "DG")
             {
                 values.Add("" + _gazewalkangles[i]);
             }
