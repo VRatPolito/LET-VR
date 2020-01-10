@@ -117,7 +117,7 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
 
         for (int i = 0; i < StatisticsLoggerData.LogFileNames.Count; i++)
         {
-            string fileName = $"i_" + StatisticsLoggerData.LogFileNames[i] + "_" +
+            string fileName = $"{i}_" + StatisticsLoggerData.LogFileNames[i] + "_" +
                               DateTime.Now.ToString("yyyyMMdd_HHmmssff") + ".csv";
             _logFilePaths.Add(Path.Combine(fileDirectory, fileName));
             _locks.Add(new object());
