@@ -1,5 +1,4 @@
-﻿
-/*
+﻿/*
  * Custom template by Gabriele P.
  */
 
@@ -14,7 +13,12 @@ using PrattiToolkit;
 using UnityEngine;
 
 
-public enum PathDevAxis { X, Y, Z };
+public enum PathDevAxis
+{
+    X,
+    Y,
+    Z
+};
 
 public interface IStatisticsLogger
 {
@@ -44,7 +48,23 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
     protected Vector3 _prevpos;
     protected float _lastsample = float.MinValue;
     protected float _pathDev = 0.0f;
-    protected List<Vector3> _positions, _rotations, _headpositions, _headrotations, _lefthandpositions, _lefthandrotations, _righthandpositions, _righthandrotations, _dirtrackpositions, _dirtrackrotations, _leftlegpositions, _leftlegrotations, _rightlegpositions, _rightlegrotations, _targetpositions;
+
+    protected List<Vector3> _positions,
+        _rotations,
+        _headpositions,
+        _headrotations,
+        _lefthandpositions,
+        _lefthandrotations,
+        _righthandpositions,
+        _righthandrotations,
+        _dirtrackpositions,
+        _dirtrackrotations,
+        _leftlegpositions,
+        _leftlegrotations,
+        _rightlegpositions,
+        _rightlegrotations,
+        _targetpositions;
+
     protected List<float> _gazewalkangles;
     protected List<object> _locks;
     private List<List<string>> _allValues;
@@ -87,20 +107,40 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
     protected virtual void Initialize()
     {
         var u = UnityMainThreadDispatcher.Instance;
-        string fileDirectory = Path.Combine(Application.dataPath, "StatisticsData", Configuration.GetString("ParticipantId","undefined"), StatisticsLoggerData.ScenarioName + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmssff"));
+        string fileDirectory = Path.Combine(Application.dataPath, "StatisticsData",
+            Configuration.GetString("ParticipantId", "undefined"),
+            StatisticsLoggerData.ScenarioName + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmssff"));
         if (!Directory.Exists(fileDirectory))
             Directory.CreateDirectory(fileDirectory);
 
         _locks = new List<object>();
+
         for (int i = 0; i < StatisticsLoggerData.LogFileNames.Count; i++)
         {
-            string fileName = $"i_"+ StatisticsLoggerData.LogFileNames[i] + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmssff") + ".csv";
+            string fileName = $"i_" + StatisticsLoggerData.LogFileNames[i] + "_" +
+                              DateTime.Now.ToString("yyyyMMdd_HHmmssff") + ".csv";
             _logFilePaths.Add(Path.Combine(fileDirectory, fileName));
             _locks.Add(new object());
         }
 
-        Debug.Log($"Logger {this.name} Initialized");
+        _positions = new List<Vector3>();
+        _rotations = new List<Vector3>();
+        _headpositions = new List<Vector3>();
+        _headrotations = new List<Vector3>();
+        _lefthandpositions = new List<Vector3>();
+        _lefthandrotations = new List<Vector3>();
+        _righthandpositions = new List<Vector3>();
+        _righthandrotations = new List<Vector3>();
+        _dirtrackpositions = new List<Vector3>();
+        _dirtrackrotations = new List<Vector3>();
+        _leftlegpositions = new List<Vector3>();
+        _leftlegrotations = new List<Vector3>();
+        _rightlegpositions = new List<Vector3>();
+        _rightlegrotations = new List<Vector3>();
+        _targetpositions = new List<Vector3>();
+        _gazewalkangles = new List<float>();
 
+        Debug.Log($"Logger {this.name} Initialized");
     }
 
     protected async void WriteToCSV(string type, List<string> values, int fileindex)
@@ -125,6 +165,7 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
                 else
                     File.AppendAllText(_logFilePaths[fileindex], _sb.ToString());
             }
+
             UnityMainThreadDispatcher.Instance.Enqueue(() => OnLogFinalized.RaiseEvent(fileindex));
         });
         Debug.Log($"Writing {_logFilePaths[fileindex]}");
@@ -147,6 +188,7 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
                     {
                         _sb.Append(s).Append(csvSeparator);
                     }
+
                     _sb.Append("\n");
                 }
 
@@ -157,8 +199,8 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
                 else
                     File.AppendAllText(_logFilePaths[fileindex], _sb.ToString());
             }
-            UnityMainThreadDispatcher.Instance.Enqueue(()=> OnLogFinalized.RaiseEvent(fileindex));
-            
+
+            UnityMainThreadDispatcher.Instance.Enqueue(() => OnLogFinalized.RaiseEvent(fileindex));
         });
         Debug.Log($"Writing {_logFilePaths[fileindex]}");
     }
@@ -176,6 +218,7 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
         {
             v += s;
         }
+
         return v / list.Count;
     }
 
@@ -221,7 +264,7 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
                 values.Add("" + _dirtrackrotations[i].x);
                 values.Add("" + _dirtrackrotations[i].y);
                 values.Add("" + _dirtrackrotations[i].z);
-               
+
                 values.Add("" + _leftlegpositions[i].x);
                 values.Add("" + _leftlegpositions[i].y);
                 values.Add("" + _leftlegpositions[i].z);
@@ -247,6 +290,7 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
             {
                 values.Add("" + _gazewalkangles[i]);
             }
+
             _allValues.Add(values);
         }
 
@@ -284,14 +328,14 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
             _righthandpositions.Add(LocomotionManager.Instance.RightController.localPosition);
             _righthandrotations.Add(LocomotionManager.Instance.RightController.localEulerAngles);
             if (LocomotionManager.Instance.Locomotion == ControllerType.FootSwing)
-                {
-                    _dirtrackpositions.Add(LocomotionManager.Instance.DirectionalTracker.localPosition);
-                    _dirtrackrotations.Add(LocomotionManager.Instance.DirectionalTracker.localEulerAngles);
-                    _leftlegpositions.Add(LocomotionManager.Instance.LeftTracker.localPosition);
-                    _leftlegrotations.Add(LocomotionManager.Instance.LeftTracker.localEulerAngles);
-                    _rightlegpositions.Add(LocomotionManager.Instance.RightTracker.localPosition);
-                    _rightlegrotations.Add(LocomotionManager.Instance.RightTracker.localEulerAngles);
-                }
+            {
+                _dirtrackpositions.Add(LocomotionManager.Instance.DirectionalTracker.localPosition);
+                _dirtrackrotations.Add(LocomotionManager.Instance.DirectionalTracker.localEulerAngles);
+                _leftlegpositions.Add(LocomotionManager.Instance.LeftTracker.localPosition);
+                _leftlegrotations.Add(LocomotionManager.Instance.LeftTracker.localEulerAngles);
+                _rightlegpositions.Add(LocomotionManager.Instance.RightTracker.localPosition);
+                _rightlegrotations.Add(LocomotionManager.Instance.RightTracker.localEulerAngles);
+            }
         }
     }
 
@@ -301,7 +345,7 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
 
     public static float GetPathDev(Transform reference, PathDevAxis axis)
     {
-        switch(axis)
+        switch (axis)
         {
             case PathDevAxis.X:
                 return Math.Abs(LocomotionManager.Instance.CurrentPlayerController.position.x - reference.position.x);
@@ -310,6 +354,7 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
             case PathDevAxis.Z:
                 return Math.Abs(LocomotionManager.Instance.CurrentPlayerController.position.z - reference.position.z);
         }
+
         return -1;
     }
 

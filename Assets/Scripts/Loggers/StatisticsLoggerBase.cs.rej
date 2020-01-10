@@ -1,0 +1,30 @@
+diff a/Assets/Scripts/Loggers/StatisticsLoggerBase.cs b/Assets/Scripts/Loggers/StatisticsLoggerBase.cs	(rejected hunks)
+@@ -100,27 +100,7 @@
+         _locks = new List<object>();
+         for (int i = 0; i < StatisticsLoggerData.LogFileNames.Count; i++)
+             _locks.Add(new object());
+-
+-
+-
+-        _speeds = new List<float>();
+-        _targetpositions = new List<Vector3>();
+-        _positions = new List<Vector3>();
+-        _rotations = new List<Vector3>();
+-        _headpositions = new List<Vector3>();
+-        _headrotations = new List<Vector3>();
+-        _lefthandpositions = new List<Vector3>();
+-        _lefthandrotations = new List<Vector3>();
+-        _righthandpositions = new List<Vector3>();
+-        _righthandrotations = new List<Vector3>();
+-        _dirtrackpositions = new List<Vector3>();
+-        _dirtrackrotations = new List<Vector3>();
+-        _leftlegpositions = new List<Vector3>();
+-        _leftlegrotations = new List<Vector3>();
+-        _rightlegpositions = new List<Vector3>();
+-        _rightlegrotations = new List<Vector3>();
+-        _gazewalkangles = new List<float>();
+-
++        
+         Debug.Log($"Logger {this.name} Initialized");
+ 
+     }
