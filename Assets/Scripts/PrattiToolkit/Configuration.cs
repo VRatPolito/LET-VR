@@ -7,10 +7,12 @@ namespace PrattiToolkit
 {
     public static class Configuration
     {
+        private const string NAME = "config.txt";
+
         private static IDictionary<string, string> _config;
 
         private static FileInfo _fileInfo =
-            new FileInfo(Path.Combine(Path.Combine(Application.dataPath, "BuildData"), "config.txt"));
+            new FileInfo(Path.Combine(Path.Combine(Application.dataPath, "BuildData"), NAME));
 
         static Configuration()
         {

@@ -87,19 +87,18 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
     protected virtual void Initialize()
     {
         var u = UnityMainThreadDispatcher.Instance;
-        string fileDirectory = Path.Combine(Application.dataPath, "StatisticsData", DateTime.Now.ToString("yyyyMMdd_HHmmssff"));
+        string fileDirectory = Path.Combine(Application.dataPath, "StatisticsData", Configuration.GetString("ParticipantId","undefined"), Configuration.GetString("ParticipantId", "undefined") +"_"+ DateTime.Now.ToString("yyyyMMdd_HHmmssff"), StatisticsLoggerData.ScenarioName);
         if (!Directory.Exists(fileDirectory))
             Directory.CreateDirectory(fileDirectory);
-        foreach (var f in StatisticsLoggerData.LogFileNames)
-        {
-            string fileName = f + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmssff") + ".csv";
-            _logFilePaths.Add(Path.Combine(fileDirectory, fileName));
-        }
 
         _locks = new List<object>();
         for (int i = 0; i < StatisticsLoggerData.LogFileNames.Count; i++)
+        {
+            string fileName = $"i_"+ StatisticsLoggerData.LogFileNames[i] + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmssff") + ".csv";
+            _logFilePaths.Add(Path.Combine(fileDirectory, fileName));
             _locks.Add(new object());
-        
+        }
+
         Debug.Log($"Logger {this.name} Initialized");
 
     }

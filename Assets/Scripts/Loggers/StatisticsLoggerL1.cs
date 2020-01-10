@@ -73,7 +73,7 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
     public void StartLogOvershooting(OvershootingDestination target)
     {
         if (_overshoots == 0)
-            StartMasterLog("O");
+            StartMasterLog("OU");
         _overshotingtarget = target;
         _timeStart = Time.time;
         _overshoots++;
@@ -89,7 +89,7 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
         "" + _numExits
         };
 
-        WriteToCSV("O" + _overshoots, values, 2);
+        WriteToCSV("OU" + _overshoots, values, 2);
         _overshotingtarget = null;
         if (_overshoots == 3)
         {
