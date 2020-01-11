@@ -95,11 +95,14 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
         _backWalking = true;
         _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
 		_inCount = 0;
+        _numLookOut = -1;
     }
 
     public void StopLogBackWalking(Destination d)
     {
         _backWalking = false;
+        if (_numLookOut == -1)
+            _numLookOut = 0;
         var ComplTime = Time.time - _timeStart;
         var TimeLookAt = (100 - ((float)_inCount / (float)_count * 100));
         var values = new List<string>

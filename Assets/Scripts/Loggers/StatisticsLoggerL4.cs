@@ -89,9 +89,12 @@ public class StatisticsLoggerL4 : StatisticsLoggerBase
 
     public override void LogCollisions(HitType type)
     {
-        _numObsColl++;
-        LocomotionManager.Instance.LeftController.GetComponent<VibrationController>().ShortVibration(.7f);
-        LocomotionManager.Instance.RightController.GetComponent<VibrationController>().ShortVibration(.7f);
+        if (_dynamicAgility)
+        {
+            _numObsColl++;
+            LocomotionManager.Instance.LeftController.GetComponent<VibrationController>().ShortVibration(.7f);
+            LocomotionManager.Instance.RightController.GetComponent<VibrationController>().ShortVibration(.7f);
+        }
     }
 
     #endregion

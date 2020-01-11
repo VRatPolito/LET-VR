@@ -46,37 +46,7 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
         base.Initialize();
     }
 
-    public void StartLogGrabbing(Destination d)
-    {
-        if (_grabtask == 0)
-        {
-            StartMasterLog("G");
-            LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>().OnDrop += LogDrop;
-        }
-
-        _timeStart = Time.time;
-        _numBodyColl = 0;
-        _numItemColl = 0;
-        switch (_grabtask)
-        {
-            case 0:
-                _numItemFalls = -1;
-                break;
-            case 1:
-            case 2:
-                _numItemFalls = -2;
-                break;
-        }
-        _grabtask++;
-        _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
-        _grabbing = true;
-    }
-
-    public void StartLogManipulation(Destination d)
-    {
-        _timeStart = Time.time;
-        StartMasterLog("M");
-    }
+   
     public void PlayerOutRange()
     {
 		_playerInside = false;
@@ -107,6 +77,37 @@ public class StatisticsLoggerL5 : StatisticsLoggerBase
         }
         LocomotionManager.Instance.LeftController.GetComponent<VibrationController>().ShortVibration(.5f);
         LocomotionManager.Instance.RightController.GetComponent<VibrationController>().ShortVibration(.5f);
+    }
+    public void StartLogGrabbing(Destination d)
+    {
+        if (_grabtask == 0)
+        {
+            StartMasterLog("G");
+            LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>().OnDrop += LogDrop;
+        }
+
+        _timeStart = Time.time;
+        _numBodyColl = 0;
+        _numItemColl = 0;
+        switch (_grabtask)
+        {
+            case 0:
+                _numItemFalls = -1;
+                break;
+            case 1:
+            case 2:
+                _numItemFalls = -2;
+                break;
+        }
+        _grabtask++;
+        _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
+        _grabbing = true;
+    }
+
+    public void StartLogManipulation(Destination d)
+    {
+        _timeStart = Time.time;
+        StartMasterLog("M");
     }
 
     public void StopLogGrabbing(Destination d)

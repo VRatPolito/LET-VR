@@ -17,6 +17,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
     #region Editor Visible
 
     [SerializeField] private float _anglethreshold = 45;
+    [SerializeField] private float _anglethresholdOffset = 2;
     [SerializeField] private PathDevAxis _pathDevAxis = PathDevAxis.X;
     #endregion
 
@@ -141,7 +142,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
             var v1 = LocomotionManager.Instance.CurrentPlayerController.position - _prevpos;
             var v2 = LocomotionManager.Instance.CameraEye.forward;
             var a = Vector3.Angle(v1, v2);
-            if (a > _anglethreshold)
+            if (a > _anglethreshold - _anglethresholdOffset && a < _anglethreshold + _anglethresholdOffset)
                 _inCount++;
             _count++;
             if(_masterlog)

@@ -110,10 +110,12 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
         _chasing = false;
         if (_numInterr == -1)
             _numInterr = 0;
+        var TimeInside = GetPercTimeInside();
+        var AvgDist = GetAverageDist();
         var values = new List<string>
         {
-            "" + GetPercTimeInside(),
-            "" + GetAverageDist(),
+            "" + TimeInside,
+            "" + AvgDist,
             "" + _numInterr,
         };
         WriteToCSV("C", values, 3);
