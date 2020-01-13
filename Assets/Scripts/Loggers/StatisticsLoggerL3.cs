@@ -141,7 +141,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
             var v1 = LocomotionManager.Instance.CurrentPlayerController.position - _prevpos;
             var v2 = LocomotionManager.Instance.CameraEye.forward;
             var a = Vector3.Angle(v1, v2);
-            if (a > Level3Manager.Instance._sphere.Angle - _anglethresholdOffset && a < Level3Manager.Instance._sphere.Angle + _anglethresholdOffset)
+            if (a > Level3Manager.Instance.Sphere.Angle - _anglethresholdOffset && a < Level3Manager.Instance.Sphere.Angle + _anglethresholdOffset)
                 _inCount++;
             _count++;
             if(_masterlog)
