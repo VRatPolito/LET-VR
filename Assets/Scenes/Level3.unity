@@ -5341,6 +5341,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _distanceFromPlayer: 2
   _aheadOfPlayer: 0.5
+  _stopOnCollision: 0
 --- !u!114 &46369785
 MonoBehaviour:
   m_ObjectHideFlags: 0

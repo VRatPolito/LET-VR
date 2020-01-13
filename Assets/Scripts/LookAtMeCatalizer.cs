@@ -20,10 +20,11 @@ public class LookAtMeCatalizer : MonoBehaviour
 
 	[SerializeField] [Range(0,10)]private float _distanceFromPlayer = 2;
 	[SerializeField] [Range(0,15)]private float _aheadOfPlayer = 1;
+    [SerializeField] private bool _stopOnCollision = true;
 
-	#endregion
-	
-	#region Private Members and Constants
+    #endregion
+
+    #region Private Members and Constants
 
     private Rigidbody _rb;
     private ParticleSystem _ps;
@@ -41,7 +42,7 @@ public class LookAtMeCatalizer : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!_startingOrEnding) _collided = true;
+        if (!_startingOrEnding && _stopOnCollision) _collided = true;
     }
 
     void Start()
