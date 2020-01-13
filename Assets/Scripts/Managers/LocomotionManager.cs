@@ -103,9 +103,9 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
     private void Awake()
     {
         if (_getLocomotionFromConfigFile)
-            Locomotion = Configuration.GetEnum("LocomotionMethod", Locomotion);
+            Locomotion = ConfigurationLookUp.Instance.GetEnum("LocomotionMethod", Locomotion);
         if (_getAutoFreezableFromConfigFile)
-            _autoFreezable = Configuration.GetBool("AutoFreeze", _autoFreezable);
+            _autoFreezable = ConfigurationLookUp.Instance.GetBool("AutoFreeze", _autoFreezable);
 
         _calibrationData = GetOrCreateCalibrationData();
         Assert.IsNotNull(_calibrationData);

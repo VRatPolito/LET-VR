@@ -1,5 +1,5 @@
-#Select scenario to load [Launcher only] {0 = Training, 1 = Straight Movements, 2 = Direction Control, 3 = Decoupled Movements, 4 = Agility, 5 = Interaction with objects}
-Scenario=1
+#Select scenario to load [Launcher only] {-1 = SelectWithGUI, 0 = Training, 1 = Straight Movements, 2 = Direction Control, 3 = Decoupled Movements, 4 = Agility, 5 = Interaction with objects}
+Scenario=-1
 #Participant ID
 ParticipantId=56
 #SetLocomotion Method among {ArmSwing, FootSwing, CVirtualizer, KatWalk, RealWalk, Joystick}
