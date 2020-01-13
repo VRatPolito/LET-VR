@@ -21,6 +21,7 @@ public class LookAtMeCatalizer : MonoBehaviour
 	[SerializeField] [Range(0,10)]private float _distanceFromPlayer = 2;
 	[SerializeField] [Range(0,15)]private float _aheadOfPlayer = 1;
     [SerializeField] private bool _stopOnCollision = true;
+    public float Angle = 0;
 
     #endregion
 
@@ -47,6 +48,7 @@ public class LookAtMeCatalizer : MonoBehaviour
 
     void Start()
     {
+        Angle = Mathf.Rad2Deg * Mathf.Asin(_distanceFromPlayer / Mathf.Sqrt((Mathf.Pow(_distanceFromPlayer, 2) + Mathf.Pow(_aheadOfPlayer, 2))));
         _rb = GetComponent<Rigidbody>();
         _ps = GetComponent<ParticleSystem>();
         _ps.Stop();

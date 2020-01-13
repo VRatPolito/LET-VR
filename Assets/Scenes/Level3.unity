@@ -119,7 +119,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh112376
+  m_Name: pb_Mesh119476
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -5298,19 +5298,19 @@ Transform:
   m_Father: {fileID: 306736691}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!65 &46369782
-BoxCollider:
+--- !u!135 &46369782
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 46369778}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.6308136, y: 0.61174935, z: 0.20610563}
-  m_Center: {x: 0.33919525, y: 0.17043117, z: 0.19206668}
+  m_Radius: 0.127
+  m_Center: {x: 0, y: 0, z: -0.000000029802322}
 --- !u!54 &46369783
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5339,9 +5339,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84f09de2e7fe73f4e8178900eb9fdd18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _distanceFromPlayer: 2
-  _aheadOfPlayer: 0.5
+  _distanceFromPlayer: 4
+  _aheadOfPlayer: 1
   _stopOnCollision: 0
+  Angle: 0
 --- !u!114 &46369785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5472,7 +5473,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh112196
+  m_Name: pb_Mesh119296
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -5752,7 +5753,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh67512
+  m_Name: pb_Mesh119446
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -7056,6 +7057,7 @@ MonoBehaviour:
   DronesCoinCollectorController: {fileID: 1093385603}
   Task1ToTask2DoorController: {fileID: 789130226}
   T2ToT3DoorController: {fileID: 899518985}
+  _sphere: {fileID: 46369784}
   _pathDevRef1: {fileID: 208450180}
   _pathDevRef2: {fileID: 1849208624}
   _pathDevRef3: {fileID: 806719721}
@@ -7088,7 +7090,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   StatisticsLoggerData: {fileID: 11400000, guid: 060b9bde028c5884dae2e3dc150aa303,
     type: 2}
-  _anglethreshold: 15
   _anglethresholdOffset: 2
   _pathDevAxis: 2
 --- !u!1001 &330438983
@@ -7143,7 +7144,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh67440
+  m_Name: pb_Mesh119374
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -9560,7 +9561,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh66906
+  m_Name: pb_Mesh118842
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -16265,7 +16266,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh67118
+  m_Name: pb_Mesh119054
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
