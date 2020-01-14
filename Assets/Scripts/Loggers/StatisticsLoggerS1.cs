@@ -207,12 +207,6 @@ public class StatisticsLoggerS1 : StatisticsLoggerBase
         return v / _positions.Count;
     }
 
-
-    protected void Quit()
-    {
-        Application.Quit();
-    }
-
     #endregion
 
     #region Events Callbacks
