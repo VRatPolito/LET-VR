@@ -2,6 +2,6 @@
 Scenario=-1
 #Participant ID
 ParticipantId=56
-#SetLocomotion Method among {ArmSwing, FootSwing, CVirtualizer, KatWalk, RealWalk, Joystick}
-LocomotionMethod=ArmSwing
+#SetLocomotion Technique among {ArmSwing, WalkInPlace, CVirtualizer, KatWalk, RealWalk, Joystick}
+LocomotionTechnique=ArmSwing
 AutoFreeze=true

@@ -10,14 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3b7687d112a772d4992b801bc7f1ff34, type: 3}
-  m_Name: Level2 LoggerData
+  m_Name: Scenario5 LoggerData
   m_EditorClassIdentifier: 
-  _scenarioName: 2_DirectionControl
+  _scenarioName: 5_InteractionWithObjects
   _logFileNames:
   - Master
-  - MultiStraighLineWalking
-  - BackwardWalking
-  - CurvedWalking
-  - StairsAndRamp
-  - Fear
+  - Grabbing
+  - Manipulation
+  - InteractionInMotion
   _samplingRate: 60

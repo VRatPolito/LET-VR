@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using PrattiToolkit;
 using UnityEngine;
 
-[RequireComponent(typeof(Level4Manager))]
-public class StatisticsLoggerL4 : StatisticsLoggerBase
+[RequireComponent(typeof(Scenario4Manager))]
+public class StatisticsLoggerS4 : StatisticsLoggerBase
 {
     #region Events
 
@@ -60,7 +60,7 @@ public class StatisticsLoggerL4 : StatisticsLoggerBase
     public void StopLogStationaryAgility()
     {
         _stationaryAgility = false;
-        var NumHits = Level4Manager.Instance.HeadShooterHits;
+        var NumHits = Scenario4Manager.Instance.HeadShooterHits;
         var values = new List<string>
         { 
             "" + NumHits
@@ -78,7 +78,7 @@ public class StatisticsLoggerL4 : StatisticsLoggerBase
     public void StopLogBodyShooter()
     {
         _evasion = false;
-        var NumHits = Level4Manager.Instance.BodyShooterHits;
+        var NumHits = Scenario4Manager.Instance.BodyShooterHits;
         var values = new List<string>
         {
             "" + NumHits

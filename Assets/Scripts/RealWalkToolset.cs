@@ -14,7 +14,7 @@ public class RealWalkToolset : MonoBehaviour
 
     private void Start()
     {
-        if (LocomotionManager.Instance.Locomotion == ControllerType.RealWalk)
+        if (LocomotionManager.Instance.Locomotion == LocomotionTechniqueType.RealWalk)
         {
             _input = LocomotionManager.Instance.CurrentPlayerController.GetComponent<InputManagement>();
             _charc = LocomotionManager.Instance.CurrentPlayerController.GetComponent<CharacterController>();

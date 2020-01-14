@@ -1,5 +1,4 @@
-﻿
-/*
+﻿/*
  * Custom template by Gabriele P.
  */
 
@@ -14,10 +13,10 @@ using UnityEngine.Assertions;
 using UnityEngine.Serialization;
 
 [RequireComponent(typeof(LocomotionManager))]
-[RequireComponent(typeof(StatisticsLoggerL1))]
-public class Level1Manager : UnitySingleton<Level1Manager>
+[RequireComponent(typeof(StatisticsLoggerS1))]
+public class Scenario1Manager : UnitySingleton<Scenario1Manager>
 {
-    protected Level1Manager()
+    protected Scenario1Manager()
     {
     }
 
@@ -39,6 +38,7 @@ public class Level1Manager : UnitySingleton<Level1Manager>
     [SerializeField] private float _timeToStop = .5f;
     [SerializeField] private DoorController _doortochase;
     [SerializeField] internal Transform _pathDevRef;
+
     #endregion
 
     #region Private Members and Constants
@@ -49,7 +49,7 @@ public class Level1Manager : UnitySingleton<Level1Manager>
 
     #region Properties
 
-    public StatisticsLoggerL1 StatisticsLogger { get; private set; }
+    public StatisticsLoggerS1 StatisticsLogger { get; private set; }
 
     public Transform Player => LocomotionManager.Instance.CurrentPlayerController;
 
@@ -73,7 +73,7 @@ public class Level1Manager : UnitySingleton<Level1Manager>
 
     private void Awake()
     {
-        StatisticsLogger = GetComponent<StatisticsLoggerL1>();
+        StatisticsLogger = GetComponent<StatisticsLoggerS1>();
         Assert.IsNotNull(StatisticsLogger);
 
         InitChoreographies();
@@ -88,12 +88,21 @@ public class Level1Manager : UnitySingleton<Level1Manager>
 
         _start.OnDisabled.AddListener(Instance.StatisticsLogger.StartLogStrLineWalking);
         _stopWalk.OnDisabled.AddListener(Instance.StatisticsLogger.StopLogStrLineWalking);
-        _end.OnDisabled.AddListener(Instance.StatisticsLogger.StopLogSprinting);
+        _end.OnDisabled.AddListener(StopLogSprinting);
         _doortochase.OnOpenGate.AddListener(EnableChasingDest);
         _chasingDest.OnEnabled.AddListener((Destination d) => _robotRotateAndPointSequence.Play());
     }
 
-
+    private void StopLogSprinting(Destination d)
+    {
+        Instance.StatisticsLogger.OnLogFinalized += (ix) =>
+        {
+            Debug.Log($"Log {ix} finalized!");
+            if (ix == 0)
+                Invoke("Quit", 5);
+        };
+        Instance.StatisticsLogger.StopLogSprinting(d);
+    }
 
     #endregion
 
@@ -123,9 +132,13 @@ public class Level1Manager : UnitySingleton<Level1Manager>
     {
         var stopPointingSequence = DOTween.Sequence();
 
-        stopPointingSequence.Append(_robothand.transform.DOLocalRotate(new Vector3(84.857f, _robothand.transform.localEulerAngles.y, _robothand.transform.localEulerAngles.z), 1,RotateMode.Fast));
+        stopPointingSequence.Append(_robothand.transform.DOLocalRotate(
+            new Vector3(84.857f, _robothand.transform.localEulerAngles.y, _robothand.transform.localEulerAngles.z), 1,
+            RotateMode.Fast));
         if (resetRotation)
-            stopPointingSequence.Append(_robot.transform.DORotate(new Vector3(_robot.transform.eulerAngles.x, 0, _robot.transform.eulerAngles.z), 1.5f,RotateMode.Fast).SetEase(Ease.InOutSine));
+            stopPointingSequence.Append(_robot.transform
+                .DORotate(new Vector3(_robot.transform.eulerAngles.x, 0, _robot.transform.eulerAngles.z), 1.5f,
+                    RotateMode.Fast).SetEase(Ease.InOutSine));
 
         _robotRotateAndPointSequence.Kill();
         stopPointingSequence.Play();
@@ -148,7 +161,6 @@ public class Level1Manager : UnitySingleton<Level1Manager>
                 1.7f, RotateMode.Fast).SetLoops(-1, LoopType.Yoyo));
 
         _robotRotateAndPointSequence.Pause();
-
     }
 
     private void EnableChasingDest()
@@ -157,7 +169,6 @@ public class Level1Manager : UnitySingleton<Level1Manager>
         _chasingDest.gameObject.SetActive(true);
     }
 
-
     #endregion
 
     #region Events Callbacks
@@ -165,6 +176,6 @@ public class Level1Manager : UnitySingleton<Level1Manager>
     #endregion
 
     #region Coroutines
-    #endregion
 
+    #endregion
 }

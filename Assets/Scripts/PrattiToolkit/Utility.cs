@@ -137,6 +137,11 @@ namespace PrattiToolkit
             return lis;
         }
 
+        public static List<string> GetStringList<T>(this T src) where T : struct
+        {
+            return src.GetValuesList().ConvertAll(input => input.ToString());
+        }
+
         /// <summary>
         /// Iterate over enum values
         /// </summary>

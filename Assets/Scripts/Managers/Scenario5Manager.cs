@@ -11,10 +11,10 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-[RequireComponent(typeof(StatisticsLoggerL5))]
-public class Level5Manager : UnitySingleton<Level5Manager>
+[RequireComponent(typeof(StatisticsLoggerS5))]
+public class Scenario5Manager : UnitySingleton<Scenario5Manager>
 {
-    protected Level5Manager()
+    protected Scenario5Manager()
     {
     }
 
@@ -53,7 +53,7 @@ public class Level5Manager : UnitySingleton<Level5Manager>
 
     #region Properties
 
-    public StatisticsLoggerL5 StatisticsLogger { get; private set; }
+    public StatisticsLoggerS5 StatisticsLogger { get; private set; }
 
 
     public Transform Player => LocomotionManager.Instance.CurrentPlayerController;
@@ -64,7 +64,7 @@ public class Level5Manager : UnitySingleton<Level5Manager>
 
     private void Awake()
     {
-        StatisticsLogger = GetComponent<StatisticsLoggerL5>();
+        StatisticsLogger = GetComponent<StatisticsLoggerS5>();
         Assert.IsNotNull(StatisticsLogger);
         Assert.IsNotNull(Red);
         Assert.IsNotNull(Green);

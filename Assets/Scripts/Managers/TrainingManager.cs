@@ -8,11 +8,11 @@ using PrattiToolkit;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-[RequireComponent(typeof(StatisticsLoggerTutorial))]
-public class TutorialManager : UnitySingleton<TutorialManager>
+[RequireComponent(typeof(StatisticsLoggerTraining))]
+public class TrainingManager : UnitySingleton<TrainingManager>
 {
 
-    protected TutorialManager() { }
+    protected TrainingManager() { }
 
     #region Events
 
@@ -29,7 +29,7 @@ public class TutorialManager : UnitySingleton<TutorialManager>
     #region Properties
 
 
-    public StatisticsLoggerTutorial StatisticsLogger { get; private set; }
+    public StatisticsLoggerTraining StatisticsLogger { get; private set; }
     public Transform Player => LocomotionManager.Instance.CurrentPlayerController;
 
     #endregion
@@ -38,7 +38,7 @@ public class TutorialManager : UnitySingleton<TutorialManager>
 
     private void Awake()
     {
-        StatisticsLogger = GetComponent<StatisticsLoggerTutorial>();
+        StatisticsLogger = GetComponent<StatisticsLoggerTraining>();
         Assert.IsNotNull(StatisticsLogger);
     }
 

@@ -8,8 +8,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using PrattiToolkit;
 
-[RequireComponent(typeof(Level2Manager))]
-public class StatisticsLoggerL2 : StatisticsLoggerBase
+[RequireComponent(typeof(Scenario2Manager))]
+public class StatisticsLoggerS2 : StatisticsLoggerBase
 {
     #region Events
 
@@ -158,8 +158,8 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
     internal void StopLogSlope(Destination d)
     {
         _stairsRamp = false;
-        Level2Manager.Instance.StartHalfSlope.gameObject.SetActive(true);
-        Level2Manager.Instance.StartHalfStairs.gameObject.SetActive(true);
+        Scenario2Manager.Instance.StartHalfSlope.gameObject.SetActive(true);
+        Scenario2Manager.Instance.StartHalfStairs.gameObject.SetActive(true);
     }
 
     internal void StartLogHalfStairs(Destination d)
@@ -167,12 +167,12 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
         _choice = "ST";
         if (_stairsRamp)
         {
-            Level2Manager.Instance.StartHalfSlope.gameObject.SetActive(true);
+            Scenario2Manager.Instance.StartHalfSlope.gameObject.SetActive(true);
         }
         else
         {
             _stairsRamp = true;
-            Level2Manager.Instance.EndStairsSlope.gameObject.SetActive(true);
+            Scenario2Manager.Instance.EndStairsSlope.gameObject.SetActive(true);
         }
     }
 
@@ -181,12 +181,12 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
         _choice = "SL";
         if (_stairsRamp)
         {
-            Level2Manager.Instance.StartHalfStairs.gameObject.SetActive(true);
+            Scenario2Manager.Instance.StartHalfStairs.gameObject.SetActive(true);
         }
         else
         {
             _stairsRamp = true;
-            Level2Manager.Instance.EndStairsSlope.gameObject.SetActive(true);
+            Scenario2Manager.Instance.EndStairsSlope.gameObject.SetActive(true);
         }
     }
 
@@ -198,15 +198,15 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
             "" + _choice
         };
         WriteToCSV("STL", values, 4);
-        if (Level2Manager.Instance.StartHalfSlope.gameObject.activeSelf)
+        if (Scenario2Manager.Instance.StartHalfSlope.gameObject.activeSelf)
         {
-            Level2Manager.Instance.StartHalfSlope.OnDisabled.RemoveListener(StartLogHalfSlope);
-            Level2Manager.Instance.StartHalfSlope.gameObject.SetActive(false);
+            Scenario2Manager.Instance.StartHalfSlope.OnDisabled.RemoveListener(StartLogHalfSlope);
+            Scenario2Manager.Instance.StartHalfSlope.gameObject.SetActive(false);
         }
-        else if (Level2Manager.Instance.StartHalfStairs.gameObject.activeSelf)
+        else if (Scenario2Manager.Instance.StartHalfStairs.gameObject.activeSelf)
         {
-            Level2Manager.Instance.StartHalfStairs.OnDisabled.RemoveListener(StartLogHalfStairs);
-            Level2Manager.Instance.StartHalfStairs.gameObject.SetActive(false);
+            Scenario2Manager.Instance.StartHalfStairs.OnDisabled.RemoveListener(StartLogHalfStairs);
+            Scenario2Manager.Instance.StartHalfStairs.gameObject.SetActive(false);
         }
 
         StopMasterLog();
@@ -254,10 +254,10 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
     {
         if (_backWalking)
         {
-            var diff = GetPathDev(Level2Manager.Instance._pathDevRef, _pathDevAxis);
+            var diff = GetPathDev(Scenario2Manager.Instance._pathDevRef, _pathDevAxis);
             _pathDev += diff * (1 / StatisticsLoggerData.SamplingRate);
             
-            if (!Level2Manager.Instance.BackwardItem.InteractiveItem.IsOver)
+            if (!Scenario2Manager.Instance.BackwardItem.InteractiveItem.IsOver)
             {
 				_inCount++;
 				if(!_errorCounted)
@@ -280,7 +280,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
             {
                 if (_timeStop == float.MinValue)
                     _timeStop = Time.time;
-                else if (Time.time >= _timeStop + Level2Manager.Instance.TimeToStop)
+                else if (Time.time >= _timeStop + Scenario2Manager.Instance.TimeToStop)
                 {
                     if (UnityExtender.NearlyEqual(_stopPos, Vector3.negativeInfinity))
                     {
@@ -297,9 +297,9 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
         }
         else if (_fear)
         {
-            if (LocomotionManager.Instance.CurrentPlayerController.position.x <= Level2Manager.Instance._avoidanceRef.position.x)
+            if (LocomotionManager.Instance.CurrentPlayerController.position.x <= Scenario2Manager.Instance._avoidanceRef.position.x)
             {
-                var diff = GetPathDev(Level2Manager.Instance._avoidanceRef, _avoidanceAxis);
+                var diff = GetPathDev(Scenario2Manager.Instance._avoidanceRef, _avoidanceAxis);
                 _avoidance += diff * (1 / StatisticsLoggerData.SamplingRate);
             }
         }
@@ -314,7 +314,7 @@ public class StatisticsLoggerL2 : StatisticsLoggerBase
                 var v1 = LocomotionManager.Instance.CurrentPlayerController.position - _prevpos;
                 Vector3 v2 = Vector3.zero;
                 if (_dirTargets == 0)
-                    v2 = _currDest.transform.position - Level2Manager.Instance.StartDest.transform.position;
+                    v2 = _currDest.transform.position - Scenario2Manager.Instance.StartDest.transform.position;
                 else
                     v2 = _currDest.transform.position - _prevTarget.transform.position;
                 _initAngErr = Vector3.Angle(v1, v2);

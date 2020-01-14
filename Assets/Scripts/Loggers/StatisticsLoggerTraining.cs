@@ -6,8 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(TutorialManager))]
-public class StatisticsLoggerTutorial : StatisticsLoggerBase
+[RequireComponent(typeof(TrainingManager))]
+public class StatisticsLoggerTraining : StatisticsLoggerBase
 {
 	#region Events
 		

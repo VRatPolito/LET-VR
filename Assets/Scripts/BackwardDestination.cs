@@ -31,7 +31,7 @@ public class BackwardDestination : DisableOnContactDestination
 
     public override void OnDisable()
     {
-        Level2Manager.Instance.Grow();
+        Scenario2Manager.Instance.Grow();
         base.OnDisable();
     }
 
@@ -39,7 +39,7 @@ public class BackwardDestination : DisableOnContactDestination
     {
         if (other.tag == "Player")
         {
-            Level2Manager.Instance.StartBackwardWalkingBehaviour();
+            Scenario2Manager.Instance.StartBackwardWalkingBehaviour();
             base.OnTriggerEnter(other);
         }
     }

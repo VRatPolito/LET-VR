@@ -55,7 +55,7 @@ public class Calibration : MonoBehaviour
 
     void Update()
     {
-        if (_playerinside && (Input.GetKeyDown(_startCalibrationKey) || (LocomotionManager.Instance.Locomotion == ControllerType.RealWalk && LocomotionManager.Instance.CurrentPlayerController != null && (LocomotionManager.Instance.CurrentPlayerController.GetComponent<InputManagement>().IsLeftTriggerClicked && LocomotionManager.Instance.CurrentPlayerController.GetComponent<InputManagement>().IsRightTriggerClicked))))
+        if (_playerinside && (Input.GetKeyDown(_startCalibrationKey) || (LocomotionManager.Instance.Locomotion == LocomotionTechniqueType.RealWalk && LocomotionManager.Instance.CurrentPlayerController != null && (LocomotionManager.Instance.CurrentPlayerController.GetComponent<InputManagement>().IsLeftTriggerClicked && LocomotionManager.Instance.CurrentPlayerController.GetComponent<InputManagement>().IsRightTriggerClicked))))
             Calibrate();
     }
 

@@ -9,9 +9,9 @@ using PrattiToolkit;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-public class Level4Manager : UnitySingleton<Level4Manager>
+public class Scenario4Manager : UnitySingleton<Scenario4Manager>
 {
-    protected Level4Manager()
+    protected Scenario4Manager()
     {
     }
 
@@ -38,7 +38,7 @@ public class Level4Manager : UnitySingleton<Level4Manager>
 
     #region Properties
 
-    public StatisticsLoggerL4 StatisticsLogger { get; private set; }
+    public StatisticsLoggerS4 StatisticsLogger { get; private set; }
 
     public int HeadShooterHits => _headShooter.HitsCounter;
     public int BodyShooterHits => _bodyShooter.HitsCounter;
@@ -51,7 +51,7 @@ public class Level4Manager : UnitySingleton<Level4Manager>
 
     private void Awake()
     {
-        StatisticsLogger = GetComponent<StatisticsLoggerL4>();
+        StatisticsLogger = GetComponent<StatisticsLoggerS4>();
         Assert.IsNotNull(StatisticsLogger);
 
 
@@ -99,9 +99,9 @@ public class Level4Manager : UnitySingleton<Level4Manager>
         LocomotionManager.Instance.StopLocomotionPublic();
         switch(LocomotionManager.Instance.Locomotion)
         {
-            case ControllerType.ArmSwing:
-            case ControllerType.FootSwing:
-            case ControllerType.Joystick:
+            case LocomotionTechniqueType.ArmSwing:
+            case LocomotionTechniqueType.WalkInPlace:
+            case LocomotionTechniqueType.Joystick:
                 LocomotionManager.Instance.CurrentPlayerController.GetComponent<CircularLimitTracking>().DisableCollider();
                 break;
             default:
@@ -132,9 +132,9 @@ public class Level4Manager : UnitySingleton<Level4Manager>
         LocomotionManager.Instance.StartLocomotionPublic();
         switch (LocomotionManager.Instance.Locomotion)
         {
-            case ControllerType.ArmSwing:
-            case ControllerType.FootSwing:
-            case ControllerType.Joystick:
+            case LocomotionTechniqueType.ArmSwing:
+            case LocomotionTechniqueType.WalkInPlace:
+            case LocomotionTechniqueType.Joystick:
                 LocomotionManager.Instance.CurrentPlayerController.GetComponent<CircularLimitTracking>().EnableCollider();
                 break;
             default:

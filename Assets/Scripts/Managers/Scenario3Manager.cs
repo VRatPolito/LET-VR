@@ -12,10 +12,10 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Serialization;
 
-public class Level3Manager : UnitySingleton<Level3Manager>
+public class Scenario3Manager : UnitySingleton<Scenario3Manager>
 {
 
-    protected Level3Manager() { }
+    protected Scenario3Manager() { }
 
     #region Events
 
@@ -43,7 +43,7 @@ public class Level3Manager : UnitySingleton<Level3Manager>
 
     #region Properties
 
-    public StatisticsLoggerL3 StatisticsLogger { get; private set; }
+    public StatisticsLoggerS3 StatisticsLogger { get; private set; }
 
     private Transform _player => LocomotionManager.Instance.CurrentPlayerController;
 
@@ -53,7 +53,7 @@ public class Level3Manager : UnitySingleton<Level3Manager>
 
     private void Awake()
     {
-        StatisticsLogger = GetComponent<StatisticsLoggerL3>();
+        StatisticsLogger = GetComponent<StatisticsLoggerS3>();
         _lookAtMe = FindObjectOfType<LookAtMeCatalizer>();
         Assert.IsNotNull(StatisticsLogger);
         Assert.IsNotNull(_lookAtMe);

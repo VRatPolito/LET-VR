@@ -7,8 +7,8 @@ using PrattiToolkit;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Level3Manager))]
-public class StatisticsLoggerL3 : StatisticsLoggerBase
+[RequireComponent(typeof(Scenario3Manager))]
+public class StatisticsLoggerS3 : StatisticsLoggerBase
 {
     #region Events
 
@@ -115,7 +115,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
         {
             "" + ComplTime,
             "" + _pathDev,
-            "" + Level3Manager.Instance.DronesCoinCollectorController.Score,
+            "" + Scenario3Manager.Instance.DronesCoinCollectorController.Score,
             "" + _numInterr
         };
         WriteToCSV("DH", values, 3);
@@ -135,13 +135,13 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
         if (_decoupledGaze)
         {
             // compute Path Deviation metrics
-            var diff = GetPathDev(Level3Manager.Instance._pathDevRef1, _pathDevAxis);
+            var diff = GetPathDev(Scenario3Manager.Instance._pathDevRef1, _pathDevAxis);
             _pathDev += diff * (1 / StatisticsLoggerData.SamplingRate);
                        
             var v1 = LocomotionManager.Instance.CurrentPlayerController.position - _prevpos;
             var v2 = LocomotionManager.Instance.CameraEye.forward;
             var a = Vector3.Angle(v1, v2);
-            if (a > Level3Manager.Instance.Sphere.Angle - _anglethresholdOffset && a < Level3Manager.Instance.Sphere.Angle + _anglethresholdOffset)
+            if (a > Scenario3Manager.Instance.Sphere.Angle - _anglethresholdOffset && a < Scenario3Manager.Instance.Sphere.Angle + _anglethresholdOffset)
                 _inCount++;
             _count++;
             if(_masterlog)
@@ -152,7 +152,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
             {
                 if (_timeStop == float.MinValue)
                     _timeStop = Time.time;
-                else if (Time.time >= _timeStop + Level3Manager.Instance.TimeToStop)
+                else if (Time.time >= _timeStop + Scenario3Manager.Instance.TimeToStop)
                 {
                     if (UnityExtender.NearlyEqual(_stopPos, Vector3.negativeInfinity))
                     {
@@ -170,7 +170,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
         else if (_strOutHands)
         {
             // compute Path Deviation metrics
-            var diff = GetPathDev(Level3Manager.Instance._pathDevRef2, _pathDevAxis);
+            var diff = GetPathDev(Scenario3Manager.Instance._pathDevRef2, _pathDevAxis);
             _pathDev += diff * (1 / StatisticsLoggerData.SamplingRate);
             
             var cl = LocomotionManager.Instance.LeftController.transform.position;
@@ -185,7 +185,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
             {
                 if (_timeStop == float.MinValue)
                     _timeStop = Time.time;
-                else if (Time.time >= _timeStop + Level3Manager.Instance.TimeToStop)
+                else if (Time.time >= _timeStop + Scenario3Manager.Instance.TimeToStop)
                 {
                     if (UnityExtender.NearlyEqual(_stopPos, Vector3.negativeInfinity))
                     {
@@ -204,7 +204,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
         {
 
             // compute Path Deviation metrics
-            var diff = GetPathDev(Level3Manager.Instance._pathDevRef3, _pathDevAxis);
+            var diff = GetPathDev(Scenario3Manager.Instance._pathDevRef3, _pathDevAxis);
             _pathDev += diff * (1 / StatisticsLoggerData.SamplingRate);
             
             var currpos = LocomotionManager.Instance.CurrentPlayerController.position;
@@ -212,7 +212,7 @@ public class StatisticsLoggerL3 : StatisticsLoggerBase
             {
                 if (_timeStop == float.MinValue)
                     _timeStop = Time.time;
-                else if (Time.time >= _timeStop + Level3Manager.Instance.TimeToStop)
+                else if (Time.time >= _timeStop + Scenario3Manager.Instance.TimeToStop)
                 {
                     if (UnityExtender.NearlyEqual(_stopPos, Vector3.negativeInfinity))
                     {

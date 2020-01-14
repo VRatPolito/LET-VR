@@ -42,7 +42,7 @@ public class GazeDestination : WalkingDestination
 
     public override void OnTriggerEnter(Collider other)
     {
-        Level2Manager.Instance.StatisticsLogger.StopLogMultiStrLineWalking(this);
+        Scenario2Manager.Instance.StatisticsLogger.StopLogMultiStrLineWalking(this);
         if (other.CompareTag("Player"))
         {
             _item.OnLocked += StopLog;
@@ -58,13 +58,13 @@ public class GazeDestination : WalkingDestination
     public override void OnEnable()
     {
         base.OnEnable();
-        Level2Manager.Instance.StatisticsLogger.StartLogMultiStrLineWalking(this);
+        Scenario2Manager.Instance.StatisticsLogger.StartLogMultiStrLineWalking(this);
     }
 
     public override void OnDisable()
     {
         _item.OnLocked -= StopLog;
-        Level2Manager.Instance.Grow();
+        Scenario2Manager.Instance.Grow();
         base.OnDisable();
     }
 

@@ -10,13 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3b7687d112a772d4992b801bc7f1ff34, type: 3}
-  m_Name: Level1 LoggerData
+  m_Name: Training LoggerData
   m_EditorClassIdentifier: 
-  _scenarioName: 1_StraightMovements
-  _logFileNames:
-  - Master
-  - StraightLineWalking
-  - OverUnderShooting
-  - Chasing
-  - Sprinting
+  _scenarioName: Training
+  _logFileNames: []
   _samplingRate: 60

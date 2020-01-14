@@ -8,8 +8,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Level1Manager))]
-public class StatisticsLoggerL1 : StatisticsLoggerBase
+[RequireComponent(typeof(Scenario1Manager))]
+public class StatisticsLoggerS1 : StatisticsLoggerBase
 {
     #region Events
 
@@ -140,11 +140,7 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
             "" + _numWallColl
         };
         WriteToCSV("S", values, 4);
-        this.OnLogFinalized += (ix) =>
-        {
-            if (ix == 0)
-                Invoke("Quit",5);
-        };
+        
         StopMasterLog();
     }
 
@@ -167,7 +163,7 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
     {
         if (_strLineWalking)
         {
-            var diff = GetPathDev(Level1Manager.Instance._pathDevRef, _pathDevAxis);
+            var diff = GetPathDev(Scenario1Manager.Instance._pathDevRef, _pathDevAxis);
             _pathDev += diff * (1 / StatisticsLoggerData.SamplingRate);
         }
         else if (_chasing)
@@ -176,7 +172,7 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
             {
                 if (_timeStop == float.MinValue)
                     _timeStop = Time.time;
-                else if (Time.time >= _timeStop + Level1Manager.Instance.TimeToStop)
+                else if (Time.time >= _timeStop + Scenario1Manager.Instance.TimeToStop)
                 {
                     _numInterr++;
                     _errorCounted = true;
@@ -191,8 +187,8 @@ public class StatisticsLoggerL1 : StatisticsLoggerBase
 
         if (_chasing && _masterlog)
         {
-            _targetpositions.Add(Level1Manager.Instance.ChasingDest.transform.position);
-            if (Level1Manager.Instance.ChasingDest.PlayerInside)
+            _targetpositions.Add(Scenario1Manager.Instance.ChasingDest.transform.position);
+            if (Scenario1Manager.Instance.ChasingDest.PlayerInside)
                 _inside++;
         }
         base.ComputeStatisticsStep();

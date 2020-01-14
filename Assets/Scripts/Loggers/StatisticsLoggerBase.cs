@@ -256,7 +256,7 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
                 "" + _righthandrotations[i].z
             };
 
-            if (LocomotionManager.Instance.Locomotion == ControllerType.FootSwing)
+            if (LocomotionManager.Instance.Locomotion == LocomotionTechniqueType.WalkInPlace)
             {
                 values.Add("" + _dirtrackpositions[i].x);
                 values.Add("" + _dirtrackpositions[i].y);
@@ -327,7 +327,7 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
             _lefthandrotations.Add(LocomotionManager.Instance.LeftController.localEulerAngles);
             _righthandpositions.Add(LocomotionManager.Instance.RightController.localPosition);
             _righthandrotations.Add(LocomotionManager.Instance.RightController.localEulerAngles);
-            if (LocomotionManager.Instance.Locomotion == ControllerType.FootSwing)
+            if (LocomotionManager.Instance.Locomotion == LocomotionTechniqueType.WalkInPlace)
             {
                 _dirtrackpositions.Add(LocomotionManager.Instance.DirectionalTracker.localPosition);
                 _dirtrackrotations.Add(LocomotionManager.Instance.DirectionalTracker.localEulerAngles);

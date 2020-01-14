@@ -13,12 +13,12 @@ using UnityEngine.Assertions;
 using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.Serialization;
 
-[RequireComponent(typeof(StatisticsLoggerL2))]
+[RequireComponent(typeof(StatisticsLoggerS2))]
 [RequireComponent(typeof(LocomotionManager))]
-public class Level2Manager : UnitySingleton<Level2Manager>
+public class Scenario2Manager : UnitySingleton<Scenario2Manager>
 {
 
-    protected Level2Manager() { }
+    protected Scenario2Manager() { }
 
     #region Events
 
@@ -38,6 +38,8 @@ public class Level2Manager : UnitySingleton<Level2Manager>
     [SerializeField] private Transform _fearDoor;
     [SerializeField] internal Transform _pathDevRef;
     [SerializeField] internal Transform _avoidanceRef;
+    [SerializeField] private GameObject _city;
+
     #endregion
 
     #region Private Members and Constants
@@ -51,7 +53,7 @@ public class Level2Manager : UnitySingleton<Level2Manager>
 
     #region Properties
 
-    public StatisticsLoggerL2 StatisticsLogger { get; private set; }
+    public StatisticsLoggerS2 StatisticsLogger { get; private set; }
 
     private Transform _player => LocomotionManager.Instance.CurrentPlayerController;
 
@@ -61,9 +63,10 @@ public class Level2Manager : UnitySingleton<Level2Manager>
 
     private void Awake()
     {
-        StatisticsLogger = GetComponent<StatisticsLoggerL2>();
+        StatisticsLogger = GetComponent<StatisticsLoggerS2>();
         Assert.IsNotNull(StatisticsLogger);
         Assert.IsNotNull(_pathController);
+        Assert.IsNotNull(_city);
 
 
         StartDest.OnDisabled.AddListener(StartGrow);
@@ -83,6 +86,8 @@ public class Level2Manager : UnitySingleton<Level2Manager>
         FearEnd.OnDisabled.AddListener(OpenFearDoor);
         FearEnd.OnDisabled.AddListener(StatisticsLogger.StopLogFear);
         LevelEnd.OnDisabled.AddListener(EndGame);
+
+        _city.SetActive(false); //Save GPU before S2T3
     }
 
 
@@ -160,6 +165,11 @@ public class Level2Manager : UnitySingleton<Level2Manager>
 
     private void EndGame(Destination d)
     {
+        Invoke("Quit", 5);
+    }
+
+    private void Quit()
+    {
         Application.Quit();
     }
 
@@ -185,6 +195,7 @@ public class Level2Manager : UnitySingleton<Level2Manager>
     {
         _headlight.transform.parent = null;
         _headlight.GetComponent<Light>().enabled = false;
+        _city.SetActive(true);
     }
 
     private void AttachLight(Destination d)
@@ -207,7 +218,7 @@ public class Level2Manager : UnitySingleton<Level2Manager>
     IEnumerator CloseDoorCoroutine()
     {
         yield return new WaitForSeconds(1);
-        var dc = Level2Manager.Instance.CurvedDoor;
+        var dc = Scenario2Manager.Instance.CurvedDoor;
         if (!dc.SensorEnabled)
             dc.ForceCloseDoor();
         _closeDoorCoroutineRef = null;

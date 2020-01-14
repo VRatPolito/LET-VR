@@ -7,8 +7,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Level5Manager))]
-public class StatisticsLoggerL5 : StatisticsLoggerBase
+[RequireComponent(typeof(Scenario5Manager))]
+public class StatisticsLoggerS5 : StatisticsLoggerBase
 {
     #region Events
 

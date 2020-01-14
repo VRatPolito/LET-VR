@@ -42,7 +42,7 @@ public class RunningDestination : WalkingDestination
 
     public override void OnDisable()
     {
-        Level1Manager.Instance.StatisticsLogger.StartLogSprinting();
+        Scenario1Manager.Instance.StatisticsLogger.StartLogSprinting();
         base.OnDisable();
     }
 
