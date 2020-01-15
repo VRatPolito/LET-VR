@@ -60,7 +60,7 @@ namespace PrattiToolkit
             }
         }
 
-        private void OnApplicationQuit()
+        protected virtual void OnApplicationQuit()
         {
             _applicationIsQuitting = true;
         }

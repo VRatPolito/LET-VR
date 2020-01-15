@@ -1,7 +1,0 @@
-PRIMA DI INDOSSARE IL VISORE Spiegare:
--I controller e realtà virtuale se necessario
--Come si esegue la camminata col proprio metodo
--Come si esegue il grabbing
--Cercare di stare all’interno del cerchio per lo swing
--Come eseguire la camminata all’indietro dove disponibile
--Spiegare la calibrazione e T-Pose

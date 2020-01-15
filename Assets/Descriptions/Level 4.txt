@@ -1,4 +1,0 @@
-- Raggiungi la destinazione che si trova appena prima della porta. Evita la collisione con gli ostacoli mobili che ti vengono incontro, ogni collisione è considerata come un errore. Fai attenzione per alcuni è necessarrio abbassarsi/accovacciarsi! Fai attenzione da dove nascono i muri in fondo alla stanza (area arancione)
-- Appena entrerai nel cerchio verde apparirà un robot spara palle. Schivale muovendoti sul posto, senza quindi usare il metodo di locomozione.
-- Raggiungi il cerchio alla tua sinistra, appena lo farai apparirà un secondo robot, ed in questo caso dovrai schivare i proiettili usando il metodo di locomozione. Attento anche alle tue mani.
-- Raggiungi il cerchio alla tua sinistra, appena lo farai apparirà un secondo robot, ed in questo caso dovrai schivare i proiettili usando il metodo di locomozione. Anche le mani possono essere colpite.

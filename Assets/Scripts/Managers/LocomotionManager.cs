@@ -109,6 +109,7 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
 
         _calibrationData = GetOrCreateCalibrationData();
         Assert.IsNotNull(_calibrationData);
+
         _startingKATmultiply = _playerControllers[(int)LocomotionTechniqueType.KatWalk].GetComponentInChildren<KATDevice>().multiply;
         _startingKATmultiplyback = _playerControllers[(int)LocomotionTechniqueType.KatWalk].GetComponentInChildren<KATDevice>().multiplyBack;
         IsPlayerFreezed = false;
@@ -119,19 +120,16 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
     {
         InitializeTechnique();
 
-        UI_HUDController c = null;
-        c = FindObjectOfType<UI_HUDController>();
+        var c = FindObjectOfType<UI_HUDController>();
         Assert.IsNotNull(c);
         var cc = c.GetComponent<Canvas>();
+        Assert.IsNotNull(cc);
         cc.renderMode = RenderMode.ScreenSpaceCamera;
         cc.worldCamera = CameraEye.transform.GetChildRecursive("UI").GetComponent<Camera>();
         CurrentUIController = c;
         _lastPlayerPosition = CurrentPlayerController.position;
 
-#if !DEBUG || !UNITY_EDITOR
-        //StartFreezed
-        IsPlayerFreezed = true;
-#endif
+        AutoFreeze();
     }
     
     private void Update()
@@ -143,9 +141,10 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
         _lastPlayerPosition = CurrentPlayerController.position;
     }
 
-    private void OnApplicationQuit()
+    protected override void OnApplicationQuit()
     {
         CalibrationData.SavePersistent();
+        base.OnApplicationQuit();
     }
     
     #endregion
@@ -163,12 +162,12 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
         if (!IsPlayerFreezed)
             StartLocomotion();
     }
+
     public void StopLocomotionPublic()
     {
         StopLocomotion();
     }
-
-   
+    
     #endregion
 
     #region Helper Methods
@@ -270,26 +269,13 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
                 break;
         }
     }
+
     private LocomotionCalibrationData GetOrCreateCalibrationData()
     {
-        //      string relPath = "Assets/BuildData/LocomotionCalibrationData.asset";
         string dataPath = PersistentSaveLoad.GetDefaultDataPath("LBF_VR", "calibrationData.pgd");
         var calib = PersistentSaveLoad.Load<LocomotionCalibrationData>(dataPath, PersistentSaveLoad.SerializationType.Json);
         if (calib == null)
             calib = new LocomotionCalibrationData();
-        //#if UNITY_EDITOR
-        //        calib = AssetDatabase.LoadAssetAtPath(relPath, typeof(LocomotionCalibrationData)) as LocomotionCalibrationData;
-        //#endif
-        //        if (calib == null)
-        //        {
-        //            calib = ScriptableObject.CreateInstance<LocomotionCalibrationData>();
-        //#if UNITY_EDITOR            
-        //            AssetDatabase.CreateAsset(calib, relPath);
-        //            AssetDatabase.SaveAssets();
-        //#endif
-
-        //        }
-
         return calib;
     }
 
