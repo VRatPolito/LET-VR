@@ -168,11 +168,6 @@ public class Scenario2Manager : UnitySingleton<Scenario2Manager>
         Invoke("Quit", 5);
     }
 
-    private void Quit()
-    {
-        Application.Quit();
-    }
-
     #endregion
 
     #region Events Callbacks

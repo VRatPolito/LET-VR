@@ -115,7 +115,65 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
         CurrentPlayerController = _playerControllers[(int)Locomotion];
     }
 
-    void Start()
+    private void Start()
+    {
+        InitializeTechnique();
+
+        UI_HUDController c = null;
+        c = FindObjectOfType<UI_HUDController>();
+        Assert.IsNotNull(c);
+        var cc = c.GetComponent<Canvas>();
+        cc.renderMode = RenderMode.ScreenSpaceCamera;
+        cc.worldCamera = CameraEye.transform.GetChildRecursive("UI").GetComponent<Camera>();
+        CurrentUIController = c;
+        _lastPlayerPosition = CurrentPlayerController.position;
+
+#if !DEBUG || !UNITY_EDITOR
+        //StartFreezed
+        IsPlayerFreezed = true;
+#endif
+    }
+    
+    private void Update()
+    {
+        if (Input.GetKeyDown(_freezePalyerKeyCode) || (Locomotion == LocomotionTechniqueType.RealWalk && CurrentPlayerController != null && (CurrentPlayerController.GetComponent<InputManagement>().IsLeftGripped && CurrentPlayerController.GetComponent<InputManagement>().IsRightGripped)))
+            IsPlayerFreezed = !IsPlayerFreezed;
+        
+        CurrentPlayerSpeed = Vector3.Distance(_lastPlayerPosition, CurrentPlayerController.position) / Time.deltaTime;
+        _lastPlayerPosition = CurrentPlayerController.position;
+    }
+
+    private void OnApplicationQuit()
+    {
+        CalibrationData.SavePersistent();
+    }
+    
+    #endregion
+
+    #region Public Methods
+
+    public void AutoFreeze()
+    {
+        if(_autoFreezable && !Application.isEditor)
+            IsPlayerFreezed = true;
+    }
+
+    public void StartLocomotionPublic()
+    {
+        if (!IsPlayerFreezed)
+            StartLocomotion();
+    }
+    public void StopLocomotionPublic()
+    {
+        StopLocomotion();
+    }
+
+   
+    #endregion
+
+    #region Helper Methods
+
+    private void InitializeTechnique()
     {
         CurrentPlayerController.gameObject.SetActive((true));
         var ic = CurrentPlayerController.GetComponent<VRItemController>();
@@ -149,7 +207,7 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
                 _initialBackMultKat = CurrentPlayerController.GetComponentInChildren<KATDevice>().multiplyBack;
                 break;
             case LocomotionTechniqueType.RealWalk:
-                var cvr= CurrentPlayerController.GetComponent<CharacterControllerVR>();
+                var cvr = CurrentPlayerController.GetComponent<CharacterControllerVR>();
                 CameraEye = cvr.CameraEye;
                 break;
             case LocomotionTechniqueType.Joystick:
@@ -157,60 +215,9 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
                 CameraEye = l.CameraEye;
                 break;
         }
-
-        UI_HUDController c = null;
-        c = FindObjectOfType<UI_HUDController>();
-        Assert.IsNotNull(c);
-        var cc = c.GetComponent<Canvas>();
-        cc.renderMode = RenderMode.ScreenSpaceCamera;
-        cc.worldCamera = CameraEye.transform.GetChildRecursive("UI").GetComponent<Camera>();
-        CurrentUIController = c;
-        _lastPlayerPosition = CurrentPlayerController.position;
-
-#if !DEBUG || !UNITY_EDITOR
-        //StartFreezed
-        IsPlayerFreezed = true;
-#endif
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(_freezePalyerKeyCode) || (Locomotion == LocomotionTechniqueType.RealWalk && CurrentPlayerController != null && (CurrentPlayerController.GetComponent<InputManagement>().IsLeftGripped && CurrentPlayerController.GetComponent<InputManagement>().IsRightGripped)))
-            IsPlayerFreezed = !IsPlayerFreezed;
-
-
-        CurrentPlayerSpeed = Vector3.Distance(_lastPlayerPosition, CurrentPlayerController.position) / Time.deltaTime;
-        _lastPlayerPosition = CurrentPlayerController.position;
-    }
-
-    private void OnApplicationQuit()
-    {
-        CalibrationData.SavePersistent();
-    }
-
-
-
-
-    #endregion
-
-    #region Public Methods
-
-    public void AutoFreeze()
-    {
-        if(_autoFreezable && !Application.isEditor)
-            IsPlayerFreezed = true;
-    }
-
-    public void StartLocomotionPublic()
-    {
-        if (!IsPlayerFreezed)
-            StartLocomotion();
-    }
-    public void StopLocomotionPublic()
-    {
-        StopLocomotion();
-    }
-    void StartLocomotion()
+    private void StartLocomotion()
     {
         if (CurrentPlayerController == null) return;
         switch (Locomotion)
@@ -236,7 +243,8 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
                 break;
         }
     }
-    void StopLocomotion()
+
+    private void StopLocomotion()
     {
         if (CurrentPlayerController == null) return;
         switch (Locomotion)
@@ -262,10 +270,6 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
                 break;
         }
     }
-    #endregion
-
-    #region Helper Methods
-
     private LocomotionCalibrationData GetOrCreateCalibrationData()
     {
         //      string relPath = "Assets/BuildData/LocomotionCalibrationData.asset";

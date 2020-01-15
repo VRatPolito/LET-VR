@@ -80,6 +80,16 @@ public class Scenario3Manager : UnitySingleton<Scenario3Manager>
         });
     }
 
+    
+
+    #endregion
+
+    #region Public Methods
+
+    #endregion
+
+    #region Helper Methods
+
     private void StartRobotT2(Destination d)
     {
         if (RobotsCoinCollectorController != null) RobotsCoinCollectorController.StartCollecting();
@@ -92,11 +102,12 @@ public class Scenario3Manager : UnitySingleton<Scenario3Manager>
 
     private void StartDronesT3(Destination d)
     {
-        if(DronesCoinCollectorController!=null) DronesCoinCollectorController.StartCollecting();
+        if (DronesCoinCollectorController != null) DronesCoinCollectorController.StartCollecting();
     }
+
     private void StopDronesT3(Destination d)
     {
-        if(DronesCoinCollectorController != null) DronesCoinCollectorController.Outro();
+        if (DronesCoinCollectorController != null) DronesCoinCollectorController.Outro();
     }
 
     private void EndGame(Destination d)
@@ -111,19 +122,6 @@ public class Scenario3Manager : UnitySingleton<Scenario3Manager>
         //StatisticsLogger.StopLogPointWalking();
         StatisticsLogger.StopLogDecoupledHands(d); //TODO SURE??
     }
-
-    private void Quit()
-    {
-        Application.Quit();
-    }
-    #endregion
-
-    #region Public Methods
-
-    #endregion
-
-    #region Helper Methods
-
     #endregion
 
     #region Events Callbacks

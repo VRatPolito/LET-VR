@@ -171,11 +171,7 @@ public class Scenario4Manager : UnitySingleton<Scenario4Manager>
         LocomotionManager.Instance.LeftController.GetComponent<Collider>().isTrigger = true;
 
     }
-
-    private void Quit()
-    {
-        Application.Quit();
-    }
+    
 
     #endregion
 

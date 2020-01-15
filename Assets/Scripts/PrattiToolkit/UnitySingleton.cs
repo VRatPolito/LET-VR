@@ -64,6 +64,11 @@ namespace PrattiToolkit
         {
             _applicationIsQuitting = true;
         }
+        
+        protected void Quit()
+        {
+            Application.Quit();
+        }
 
         //     private void Awake () {
         //         lock (_lock) {

@@ -179,11 +179,6 @@ public class Scenario5Manager : UnitySingleton<Scenario5Manager>
         StatisticsLogger.StopLogInteractionInMotion();
     }
 
-    private void Quit()
-    {
-        Application.Quit();
-    }
-
     #endregion
 
     #region Coroutines

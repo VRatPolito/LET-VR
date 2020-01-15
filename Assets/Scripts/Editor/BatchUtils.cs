@@ -16,7 +16,7 @@ public class BatchUtils : MonoBehaviour
 
     #region Build
 
-    [MenuItem("VR@PoliTo/Build All Levels Splitted")]
+    [MenuItem("VR@PoliTo/Build All Scenarios Splitted")]
     public static void BuildGame()
     {
         var options = new BuildPlayerOptions();
@@ -52,11 +52,11 @@ public class BatchUtils : MonoBehaviour
             }
         }
 
-        Debug.Log("[Build Finished]: ALL LEVELS!");
+        Debug.Log("[Build Finished]: ALL SCENARIOS!");
     }
 
 
-    [MenuItem("VR@PoliTo/Build Launcher (built-in levels)")]
+    [MenuItem("VR@PoliTo/Build Launcher (built-in scenarios)")]
     public static void BuildLauncher()
     {
         var sceneToBuild = new List<string>();
@@ -90,7 +90,7 @@ public class BatchUtils : MonoBehaviour
                 break;
         }
 
-        Debug.Log("[Build Finished]: Launcher (with all levels inside)!");
+        Debug.Log("[Build Finished]: Launcher (with all scenarios inside)!");
     }
 
     #endregion
