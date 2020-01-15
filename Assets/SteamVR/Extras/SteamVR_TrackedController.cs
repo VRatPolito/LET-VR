@@ -21,6 +21,14 @@ public class SteamVR_TrackedController : MonoBehaviour
 	public bool padPressed = false;
 	public bool padTouched = false;
 	public bool gripped = false;
+    public Vector2 touchPos
+    {
+        get
+        {
+            return new Vector2(controllerState.rAxis0.x, controllerState.rAxis0.y);
+        }
+        private set { }
+    }
 
 	public event ClickedEventHandler MenuButtonClicked;
 	public event ClickedEventHandler MenuButtonUnclicked;

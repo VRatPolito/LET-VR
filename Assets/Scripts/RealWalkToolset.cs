@@ -6,19 +6,24 @@ using UnityEngine;
 public class RealWalkToolset : MonoBehaviour
 {
     [SerializeField]
-    private List<Vector3> _teleportPoints;
+    private List<Transform> _teleportPoints;
     private InputManagement _input;
     private CharacterControllerVR _cVR;
     private int _currPoint = 0;
+    private CharacterController _charc;
 
-    private void Awake()
+    private void Start()
     {
-        _input = GetComponent<InputManagement>();
-        _cVR = GetComponent<CharacterControllerVR>();
-        _input.OnLeftPadPressed += LeftPadPressed;
-        _input.OnRightPadPressed += RightPadPressed;
-        _input.OnLeftPadTouched += LeftPadTouched;
-        _input.OnRightPadTouched += RightPadTouched;
+        if (LocomotionManager.Instance.Locomotion == LocomotionTechniqueType.RealWalk)
+        {
+            _input = LocomotionManager.Instance.CurrentPlayerController.GetComponent<InputManagement>();
+            _charc = LocomotionManager.Instance.CurrentPlayerController.GetComponent<CharacterController>();
+            _cVR = LocomotionManager.Instance.CurrentPlayerController.GetComponent<CharacterControllerVR>();
+            _input.OnLeftPadPressed += LeftPadPressed;
+            _input.OnRightPadPressed += RightPadPressed;
+            _input.OnLeftPadTouched += LeftPadTouched;
+            _input.OnRightPadTouched += RightPadTouched;
+        }
     }
 
 
@@ -107,7 +112,8 @@ public class RealWalkToolset : MonoBehaviour
             _currPoint++;
             if (_currPoint > _teleportPoints.Count - 1)
                 _currPoint = _teleportPoints.Count - 1;
-            transform.position = _teleportPoints[_currPoint];
+            LocomotionManager.Instance.CurrentPlayerController.position = _teleportPoints[_currPoint].position;
+            LocomotionManager.Instance.CurrentPlayerController.rotation = _teleportPoints[_currPoint].rotation;
         }
     }
 
@@ -116,17 +122,18 @@ public class RealWalkToolset : MonoBehaviour
         _currPoint--;
         if (_currPoint < 0)
             _currPoint = 0;
-        transform.position = _teleportPoints[_currPoint];
+        LocomotionManager.Instance.CurrentPlayerController.position = _teleportPoints[_currPoint].position;
+        LocomotionManager.Instance.CurrentPlayerController.rotation = _teleportPoints[_currPoint].rotation;
     }
 
     private void Rotate(float a)
     {
-        transform.Rotate(new Vector3(0, a, 0));
+        LocomotionManager.Instance.CurrentPlayerController.Rotate(new Vector3(0, a, 0));
     }
 
     private void Translate2D(float x, float z)
     {
         var p = _cVR.CameraEye.localToWorldMatrix * new Vector3(x, 0, z);
-        transform.Translate(new Vector3(p.x, 0, p.z), Space.World);
+        LocomotionManager.Instance.CurrentPlayerController.Translate(new Vector3(p.x, 0, p.z), Space.World);
     }
 }

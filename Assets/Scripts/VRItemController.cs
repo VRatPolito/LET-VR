@@ -10,7 +10,7 @@ public enum GrabMode { HoldButton, ClickButton };
 
 public class VRItemController : ItemController
 {
-    public event Action OnGrab, OnDrop;
+    public event Action<GenericItem> OnGrab, OnDrop, OnInteract;
     [HideInInspector]
     public SteamVR_TrackedController LeftVRController, RightVRController;
     Material oldmat;
@@ -35,7 +35,8 @@ public class VRItemController : ItemController
     public Color TriggerColor = Color.magenta;
     public Color GripColor = Color.cyan;
     [HideInInspector]
-    public VibrationController LeftVibrationController, RightVibrationController;
+    public VibrationController LeftVibrationController, RightVibrationController;   
+
 
 
     private void Awake()
@@ -1143,19 +1144,21 @@ public class VRItemController : ItemController
     {
         g.Interact(this);
         StopPulse(hand);
+        g.Grab(this, hand);
         if (g.ItemCode != ItemCodes.Generic)
         {
-            g.Player = this;
-            g.DisablePhysics();
             if (hand == ControllerHand.LeftHand)
             {
                 g.DisableItem(LeftController);
                 GrabbableItem gb = null;
                 gb = EnableItem(g.ItemCode, g, hand);
                 g.ForceParent(gb.Slave.transform.GetChild(0), false);
-                LeftItemSource.clip = gb.Grab;
-                LeftItemSource.volume = gb.GrabVolume;
-                LeftItemSource.Play();
+                if (g._grabSound)
+                {
+                    LeftItemSource.clip = gb.Grab;
+                    LeftItemSource.volume = gb.GrabVolume;
+                    LeftItemSource.Play();
+                }
                 toucheditemleft = null;
             }
             else if (hand == ControllerHand.RightHand)
@@ -1164,26 +1167,28 @@ public class VRItemController : ItemController
                 GrabbableItem gb = null;
                 gb = EnableItem(g.ItemCode, g, hand);
                 g.ForceParent(gb.Slave.transform.GetChild(0), false);
-                RightItemSource.clip = gb.Grab;
-                RightItemSource.volume = gb.GrabVolume;
-                RightItemSource.Play();
+                if (g._grabSound)
+                {
+                    RightItemSource.clip = gb.Grab;
+                    RightItemSource.volume = gb.GrabVolume;
+                    RightItemSource.Play();
+                }
                 toucheditemright = null;
             }
         }
         else
         {
-            if (g.Player != null)
-                g.Player.DropItem(g.transform, true);
-            g.Player = this;
-            g.DisablePhysics();
             g.DisableOutline(this);
             if (hand == ControllerHand.LeftHand)
             {
                 g.ForceParent(LeftController, true);
                 ItemLeft = g.transform;
-                LeftItemSource.clip = DefaultGrabSound;
-                LeftItemSource.volume = DefaultGrabSoundVolume;
-                LeftItemSource.Play();
+                if (g._grabSound)
+                {
+                    LeftItemSource.clip = DefaultGrabSound;
+                    LeftItemSource.volume = DefaultGrabSoundVolume;
+                    LeftItemSource.Play();
+                }
                 toucheditemleft = null;
                 LeftVibrationController.ShortVibration();
             }
@@ -1191,15 +1196,19 @@ public class VRItemController : ItemController
             {
                 g.ForceParent(RightController, true);
                 ItemRight = g.transform;
-                RightItemSource.clip = DefaultGrabSound;
-                RightItemSource.volume = DefaultGrabSoundVolume;
-                RightItemSource.Play();
+                if (g._grabSound)
+                {
+                    RightItemSource.clip = DefaultGrabSound;
+                    RightItemSource.volume = DefaultGrabSoundVolume;
+                    RightItemSource.Play();
+                }
                 toucheditemright = null;
                 RightVibrationController.ShortVibration();
             }
         }
+        g.SignalGrab();
         if(OnGrab != null)
-            OnGrab.Invoke();
+            OnGrab.Invoke(g);
     }
 
 
@@ -1212,6 +1221,8 @@ public class VRItemController : ItemController
             LeftVibrationController.ShortVibration();
         else if (hand == ControllerHand.RightHand)
             RightVibrationController.ShortVibration();
+        if (OnInteract != null)
+            OnInteract.Invoke(i);
     }
 
     /*private void ClickItem(NPCController i, ControllerHand hand)
@@ -1251,16 +1262,19 @@ public class VRItemController : ItemController
                 var i = ItemLeft.GetComponent<GenericItem>();
                 if (i != null)
                 {
-                    i.Player = null;
+                    i.Drop();
                     if (i.ItemCode == ItemCodes.Generic)
                     {
                         i.DisableOutline(this);
                         i.DropParent();
                         i.EnablePhysics();
                         ItemLeft = null;
-                        LeftItemSource.clip = DefaultDropSound;
-                        LeftItemSource.volume = DefaultDropSoundVolume;
-                        LeftItemSource.Play();
+                        if (i._grabSound)
+                        {
+                            LeftItemSource.clip = DefaultDropSound;
+                            LeftItemSource.volume = DefaultDropSoundVolume;
+                            LeftItemSource.Play();
+                        }
                     }
                     else if (force || GetCurrentItem(ControllerHand.LeftHand).CanDrop())
                     {
@@ -1268,9 +1282,12 @@ public class VRItemController : ItemController
                         i.EnableItem(transform);
                         i.EnablePhysics();
                         var g = DisableItem(ControllerHand.LeftHand);
-                        LeftItemSource.clip = g.Drop;
-                        LeftItemSource.volume = g.DropVolume;
-                        LeftItemSource.Play();
+                        if (i._grabSound)
+                        {
+                            LeftItemSource.clip = g.Drop;
+                            LeftItemSource.volume = g.DropVolume;
+                            LeftItemSource.Play();
+                        }
                     }
                     else
                     {
@@ -1284,8 +1301,9 @@ public class VRItemController : ItemController
                 ItemLeft = null;
                 LeftVibrationController.ShortVibration();
 
-                if (OnDrop != null)
-                    OnDrop.Invoke();
+                i.SignalDrop(this, ControllerHand.LeftHand);
+                if (!force && OnDrop != null)
+                    OnDrop.Invoke(i);
             }
             LeftInteracting = false;
             leftoperating = false;
@@ -1302,16 +1320,19 @@ public class VRItemController : ItemController
                 var i = ItemRight.GetComponent<GenericItem>();
                 if (i != null)
                 {
-                    i.Player = null;
+                    i.Drop();
                     if (i.ItemCode == ItemCodes.Generic)
                     {
                         i.DisableOutline(this);
                         i.DropParent();
                         i.EnablePhysics();
                         ItemRight = null;
-                        RightItemSource.clip = DefaultDropSound;
-                        RightItemSource.volume = DefaultDropSoundVolume;
-                        RightItemSource.Play();
+                        if (i._grabSound)
+                        {
+                            RightItemSource.clip = DefaultDropSound;
+                            RightItemSource.volume = DefaultDropSoundVolume;
+                            RightItemSource.Play();
+                        }
                     }
                     else if (force || GetCurrentItem(ControllerHand.RightHand).CanDrop())
                     {
@@ -1319,9 +1340,12 @@ public class VRItemController : ItemController
                         i.EnableItem(transform);
                         i.EnablePhysics();
                         var g = DisableItem(ControllerHand.RightHand);
-                        RightItemSource.clip = g.Drop;
-                        RightItemSource.volume = g.DropVolume;
-                        RightItemSource.Play();
+                        if (i._grabSound)
+                        {
+                            RightItemSource.clip = g.Drop;
+                            RightItemSource.volume = g.DropVolume;
+                            RightItemSource.Play();
+                        }
                     }
                     else
                     {
@@ -1334,8 +1358,10 @@ public class VRItemController : ItemController
                 StopPulse(ControllerHand.RightHand);
                 ItemRight = null;
                 RightVibrationController.ShortVibration();
-                if (OnDrop != null)
-                    OnDrop.Invoke();
+
+                i.SignalDrop(this, ControllerHand.RightHand);
+                if (!force && OnDrop != null)
+                    OnDrop.Invoke(i);
             }
             RightInteracting = false;
             rightoperating = false;
@@ -1361,9 +1387,7 @@ public class VRItemController : ItemController
                 var item = ItemsLeft[i].GetComponent<GrabbableItem>();
                 if (item != null && item.Code == code)
                 {
-                    if (code == ItemCodes.Brochure)
-                        return EnableItem(i, null, hand);
-                    else if (g.Slave != null)
+                    if (g.Slave != null)
                         return EnableItem(i, g.Slave.transform, hand);
                     else
                         return EnableItem(i, g.transform, hand);
@@ -1377,9 +1401,7 @@ public class VRItemController : ItemController
                 var item = ItemsRight[i].GetComponent<GrabbableItem>();
                 if (item != null && item.Code == code)
                 {
-                    if (code == ItemCodes.Brochure)
-                        return EnableItem(i, null, hand);
-                    else if (g.Slave != null)
+                    if (g.Slave != null)
                         return EnableItem(i, g.Slave.transform, hand);
                     else
                         return EnableItem(i, g.transform, hand);

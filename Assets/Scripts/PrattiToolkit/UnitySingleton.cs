@@ -60,9 +60,14 @@ namespace PrattiToolkit
             }
         }
 
-        private void OnApplicationQuit()
+        protected virtual void OnApplicationQuit()
         {
             _applicationIsQuitting = true;
+        }
+        
+        protected void Quit()
+        {
+            Application.Quit();
         }
 
         //     private void Awake () {

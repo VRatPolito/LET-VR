@@ -26,17 +26,17 @@ public class RobotsCoinCollectorController : MonoBehaviour
     [SerializeField] private Transform _from, _to;
     [SerializeField] private Transform _leftCoinRow, _rightCoinRow;
     [SerializeField] private Rigidbody _leftRobot, _rightRobot;
-    [SerializeField] [Range(0, 3)] private float _aheadOfPlayer = 1;
+    [SerializeField] private TextMeshPro _coinsCollectedVisualizerText;
+    [SerializeField] [Range(1, 5)] private float _aheadOfPlayer = 2;
     [SerializeField] [Range(0, 1)] private float _robotMoveSmoothing = 0.3f;
-
 
     #endregion
 
     #region Private Members and Constants
 
+    private int _maxCoins = 0;
     private int _score = 0;
     private float _calibratedControllerDistance = 2;
-    private TextMeshPro _coinsCollectedVisualizerText;
     private Vector3 _movingDirection;
     private Vector3 _lastLeftRobotPosition;
     private Vector3 _lastRightRobotPosition;
@@ -46,6 +46,7 @@ public class RobotsCoinCollectorController : MonoBehaviour
     private List<AudioSource> _coinAudioSource, _idleAudioSource;
 
     private Sequence _introducingSequence, _outroSequence;
+    private Coroutine _collectorCor;
 
     #endregion
 
@@ -59,7 +60,7 @@ public class RobotsCoinCollectorController : MonoBehaviour
         private set
         {
             _score = value;
-            _coinsCollectedVisualizerText.text = $"Coins Collected\n{_score:###0}";
+            _coinsCollectedVisualizerText.text = $"Coins Collected\n{_score:###0}/{_maxCoins:###0}";
         }
     }
 
@@ -80,9 +81,10 @@ public class RobotsCoinCollectorController : MonoBehaviour
         Assert.IsNotNull(_leftCoinRow);
         Assert.IsNotNull(_rightCoinRow);
         Assert.IsNotNull(_to);
-        _calibratedControllerDistance = LocomotionManager.Instance.CalibrationData.ControllerDistance;
-        _coinsCollectedVisualizerText = GameObject.Find("ScoreVisualizer").GetComponent<TextMeshPro>();
         Assert.IsNotNull(_coinsCollectedVisualizerText);
+        IsCollecting = false;
+
+        _calibratedControllerDistance = LocomotionManager.Instance.CalibrationData.ControllerDistance;
         foreach (var cel in GetComponentsInChildren<ColliderEventsListener>())
             cel.OnTriggerEnterAction += Collect;
 
@@ -102,6 +104,8 @@ public class RobotsCoinCollectorController : MonoBehaviour
         _coinAudioSource.Add(audioS[0]);
         _idleAudioSource.Add(audioS[1]);
 
+        _maxCoins = _leftCoinRow.transform.childCount + _rightCoinRow.transform.childCount;
+        Score = 0;
         SetupCoreo();
     }
 
@@ -113,19 +117,20 @@ public class RobotsCoinCollectorController : MonoBehaviour
     public void Introduce()
     {
         _introducingSequence.Play();
-        IsCollecting = true;
     }
 
     public void StartCollecting()
     {
         _introducingSequence.Kill();
-        StartCoroutine(CollectorCoroutine());
+        if (_collectorCor == null)
+            _collectorCor = StartCoroutine(CollectorCoroutine());
     }
 
     public void Outro()
     {
         IsCollecting = false;
         StopCoroutine(CollectorCoroutine());
+        _collectorCor = null;
         _outroSequence.Play();
     }
 
@@ -136,6 +141,18 @@ public class RobotsCoinCollectorController : MonoBehaviour
     private void SetupCoreo()
     {
         _introducingSequence = DOTween.Sequence();
+        _introducingSequence.OnComplete(() =>
+        {
+            IsCollecting = true;
+            if (_collectorCor == null)
+                _collectorCor = StartCoroutine(CollectorCoroutine());
+        });
+        _introducingSequence.OnKill(() =>
+        {
+            IsCollecting = true;
+            if (_collectorCor == null)
+                _collectorCor = StartCoroutine(CollectorCoroutine());
+        });
         _introducingSequence.AppendCallback(() => _idleAudioSource.ForEach(source => source.Play()));
         _introducingSequence.AppendInterval(.5f);
         _introducingSequence.Append(_leftRobot.transform.DOShakeRotation(2));
@@ -145,7 +162,6 @@ public class RobotsCoinCollectorController : MonoBehaviour
         _introducingSequence.AppendInterval(1.5f);
         _introducingSequence.Append(_leftRobot.transform.DOLocalRotate(new Vector3(0, 90, 0), .8f));
         _introducingSequence.Join(_rightRobot.transform.DOLocalRotate(new Vector3(0, 90, 0), .8f));
-        _introducingSequence.AppendCallback(StartCollecting);
         _introducingSequence.Pause();
 
         _outroSequence = DOTween.Sequence();
@@ -182,9 +198,15 @@ public class RobotsCoinCollectorController : MonoBehaviour
 
     IEnumerator CollectorCoroutine()
     {
+        while (!IsCollecting || _introducingSequence.IsPlaying()) yield return null;
+
         yield return new WaitForFixedUpdate();
-        //yield return new WaitForSeconds(2);
+
+        _leftRobot.position = _lastLeftRobotPosition;
+        _rightRobot.position = _lastRightRobotPosition;
         _leftRobot.rotation = _rightRobot.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
+
+        yield return new WaitForFixedUpdate();
 
         float rayLength = 30;
         int layerMask = LayerMask.GetMask(new[] { "Default" });
@@ -192,36 +214,39 @@ public class RobotsCoinCollectorController : MonoBehaviour
 
         var ray = new Ray(_leftRobot.transform.position, _leftRobot.transform.right * -1);
         Physics.Raycast(ray, out hitL, rayLength, layerMask);
-        Debug.DrawRay(ray.origin, ray.direction, Color.red);
+        //Debug.DrawRay(ray.origin, ray.direction, Color.red);
 
         ray = new Ray(_rightRobot.transform.position, _rightRobot.transform.right);
         Physics.Raycast(ray, out hitR, rayLength, layerMask);
-        Debug.DrawRay(ray.origin, ray.direction, Color.blue);
+        //Debug.DrawRay(ray.origin, ray.direction, Color.blue);
         _robotPositionLimit = new Tuple<Vector3, Vector3>(hitL.point, hitR.point);
         Debug.Log(_robotPositionLimit);
 
+        Vector3 currPos, p, lp, rp;
+        float leftControllerDistance, rightControllerDistance, fromD, dzL, dzR;
+
         while (IsCollecting)
         {
-            var currPos = LocomotionManager.Instance.CurrentPlayerController.transform.position;
-            var leftControllerDistance = Mathf.Abs(LocomotionManager.Instance.LeftController.localPosition.x -
+            currPos = LocomotionManager.Instance.CurrentPlayerController.transform.position;
+            leftControllerDistance = Mathf.Abs(LocomotionManager.Instance.LeftController.localPosition.x -
                                                    LocomotionManager.Instance.CameraEye.localPosition.x);
-            var rightControllerDistance = Mathf.Abs(LocomotionManager.Instance.RightController.localPosition.x -
+            rightControllerDistance = Mathf.Abs(LocomotionManager.Instance.RightController.localPosition.x -
                                                     LocomotionManager.Instance.CameraEye.localPosition.x);
 
             if (Vector3.Dot(currPos - _lastPlayerPosition, _movingDirection) >= 0)
                 _lastPlayerPosition = LocomotionManager.Instance.CurrentPlayerController.transform.position;
 
             //robot can only move forward
-            var p = _lastPlayerPosition;
+            p = _lastPlayerPosition;
             p += _movingDirection * _aheadOfPlayer;
-            var fromD = Vector3.Dot(_from.position - p, _movingDirection);
+            fromD = Vector3.Dot(_from.position - p, _movingDirection);
             if (fromD > 0)
                 p = _from.position + _aheadOfPlayer * _movingDirection;
-            var lp = p;
-            var rp = p;
-            var dzL = Mathf.Lerp(.75f, _leftCoinRow.position.z - _from.position.z,
+            lp = p;
+            rp = p;
+            dzL = Mathf.Lerp(.75f, _leftCoinRow.position.z - _from.position.z,
                 Mathf.InverseLerp(0, _calibratedControllerDistance / 2, leftControllerDistance));
-            var dzR = Mathf.Lerp(.75f, _from.position.z - _rightCoinRow.position.z,
+            dzR = Mathf.Lerp(.75f, _from.position.z - _rightCoinRow.position.z,
                 Mathf.InverseLerp(0, _calibratedControllerDistance / 2, rightControllerDistance));
 
             if (Vector3.Dot(lp - _lastLeftRobotPosition, _movingDirection) < 0)
@@ -229,8 +254,8 @@ public class RobotsCoinCollectorController : MonoBehaviour
             if (Vector3.Dot(rp - _lastRightRobotPosition, _movingDirection) < 0)
                 rp = p;
 
-            lp.z = Mathf.Min(lp.z+dzL,_robotPositionLimit.Item1.z-0.65f);
-            rp.z = Mathf.Max(rp.z-dzR,_robotPositionLimit.Item2.z+0.65f);
+            lp.z = Mathf.Min(lp.z + dzL, _robotPositionLimit.Item1.z - 0.65f);
+            rp.z = Mathf.Max(rp.z - dzR, _robotPositionLimit.Item2.z + 0.65f);
 
             _leftRobot.DOMove(lp, _robotMoveSmoothing);
             _rightRobot.DOMove(rp, _robotMoveSmoothing);

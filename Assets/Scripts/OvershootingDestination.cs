@@ -66,7 +66,7 @@ public class OvershootingDestination : Destination
 
     public override void OnEnable()
     {
-        Level1Manager.Instance.StatisticsLogger.StartLogOvershooting(this);
+        Scenario1Manager.Instance.StatisticsLogger.StartLogOvershooting(this);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -79,7 +79,7 @@ public class OvershootingDestination : Destination
     {
         if (LocomotionManager.Instance.CurrentPlayerController == other.transform)
         {
-            Level1Manager.Instance.StatisticsLogger.LogOvershootError();
+            Scenario1Manager.Instance.StatisticsLogger.LogOvershootError();
             _timeStop = float.MinValue;
         }
     }
@@ -92,9 +92,9 @@ public class OvershootingDestination : Destination
             {
                 if (_timeStop == float.MinValue)
                     _timeStop = Time.time;
-                else if (Time.time >= _timeStop + Level1Manager.Instance.TimeToStop)
+                else if (Time.time >= _timeStop + Scenario1Manager.Instance.TimeToStop)
                 {
-                    Level1Manager.Instance.StatisticsLogger.StopLogOvershooting();
+                    Scenario1Manager.Instance.StatisticsLogger.StopLogOvershooting();
                         gameObject.SetActive(false);
                     }
             }

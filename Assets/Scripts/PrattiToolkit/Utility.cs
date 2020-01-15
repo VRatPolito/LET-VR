@@ -137,6 +137,11 @@ namespace PrattiToolkit
             return lis;
         }
 
+        public static List<string> GetStringList<T>(this T src) where T : struct
+        {
+            return src.GetValuesList().ConvertAll(input => input.ToString());
+        }
+
         /// <summary>
         /// Iterate over enum values
         /// </summary>
@@ -253,6 +258,12 @@ namespace PrattiToolkit
         {
             v.z = 0f;
             return v;
+        }
+
+        /// Returns a Vector3 with only the X and Z components (Y is 0'd)
+        public static Vector3 vector3XZOnly(this Vector3 vec)
+        {
+            return new Vector3(vec.x, 0f, vec.z);
         }
 
         #endregion
@@ -601,7 +612,10 @@ namespace PrattiToolkit
         {
             return NearlyEqual(a.x, b.x, epsilon) && NearlyEqual(a.y, b.y, epsilon) && NearlyEqual(a.z, b.z, epsilon);
         }
-
+        public static bool NearlyEqual(Quaternion a, Quaternion b, float epsilon = float.Epsilon)
+        {
+            return NearlyEqual(a.x, b.x, epsilon) && NearlyEqual(a.y, b.y, epsilon) && NearlyEqual(a.z, b.z, epsilon) && NearlyEqual(a.w, b.w, epsilon);
+        }
         public static float[] GetFloatArray(this Color c)
         {
             return new[] {c.r, c.g, c.b, c.a};
@@ -617,7 +631,7 @@ namespace PrattiToolkit
             {
                 return true;
             }
-            else if (a == 0 || b == 0 || diff < float.Epsilon)
+            else if (a == 0 || b == 0 || diff < epsilon)
             {
                 // a or b is zero or both are extremely close to it
                 // relative error is less meaningful here
@@ -627,6 +641,20 @@ namespace PrattiToolkit
             { // use relative error
                 return diff / (absA + absB) < epsilon;
             }
+        }
+
+        public static bool NearlyEqualRange(float a, float b, float range)
+        {
+            if (a == b)
+                return true;
+
+            float min = b - Mathf.Abs(range);
+            float max = b + Mathf.Abs(range);
+
+            if (a >= min && a <= max)
+                return true;
+
+            return false;
         }
 
         public static Color GetColor(this float[] colorFloatArray)
@@ -660,6 +688,11 @@ namespace PrattiToolkit
 
     public static class NumericExtender
     {
+        public static float Clamp(this float value, float min, float max)
+        {
+            return Mathf.Clamp(value, min, max);
+        }
+
         /// <summary>
         /// Remap this value from a range to another one
         /// </summary>

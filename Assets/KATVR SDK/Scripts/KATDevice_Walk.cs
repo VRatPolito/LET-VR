@@ -1,12 +1,14 @@
-﻿using UnityEngine;
-using System;
-using System.Collections;
+﻿using System;
 using System.Runtime.InteropServices;
+using PrattiToolkit;
+using UnityEngine;
 
 namespace KATVR
 {
-    public class KATDevice_Walk : MonoBehaviour
+    public class KATDevice_Walk : UnitySingleton<KATDevice_Walk>
     {
+        protected KATDevice_Walk() { }
+
         #region Basic Variable
 
         public bool LogRawData = false;
@@ -20,9 +22,7 @@ namespace KATVR
         public static bool Launched;
         private static float _moveSpeed, _maxMovePower, _bodyRotation, _newBodyYaw, _newCameraYaw;
 
-
-
-
+        
         #region Rec
 
         public KATDevice_Data Data;
@@ -41,19 +41,22 @@ namespace KATVR
 
         public void Initialize(int count)
         {
-            Init(count);
+            if (!Launched)
+            {
+                Ini(count);
+            }
         }
 
         public bool LaunchDevice()
         {
             if (CheckForLaunch())
             {
-                Launch();
                 Launched = true;
             }
             else
             {
-                Launched = false;
+                Launch();
+                Launched = true;
             }
             return Launched;
         }
@@ -72,15 +75,16 @@ namespace KATVR
             _rawData.bodyYaw = (int)Math.Floor((float)_rawData.bodyYaw / 1024 * 360);
             _bodyRotation = (float)_rawData.bodyYaw - _newBodyYaw + _newCameraYaw;
             _rawData.walkPower = Math.Round((double)_rawData.walkPower, 2);
-            _moveSpeed = (float)_rawData.walkPower / 3000f;
+            _moveSpeed = (float)_rawData.walkPower / 10f;
             _rawData.moveDirection = -_rawData.moveDirection;
 
-            if (_moveSpeed > 1) _moveSpeed = 1;
-            else if (_moveSpeed < 0.3f) _moveSpeed = 0;
+            //if (_moveSpeed > 1) _moveSpeed = 1;
+            //else if (_moveSpeed < 0.3f) _moveSpeed = 0;
 
             Data.bodyYaw = _bodyRotation;
             Data.walkPower = _rawData.walkPower;
-            Data.moveSpeed = Data.displayedSpeed = _moveSpeed;
+            //Data.moveSpeed = Data.displayedSpeed = _moveSpeed * Time.deltaTime; //Added deltaTime in last version
+            Data.moveSpeed = Data.displayedSpeed = _moveSpeed * Time.fixedDeltaTime; //fixedDeltaTime should be the proper one
             Data.moveDirection = _rawData.moveDirection;
             Data.isMoving = _rawData.isMoving;
             Data.meter = _rawData.meter;
@@ -95,7 +99,9 @@ namespace KATVR
             if (handset != null)
             {
                 _newCameraYaw = handset.transform.localEulerAngles.y;
-                _newBodyYaw = (float)_rawData.bodyYaw;
+                //_newBodyYaw = (float)_rawData.bodyYaw;
+                GetWalkerData(0, ref _rawData.bodyYaw, ref _rawData.walkPower, ref _rawData.moveDirection, ref _rawData.isMoving, ref _rawData.meter);
+                _newBodyYaw = (float) Math.Floor((float)_rawData.bodyYaw / 1024 * 360); ;
             }
             else
             {
@@ -109,7 +115,7 @@ namespace KATVR
         #region Dllinput
 
         [DllImport("WalkerBase", CallingConvention = CallingConvention.Cdecl)]
-        static extern void Init(int count);
+        static extern void Ini(int count);
 
         [DllImport("WalkerBase", CallingConvention = CallingConvention.Cdecl)]
         static extern int Launch();

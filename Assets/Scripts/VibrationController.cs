@@ -62,7 +62,7 @@ public class VibrationController : MonoBehaviour {
 
     public void ShortVibration()
     {
-        if (!vibrate)
+        if (!vibrate && gameObject.activeSelf)
         {
             if (Vibration != null)
                 StopCoroutine(Vibration);
@@ -71,7 +71,7 @@ public class VibrationController : MonoBehaviour {
     }
     public void ShortVibration(float intensity)
     {
-        if (!vibrate)
+        if (!vibrate && gameObject.activeSelf)
         {
             if (Vibration != null)
                 StopCoroutine(Vibration);

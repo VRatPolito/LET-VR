@@ -31,7 +31,8 @@ public class LimitTracking : MonoBehaviour
     public bool ManageCharacterController = false;
     [Tooltip("If enabled, the Limit is kept at the global zero y coordinate.\n\n (Default: false)")]
     public bool KeepLimitAtGlobalZero = false;
-    //public bool DebugPosition = false;
+    [SerializeField]
+    private bool _debug = false;
 
     //External components
     [Header("External components")]
@@ -57,6 +58,9 @@ public class LimitTracking : MonoBehaviour
     [SerializeField]
     [Tooltip("The NavMeshObstacle component attached to the Player, in order to manage the Collider height")]
     NavMeshObstacle PlayerNavMeshObstacle;
+    [SerializeField]
+    [Tooltip("The Capsule Collider component attached to the Player, in order to manage the Collider height")]
+    CapsuleCollider PlayerCapsule;
 
     //Initial position of the user's head at the script initialization. It will be applied as negative displacement to the CameraRig Transform to keep the user aligned with the CharacterController attached to the playerController in local Vector3.zero.
     [HideInInspector]
@@ -88,6 +92,15 @@ public class LimitTracking : MonoBehaviour
     {
         if (Limit != null)
             LimitStartPos = Limit.localPosition;
+        if(_debug && !UnityEngine.XR.XRDevice.isPresent)
+        {
+            var CameraHead = CameraEye.parent;
+            var c = CameraHead.childCount;
+            for (int i = 0; i < c; i++)
+                CameraHead.GetChild(0).parent = CameraRig;
+            CameraHead.parent = CameraEye;
+            CameraHead.gameObject.SetActive(false);
+        }
     }
 
     private void Start()
@@ -108,7 +121,10 @@ public class LimitTracking : MonoBehaviour
         {
             _playerheight = LocomotionManager.Instance.CalibrationData.HeadHeight;
             //Save the initial VRNode.CenterEye localPosition
-            StartCenterEyeLocalPos = UnityEngine.XR.InputTracking.GetLocalPosition(UnityEngine.XR.XRNode.CenterEye);
+            if (!UnityEngine.XR.XRDevice.isPresent)
+                StartCenterEyeLocalPos = CameraEye.localPosition;
+            else
+                StartCenterEyeLocalPos = UnityEngine.XR.InputTracking.GetLocalPosition(UnityEngine.XR.XRNode.CenterEye);
             //Move the CameraRig in order to keep the the player centered
             CameraRig.localPosition = new Vector3(-StartCenterEyeLocalPos.x, CameraRig.localPosition.y, -StartCenterEyeLocalPos.z);
 
@@ -121,6 +137,9 @@ public class LimitTracking : MonoBehaviour
                     mat[0] = LimitMaterial;
                     m.materials = mat;
                 }
+                var pos = transform.TransformPoint(0, 0, 0);
+                pos.y = Limit.transform.position.y;
+                Limit.transform.position = pos;
                 Limit.gameObject.SetActive(true);
             }
 
@@ -140,6 +159,12 @@ public class LimitTracking : MonoBehaviour
                         PlayerNavMeshObstacle.center = new Vector3(0, _playerheight / 2, 0);
                     }
 
+                    if(PlayerCapsule != null)
+                    {
+                        PlayerCapsule.height = _playerheight;
+                        PlayerCapsule.center = new Vector3(0, _playerheight / 2, 0);
+                    }
+
                     if (Posizione != Position.Standing)
                         Posizione = Position.Standing;
                 }
@@ -153,6 +178,11 @@ public class LimitTracking : MonoBehaviour
                     {
                         PlayerNavMeshObstacle.height = CameraEye.localPosition.y;
                         PlayerNavMeshObstacle.center = new Vector3(0, heady / 2, 0);
+                    }
+                    if (PlayerCapsule != null)
+                    {
+                        PlayerCapsule.height = CameraEye.localPosition.y;
+                        PlayerCapsule.center = new Vector3(0, heady / 2, 0);
                     }
 
                     if (Posizione != Position.Standing)
@@ -168,6 +198,11 @@ public class LimitTracking : MonoBehaviour
                     {
                         PlayerNavMeshObstacle.height = _playerheight / 2;
                         PlayerNavMeshObstacle.center = new Vector3(0, _playerheight / 4, 0);
+                    }
+                    if (PlayerCapsule != null)
+                    {
+                        PlayerCapsule.height = _playerheight / 2;
+                        PlayerCapsule.center = new Vector3(0, _playerheight / 4, 0);
                     }
 
                     if (Posizione != Position.Crouched)
@@ -196,13 +231,24 @@ public class LimitTracking : MonoBehaviour
         return new Vector3(x / 2, y / 2, z / 2);
     }
 
+    private void Update()
+    {
+        if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.R))
+            Reset();
+    }
+
     void LateUpdate()
     {
         if (!initialized)
             Initialize();
 
         //Get the actual VRNode.CenterEye localPosition
-        var NewCenterEyeLocalPos = UnityEngine.XR.InputTracking.GetLocalPosition(UnityEngine.XR.XRNode.CenterEye);
+        Vector3 NewCenterEyeLocalPos = Vector3.zero;
+
+        if (!UnityEngine.XR.XRDevice.isPresent)
+            NewCenterEyeLocalPos = CameraEye.localPosition;
+        else
+            NewCenterEyeLocalPos = UnityEngine.XR.InputTracking.GetLocalPosition(UnityEngine.XR.XRNode.CenterEye);
 
         //If I already set the CameraEye localPosition once and it was at the same localPosition
         if (PrevCameraEyeLocalPosSet && PrevCenterEyeLocalPos == NewCenterEyeLocalPos)
@@ -234,17 +280,20 @@ public class LimitTracking : MonoBehaviour
                     StartFadeIn();
             }
 
-            if (vibrate && !vibrationrequested && WarningVibrationEnabled)
+            if (UnityEngine.XR.XRDevice.isPresent)
             {
-                LeftController.StartVibration(0.1f, 0.5f, 0.08f, this);
-                RightController.StartVibration(0.1f, 0.5f, 0.08f, this);
-                vibrationrequested = true;
-            }
-            else if (!vibrate && vibrationrequested)
-            {
-                LeftController.StopVibration(0.1f, 0.5f, 0.08f, this);
-                RightController.StopVibration(0.1f, 0.5f, 0.08f, this);
-                vibrationrequested = false;
+                if (vibrate && !vibrationrequested && WarningVibrationEnabled)
+                {
+                    LeftController.StartVibration(0.1f, 0.5f, 0.08f, this);
+                    RightController.StartVibration(0.1f, 0.5f, 0.08f, this);
+                    vibrationrequested = true;
+                }
+                else if (!vibrate && vibrationrequested)
+                {
+                    LeftController.StopVibration(0.1f, 0.5f, 0.08f, this);
+                    RightController.StopVibration(0.1f, 0.5f, 0.08f, this);
+                    vibrationrequested = false;
+                }
             }
 
             PrevCenterEyeLocalPos = NewCenterEyeLocalPos;
@@ -255,8 +304,8 @@ public class LimitTracking : MonoBehaviour
             {
                 if (KeepLimitAtGlobalZero)
                     Limit.position = new Vector3(Limit.position.x, 0, Limit.position.z);
-                else if (Limit.localPosition.y != 0)
-                    Limit.localPosition = LimitStartPos;
+                else
+                    Limit.localPosition = new Vector3(Limit.localPosition.x, LimitStartPos.y, Limit.localPosition.z);
             }
 
             PrevCameraRigLocalPos = CameraRig.localPosition;
@@ -280,6 +329,11 @@ public class LimitTracking : MonoBehaviour
                         PlayerNavMeshObstacle.height = _playerheight;
                         PlayerNavMeshObstacle.center = new Vector3(0, _playerheight / 2, 0);
                     }
+                    if(PlayerCapsule != null)
+                    {
+                        PlayerCapsule.height = _playerheight;
+                        PlayerCapsule.center = new Vector3(0, _playerheight / 2, 0);
+                    }
 
                     if (Posizione != Position.Standing)
                         Posizione = Position.Standing;
@@ -295,6 +349,11 @@ public class LimitTracking : MonoBehaviour
                         PlayerNavMeshObstacle.height = HeadY;
                         PlayerNavMeshObstacle.center = new Vector3(0, HeadY / 2, 0);
                     }
+                    if (PlayerCapsule != null)
+                    {
+                        PlayerCapsule.height = HeadY;
+                        PlayerCapsule.center = new Vector3(0, HeadY / 2, 0);
+                    }
 
                     if (Posizione != Position.Standing)
                         Posizione = Position.Standing;
@@ -309,6 +368,11 @@ public class LimitTracking : MonoBehaviour
                     {
                         PlayerNavMeshObstacle.height = _playerheight / 2;
                         PlayerNavMeshObstacle.center = new Vector3(0, _playerheight / 4, 0);
+                    }
+                    if (PlayerCapsule != null)
+                    {
+                        PlayerCapsule.height = _playerheight / 2;
+                        PlayerCapsule.center = new Vector3(0, _playerheight / 4, 0);
                     }
 
                     if (Posizione != Position.Crouched)
@@ -385,6 +449,28 @@ public class LimitTracking : MonoBehaviour
             RightController.StopVibration(0.1f, 0.5f, 0.08f, this);
             vibrationrequested = false;
         }
+    }
+
+
+    public void EnableCollider()
+    {
+        if (PlayerCollider != null)
+            PlayerCollider.enabled = true;
+        if (PlayerNavMeshObstacle != null)
+            PlayerNavMeshObstacle.enabled = true;
+        if (PlayerCapsule != null)
+            PlayerCapsule.enabled = true;
+    }
+
+    public void DisableCollider()
+    {
+
+        if (PlayerCollider != null)
+            PlayerCollider.enabled = false;
+        if (PlayerNavMeshObstacle != null)
+            PlayerNavMeshObstacle.enabled = false;
+        if (PlayerCapsule != null)
+            PlayerCapsule.enabled = false;
     }
 
     internal virtual void CopyConstraints(LimitTracking l)

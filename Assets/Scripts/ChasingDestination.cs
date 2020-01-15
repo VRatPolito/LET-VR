@@ -33,7 +33,7 @@ public class ChasingDestination : Destination {
         {
         if (!moving)
             {
-            Level1Manager.Instance.RobotStopPointing();
+            Scenario1Manager.Instance.RobotStopPointing();
             Invoke("StartMoving", 1);
             }
         _inside = true;
@@ -54,14 +54,14 @@ public class ChasingDestination : Destination {
         {
             transform.parent.DOMove(targetpos.position, traveltime, false).SetEase(Curve);
             moving = true;
-            Level1Manager.Instance.StatisticsLogger.StartLogChasing();
+            Scenario1Manager.Instance.StatisticsLogger.StartLogChasing();
         }
     }
 
     private void AutoDisable()
     {
-        Level1Manager.Instance.StatisticsLogger.StopLogChasing();
-        Level1Manager.Instance.CloseRobotDoor();
+        Scenario1Manager.Instance.StatisticsLogger.StopLogChasing();
+        Scenario1Manager.Instance.CloseRobotDoor();
         gameObject.SetActive(false);
     }
     
