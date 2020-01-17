@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2df28c2ec9fcc447ad90a9dbd139da1, type: 3}
+  m_Name: ProceduralObstaclePattern
+  m_EditorClassIdentifier: 
+  _speed: 1.8
+  _endPadding: 4
+  _defaultMaterial: {fileID: 2100000, guid: e1b20317cce990743bceaa7ea1f98d5a, type: 2}
+  _elements:
+  - Xs: 0
+    Xe: 0.35
+    Ys: 0
+    Ye: 1
+    Length: 2
+    FrontLine: 0
+    Color: {r: 0.5283019, g: 0.042363837, b: 0.042363837, a: 1}
+  - Xs: 0.65
+    Xe: 1
+    Ys: 0
+    Ye: 1
+    Length: 2
+    FrontLine: 0
+    Color: {r: 0.5294118, g: 0.043137256, b: 0.043137256, a: 1}
+  - Xs: 0
+    Xe: 0.6
+    Ys: 0
+    Ye: 1
+    Length: 2
+    FrontLine: 5
+    Color: {r: 0.09220363, g: 0.27982688, b: 0.5283019, a: 1}
+  - Xs: 0.4
+    Xe: 1
+    Ys: 0
+    Ye: 1
+    Length: 2
+    FrontLine: 11
+    Color: {r: 0, g: 1, b: 0.24035454, a: 1}
+  - Xs: 0
+    Xe: 1
+    Ys: 0.55
+    Ye: 1
+    Length: 4
+    FrontLine: 16
+    Color: {r: 0.5294118, g: 0.09411765, b: 0.41045165, a: 1}
+  - Xs: 0
+    Xe: 0.3
+    Ys: 0.55
+    Ye: 1
+    Length: 5
+    FrontLine: 25
+    Color: {r: 0, g: 0.7672777, b: 1, a: 1}
+  - Xs: 0.3
+    Xe: 1
+    Ys: 0
+    Ye: 1
+    Length: 3
+    FrontLine: 25
+    Color: {r: 0, g: 0.76862746, b: 1, a: 1}
+  - Xs: 0
+    Xe: 0.752
+    Ys: 0
+    Ye: 0.6
+    Length: 2
+    FrontLine: 33
+    Color: {r: 0.8490566, g: 0.4627216, b: 0.06808474, a: 1}

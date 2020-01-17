@@ -1,5 +1,0 @@
-- Per aprire la porta ed andare oltre, usa il componente posto sul tavolo e inseriscilo nella struttura di aggancio che trovi alla destra della porta.
-- Come prima ma per aprire la porta serviranno 2 componenti. Aiutati con le loro dimensioni e colore per inserirle nel loro unico corrispettivo a fianco della porta. Puoi anche portarli entrambi contemporaneamente con te, ma non è obbligatorio.
-- Al di là del labirinto si trova una porta che dovrai aprire allo stesso modo di come hai appena fatto. Evita di andare a sbattere con le pareti del labirinto, perchè questo è considerato come un errore.
-- Posiziona i componenti che trovi nella stanza nei corrispettivi spazi che trovi sui tavoli, facendo corrispondere i colori delle aree con quelli dei componenti. 
--- Successivamente, impila i componenti per costruire una torre nell’area che apparirà sul tavolo CENTRALE. Quando ritieni ti senti soddisfatto della tua creazione (ed è stabile) raggiungi la destinazione alle tue spalle.
