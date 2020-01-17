@@ -16,7 +16,7 @@ public class BatchUtils : MonoBehaviour
 
     #region Build
 
-    [MenuItem("VR@PoliTo/Build All Scenarios Splitted")]
+    [MenuItem("VR@PoliTo/Build All Scenarios Split")]
     public static void BuildGame()
     {
         var options = new BuildPlayerOptions();
