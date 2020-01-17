@@ -1,1 +1,1 @@
-# LocomotionVR_BenchmarkFramework
+# LocomotionVR Framework
