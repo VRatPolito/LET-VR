@@ -21,7 +21,6 @@ public class ItemController : MonoBehaviour
     public AudioSource BlipSource;
     [HideInInspector]
     public AudioSource LeftItemSource, RightItemSource;
-    public bool BrochureAvailable = true;
     public AudioClip DefaultGrabSound, DefaultDropSound;
     public float DefaultGrabSoundVolume = 1, DefaultDropSoundVolume = 1;
     [HideInInspector]
