@@ -21,7 +21,7 @@ public class StatisticsLoggerS5 : StatisticsLoggerBase
     #region Private Members and Constants
     protected List<float> _setupPrecision = new List<float>();
     protected List<float> _towerPrecision = new List<float>();
-    private float _timeStart, _timeStop;
+    private float _timeStart, _complTime;
     private uint  _grabtask;
     private bool _grabbing;
     private bool _movingInteraction;
@@ -112,10 +112,10 @@ public class StatisticsLoggerS5 : StatisticsLoggerBase
 
     public void StopLogGrabbing(Destination d)
     {
-        _timeStop = Time.time - _timeStart;
+        _complTime = Time.time - _timeStart;
         var values = new List<string>
         {
-            "" + _timeStop,
+            "" + _complTime,
             "" + _numItemFalls,
             "" + _numBodyColl,
             "" + _numItemColl
@@ -129,14 +129,14 @@ public class StatisticsLoggerS5 : StatisticsLoggerBase
 
     public void StopLogManipulation(Destination d)
     {
-        _timeStop = Time.time - _timeStart;
-        var SetupPrecision = GetAvgSetupPrecision();
-        var TowerPrecision = GetAvgTowerPrecision();
+        _complTime = Time.time - _timeStart;
+        var AvgSetupAcc = GetAvgSetupPrecision();
+        var AvgTowerAcc = GetAvgTowerPrecision();
         var values = new List<string>
         {
-            "" + _timeStop,
-            "" + SetupPrecision,
-            "" + TowerPrecision
+            "" + _complTime,
+            "" + AvgSetupAcc,
+            "" + AvgTowerAcc
         };
         WriteToCSV("M", values, 2);
         StopMasterLog();
@@ -163,13 +163,13 @@ public class StatisticsLoggerS5 : StatisticsLoggerBase
     public void StopLogInteractionInMotion()
     {
         _movingInteraction = false;
-        _timeStop = Time.time - _timeStart;
-        var TimeClose = GetPercTimeClose();
+        _complTime = Time.time - _timeStart;
+        var CloseToTargetRate = GetPercTimeClose();
         var NumErrors = _numItemFalls + _numIntErrors;
         var values = new List<string>
         {
-            "" + _timeStop,
-            "" + TimeClose,
+            "" + _complTime,
+            "" + CloseToTargetRate,
             "" + NumErrors
         };
         WriteToCSV("IM", values, 3);
