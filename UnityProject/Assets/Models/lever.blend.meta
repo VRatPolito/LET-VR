@@ -13,6 +13,9 @@ ModelImporter:
     2100002: Material
     2100004: Material_001
     2100006: Material_003
+    2100008: Material.002
+    2100010: Material.001
+    2100012: Material.003
     2300000: Base
     2300002: Lever
     3300000: Base
@@ -21,6 +24,7 @@ ModelImporter:
     4300002: Base
     7400000: Default Take
     9500000: //RootNode
+    2186277476908879412: ImportLogs
   externalObjects: {}
   materials:
     importMaterials: 1

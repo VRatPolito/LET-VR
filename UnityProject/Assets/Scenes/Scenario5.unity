@@ -88,7 +88,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaIndirect: 2
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ShowResolutionOverlay: 1
-  m_LightingDataAsset: {fileID: 112000000, guid: 014c174435b1211449221057f8765c1d,
+  m_LightingDataAsset: {fileID: 112000000, guid: af3bab875e407c04b8b4dccc8fa45ecf,
     type: 2}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -18206,11 +18206,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 224950355473351040, guid: 65dcc01499fae8644abcfcaa5338d9e4,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224950355473351040, guid: 65dcc01499fae8644abcfcaa5338d9e4,
         type: 3}

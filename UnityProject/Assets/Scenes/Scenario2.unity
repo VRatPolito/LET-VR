@@ -88,7 +88,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaIndirect: 2
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ShowResolutionOverlay: 1
-  m_LightingDataAsset: {fileID: 112000000, guid: a327a3a8dea460f4b9c402759c58f6f2,
+  m_LightingDataAsset: {fileID: 112000000, guid: 3c15aeec5e7a18c40ad9dbe58cfd3477,
     type: 2}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -21051,7 +21051,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1224021003}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &100695578
 PrefabInstance:
@@ -43072,12 +43072,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 870506959}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &878137712 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400006, guid: 750bac6edb4b4184f83a2a6019d4fea0,
-    type: 3}
-  m_PrefabInstance: {fileID: 1884854708}
-  m_PrefabAsset: {fileID: 0}
 --- !u!43 &894786657
 Mesh:
   m_ObjectHideFlags: 0
@@ -57200,8 +57194,8 @@ Transform:
   - {fileID: 1400242748}
   - {fileID: 1042781387}
   - {fileID: 1738886347}
-  - {fileID: 878137712}
   - {fileID: 94807166}
+  - {fileID: 1884854711}
   - {fileID: 1827680302}
   - {fileID: 100695579}
   - {fileID: 112008009}
@@ -69367,6 +69361,11 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 14
   m_Mesh: {fileID: 4300004, guid: 750bac6edb4b4184f83a2a6019d4fea0, type: 3}
+--- !u!4 &1884854711 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 1884854708}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1890825318
 PrefabInstance:
   m_ObjectHideFlags: 0

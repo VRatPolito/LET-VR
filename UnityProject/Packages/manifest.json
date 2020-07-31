@@ -1,9 +1,10 @@
 {
   "dependencies": {
+    "com.unity.burst": "1.1.2",
     "com.unity.collab-proxy": "1.2.16",
     "com.unity.entities": "0.0.12-preview.24",
     "com.unity.jobs": "0.0.7-preview.6",
-    "com.unity.package-manager-ui": "2.0.8",
+    "com.unity.package-manager-ui": "2.0.13",
     "com.unity.postprocessing": "2.2.1",
     "com.unity.probuilder": "4.1.0",
     "com.unity.progrids": "3.0.3-preview.4",
