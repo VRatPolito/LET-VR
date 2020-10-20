@@ -16,7 +16,7 @@ public class StatisticsLoggerSO : ScriptableObject
     #region Editor Visible
 
     [SerializeField] private string _scenarioName="undefined";
-    [SerializeField] private List<String> _logFileNames = new List<string>();
+    [SerializeField] private List<LogFile> _logFiles = new List<LogFile>(new LogFile[] { new LogFile("Master", StatisticsLoggerBase.MasterHeader()) });
     [SerializeField] [Range(0,90)]protected float _samplingRate = 60.0f;
     public const string CSV_SEPARATOR = ";";
 
@@ -36,10 +36,10 @@ public class StatisticsLoggerSO : ScriptableObject
         protected set => _samplingRate = value;
     }
 
-    public List<string> LogFileNames
+    public List<LogFile> LogFiles
     {
-        get => _logFileNames;
-        set => _logFileNames = value;
+        get => _logFiles;
+        set => _logFiles = value;
     }
 
     #endregion
