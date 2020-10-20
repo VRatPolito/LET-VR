@@ -253,7 +253,7 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
 
     private LocomotionCalibrationData GetOrCreateCalibrationData()
     {
-        var dataPath = PersistentSaveLoad.GetDefaultDataPath("LBF_VR", "calibrationData.pgd");
+        var dataPath = PersistentSaveLoad.GetDefaultDataPath("LET_VR", "calibrationData.pgd");
         var calib = PersistentSaveLoad.Load<LocomotionCalibrationData>(dataPath,
             PersistentSaveLoad.SerializationType.Json);
 

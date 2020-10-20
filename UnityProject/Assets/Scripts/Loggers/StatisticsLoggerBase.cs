@@ -108,6 +108,7 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
     {
         var u = UnityMainThreadDispatcher.Instance;
         string fileDirectory = Path.Combine(Application.dataPath, "StatisticsData",
+            ConfigurationLookUp.Instance.GetString("LocomotionTechnique", "unknown"),
             ConfigurationLookUp.Instance.GetString("ParticipantId", "undefined"),
             StatisticsLoggerData.ScenarioName + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmssff"));
         if (!Directory.Exists(fileDirectory))
