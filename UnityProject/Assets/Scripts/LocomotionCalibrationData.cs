@@ -43,7 +43,7 @@ public class LocomotionCalibrationData
         set { _controllerDistance = value; }
     }
 
-    public string DefaultDataPath => PersistentSaveLoad.GetDefaultDataPath("LBF_VR", "calibrationData.pgd");
+    public string DefaultDataPath => PersistentSaveLoad.GetDefaultDataPath("LET_VR", "calibrationData.pgd");
 
     #endregion
 
