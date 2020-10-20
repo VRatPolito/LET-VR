@@ -52,7 +52,7 @@ public class StatisticsLoggerS1 : StatisticsLoggerBase
         var values = new List<string>
         {
             "" + ComplTime,
-            "" + _pathDev,
+            "" + _stPathDev,
             "" + _numWallColl
         };
         WriteToCSV("SW", values, 1);
@@ -110,11 +110,11 @@ public class StatisticsLoggerS1 : StatisticsLoggerBase
         _chasing = false;
         if (_numInterr == -1)
             _numInterr = 0;
-        var TimeInside = GetPercTimeInside();
+        var InsideTargetRate = GetPercTimeInside();
         var AvgDist = GetAverageDist();
         var values = new List<string>
         {
-            "" + TimeInside,
+            "" + InsideTargetRate,
             "" + AvgDist,
             "" + _numInterr,
         };
@@ -164,7 +164,7 @@ public class StatisticsLoggerS1 : StatisticsLoggerBase
         if (_strLineWalking)
         {
             var diff = GetPathDev(Scenario1Manager.Instance._pathDevRef, _pathDevAxis);
-            _pathDev += diff * (1 / StatisticsLoggerData.SamplingRate);
+            _stPathDev += diff * (1 / StatisticsLoggerData.SamplingRate);
         }
         else if (_chasing)
         {

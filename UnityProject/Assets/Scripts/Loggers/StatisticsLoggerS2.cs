@@ -28,7 +28,7 @@ public class StatisticsLoggerS2 : StatisticsLoggerBase
     float _estPathLen, _initAngErr, _recallTime, _timesover;
     private bool _errorCounted = false;
     private bool _backWalking = false, _curvedWalking = false, _fear = false, _multiStrLineWalking = false, _stairsRamp = false;
-    private string _choice;
+    private string _stairsChoice;
 	private int _inCount = 0;
     private int _count = 0;
     private int _numLookOut = 0;
@@ -104,13 +104,13 @@ public class StatisticsLoggerS2 : StatisticsLoggerBase
         if (_numLookOut == -1)
             _numLookOut = 0;
         var ComplTime = Time.time - _timeStart;
-        var TimeLookAt = (100 - ((float)_inCount / (float)_count * 100));
+        var LookAtRate = (100 - ((float)_inCount / (float)_count * 100));
         var values = new List<string>
         {
             "" + ComplTime,
             "" + _numLookOut,
-            "" + TimeLookAt,
-            "" + _pathDev
+            "" + LookAtRate,
+            "" + _stPathDev
         };
         WriteToCSV("BW", values, 2);
         StopMasterLog();
@@ -164,7 +164,7 @@ public class StatisticsLoggerS2 : StatisticsLoggerBase
 
     internal void StartLogHalfStairs(Destination d)
     {
-        _choice = "ST";
+        _stairsChoice = "ST";
         if (_stairsRamp)
         {
             Scenario2Manager.Instance.StartHalfSlope.gameObject.SetActive(true);
@@ -178,7 +178,7 @@ public class StatisticsLoggerS2 : StatisticsLoggerBase
 
     internal void StartLogHalfSlope(Destination d)
     {
-        _choice = "SL";
+        _stairsChoice = "SL";
         if (_stairsRamp)
         {
             Scenario2Manager.Instance.StartHalfStairs.gameObject.SetActive(true);
@@ -195,7 +195,7 @@ public class StatisticsLoggerS2 : StatisticsLoggerBase
         _stairsRamp = false;
         var values = new List<string>
         {
-            "" + _choice
+            "" + _stairsChoice
         };
         WriteToCSV("STL", values, 4);
         if (Scenario2Manager.Instance.StartHalfSlope.gameObject.activeSelf)
@@ -255,7 +255,7 @@ public class StatisticsLoggerS2 : StatisticsLoggerBase
         if (_backWalking)
         {
             var diff = GetPathDev(Scenario2Manager.Instance._pathDevRef, _pathDevAxis);
-            _pathDev += diff * (1 / StatisticsLoggerData.SamplingRate);
+            _stPathDev += diff * (1 / StatisticsLoggerData.SamplingRate);
             
             if (!Scenario2Manager.Instance.BackwardItem.InteractiveItem.IsOver)
             {

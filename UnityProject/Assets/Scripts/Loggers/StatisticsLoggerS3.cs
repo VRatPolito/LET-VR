@@ -56,12 +56,12 @@ public class StatisticsLoggerS3 : StatisticsLoggerBase
     {
         _decoupledGaze = false;
         var ComplTime = Time.time - _timeStart;
-        var TimeGazeUnc = ((float)_inCount / (float)_count * 100);
+        var GazeUncRate = ((float)_inCount / (float)_count * 100);
         var values = new List<string>
         {
             "" + ComplTime,
-            "" + _pathDev,
-            "" + TimeGazeUnc,
+            "" + _stPathDev,
+            "" + GazeUncRate,
             "" + _numInterr
         };
         WriteToCSV("DG", values, 1);
@@ -84,12 +84,12 @@ public class StatisticsLoggerS3 : StatisticsLoggerBase
     {
         _strOutHands = false;
         var ComplTime = Time.time - _timeStart;
-        var TimStrOut = ((float)_inCount / (float)_count * 100);
+        var StrcRate = ((float)_inCount / (float)_count * 100);
         var values = new List<string>
         {
             "" + ComplTime,
-            "" + _pathDev,
-            "" + TimStrOut,
+            "" + _stPathDev,
+            "" + StrcRate,
             "" + _numInterr
         };
         WriteToCSV("SH", values, 2);
@@ -104,7 +104,7 @@ public class StatisticsLoggerS3 : StatisticsLoggerBase
         _decoupledHands = true;
         _stopPos = Vector3.negativeInfinity;
         _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
-        _pathDev = 0;
+        _stPathDev = 0;
         _numInterr = 0;
     }
     public void StopLogDecoupledHands(Destination d)
@@ -114,7 +114,7 @@ public class StatisticsLoggerS3 : StatisticsLoggerBase
         var values = new List<string>
         {
             "" + ComplTime,
-            "" + _pathDev,
+            "" + _stPathDev,
             "" + Scenario3Manager.Instance.DronesCoinCollectorController.Score,
             "" + _numInterr
         };
@@ -136,7 +136,7 @@ public class StatisticsLoggerS3 : StatisticsLoggerBase
         {
             // compute Path Deviation metrics
             var diff = GetPathDev(Scenario3Manager.Instance._pathDevRef1, _pathDevAxis);
-            _pathDev += diff * (1 / StatisticsLoggerData.SamplingRate);
+            _stPathDev += diff * (1 / StatisticsLoggerData.SamplingRate);
                        
             var v1 = LocomotionManager.Instance.CurrentPlayerController.position - _prevpos;
             var v2 = LocomotionManager.Instance.CameraEye.forward;
@@ -171,7 +171,7 @@ public class StatisticsLoggerS3 : StatisticsLoggerBase
         {
             // compute Path Deviation metrics
             var diff = GetPathDev(Scenario3Manager.Instance._pathDevRef2, _pathDevAxis);
-            _pathDev += diff * (1 / StatisticsLoggerData.SamplingRate);
+            _stPathDev += diff * (1 / StatisticsLoggerData.SamplingRate);
             
             var cl = LocomotionManager.Instance.LeftController.transform.position;
             var cr = LocomotionManager.Instance.RightController.transform.position;
@@ -205,7 +205,7 @@ public class StatisticsLoggerS3 : StatisticsLoggerBase
 
             // compute Path Deviation metrics
             var diff = GetPathDev(Scenario3Manager.Instance._pathDevRef3, _pathDevAxis);
-            _pathDev += diff * (1 / StatisticsLoggerData.SamplingRate);
+            _stPathDev += diff * (1 / StatisticsLoggerData.SamplingRate);
             
             var currpos = LocomotionManager.Instance.CurrentPlayerController.position;
             if (currpos == _prevpos)
