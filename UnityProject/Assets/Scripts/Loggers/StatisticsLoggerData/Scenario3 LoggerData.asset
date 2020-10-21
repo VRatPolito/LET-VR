@@ -13,9 +13,71 @@ MonoBehaviour:
   m_Name: Scenario3 LoggerData
   m_EditorClassIdentifier: 
   _scenarioName: 3_DecoupledMovements
-  _logFileNames:
-  - Master
-  - DecoupledGaze
-  - StretchedOutHands
-  - DecoupledHands
+  _logFiles:
+  - FileName: Master
+    Metrics:
+    - PosX
+    - PosY
+    - PosZ
+    - RotX
+    - RotY
+    - RotZ
+    - HeadPosX
+    - HeadPosY
+    - HeadPosZ
+    - HeadRotX
+    - HeadRotY
+    - HeadRotZ
+    - LHandPosX
+    - LHandPosY
+    - LHandPosZ
+    - LHandRotX
+    - LHandRotY
+    - LHandRotZ
+    - RHandPosX
+    - RHandPosY
+    - RHandPosZ
+    - RHandRotX
+    - RHandRotY
+    - RHandRotZ
+    - HipPosX
+    - HipPosY
+    - HipPosZ
+    - HipRotX
+    - HipRotY
+    - HipRotZ
+    - LLegPosX
+    - LLegPosY
+    - LLegPosZ
+    - LLegRotX
+    - LLegRotY
+    - LLegRotZ
+    - RLegPosX
+    - RLegPosY
+    - RLegPosZ
+    - RLegRotX
+    - RLegRotY
+    - RLegRotZ
+    - TargetPosX
+    - TargetPosY
+    - TargetPosZ
+    - GWAngle
+  - FileName: DecoupledGaze
+    Metrics:
+    - ComplTime
+    - STPathDev
+    - TimeGazeUnc
+    - NumInterr
+  - FileName: StretchedOutHands
+    Metrics:
+    - ComplTime
+    - STPathDev
+    - TimeStrOut
+    - NumInterr
+  - FileName: DecoupledHands
+    Metrics:
+    - ComplTime
+    - STPathDev
+    - Score
+    - NumInterr
   _samplingRate: 60

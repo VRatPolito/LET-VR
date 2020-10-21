@@ -13,11 +13,77 @@ MonoBehaviour:
   m_Name: Scenario2 LoggerData
   m_EditorClassIdentifier: 
   _scenarioName: 2_DirectionControl
-  _logFileNames:
-  - Master
-  - MultiStraighLineWalking
-  - BackwardWalking
-  - CurvedWalking
-  - StairsAndRamp
-  - Fear
+  _logFiles:
+  - FileName: Master
+    Metrics:
+    - PosX
+    - PosY
+    - PosZ
+    - RotX
+    - RotY
+    - RotZ
+    - HeadPosX
+    - HeadPosY
+    - HeadPosZ
+    - HeadRotX
+    - HeadRotY
+    - HeadRotZ
+    - LHandPosX
+    - LHandPosY
+    - LHandPosZ
+    - LHandRotX
+    - LHandRotY
+    - LHandRotZ
+    - RHandPosX
+    - RHandPosY
+    - RHandPosZ
+    - RHandRotX
+    - RHandRotY
+    - RHandRotZ
+    - HipPosX
+    - HipPosY
+    - HipPosZ
+    - HipRotX
+    - HipRotY
+    - HipRotZ
+    - LLegPosX
+    - LLegPosY
+    - LLegPosZ
+    - LLegRotX
+    - LLegRotY
+    - LLegRotZ
+    - RLegPosX
+    - RLegPosY
+    - RLegPosZ
+    - RLegRotX
+    - RLegRotY
+    - RLegRotZ
+    - TargetPosX
+    - TargetPosY
+    - TargetPosZ
+    - GWAngle
+  - FileName: MultiStraighLineWalking
+    Metrics:
+    - ComplTime
+    - InitAngErr
+    - EstPathLen
+    - RecallTime
+  - FileName: BackwardWalking
+    Metrics:
+    - ComplTime
+    - NumLookOut
+    - LookAtRate
+    - STPathDev
+  - FileName: CurvedWalking
+    Metrics:
+    - ComplTime
+    - NumInterr
+  - FileName: StairsAndRamp
+    Metrics:
+    - StairsChoice
+  - FileName: Fear
+    Metrics:
+    - ComplTime
+    - Avoidance
+    - NumFalls
   _samplingRate: 60

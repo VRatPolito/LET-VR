@@ -20,6 +20,18 @@ public enum PathDevAxis
     Z
 };
 
+[Serializable]
+public class LogFile
+{
+    public string FileName;
+    public List<string> Metrics;
+    public LogFile(string name, List<string> metrics)
+    {
+        FileName = name;
+        Metrics = metrics;
+    }    
+}
+
 public interface IStatisticsLogger
 {
     void Ticker();
@@ -100,6 +112,27 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
         }
     }
 
+    public static List<string> MasterHeader()
+    {
+        return new List<string>(new string[] { "PosX", "PosY", "PosZ",
+                                                "RotX", "RotY", "RotZ",
+                                                "HeadPosX", "HeadPosY", "HeadPosZ",
+                                                "HeadRotX", "HeadRotY", "HeadRotZ",
+                                                "LHandPosX", "LHandPosY", "LHandPosZ",
+                                                "LHandRotX", "LHandRotY", "LHandRotZ",
+                                                "RHandPosX", "RHandPosY", "RHandPosZ",
+                                                "RHandRotX", "RHandRotY", "RHandRotZ",
+                                                "HipPosX", "HipPosY", "HipPosZ",
+                                                "HipRotX", "HipRotY", "HipRotZ",
+                                                "LLegPosX","LLegPosY", "LLegPosZ",
+                                                "LLegRotX", "LLegRotY", "LLegRotZ",
+                                                "RLegPosX","RLegPosY", "RLegPosZ",
+                                                "RLegRotX", "RLegRotY", "RLegRotZ",
+                                                "TargetPosX", "TargetPosY", "TargetPosZ",
+                                                "GWAngle"
+        });
+    }
+
     #endregion
 
     #region Helper Methods
@@ -116,11 +149,11 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
 
         _locks = new List<object>();
 
-        for (int i = 0; i < StatisticsLoggerData.LogFileNames.Count; i++)
+        for (int i = 0; i < StatisticsLoggerData.LogFiles.Count; i++)
         {
-            string fileName = $"{i}_" + StatisticsLoggerData.LogFileNames[i] + "_" +
+            string fileName = $"{i}_" + StatisticsLoggerData.LogFiles[i].FileName + "_" +
                               DateTime.Now.ToString("yyyyMMdd_HHmmssff") + ".csv";
-            _logFilePaths.Add(Path.Combine(fileDirectory, fileName));
+            _logFilePaths.Add(Path.Combine(fileDirectory, fileName));       
             _locks.Add(new object());
         }
 
@@ -147,13 +180,19 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
     protected async void WriteToCSV(string type, List<string> values, int fileindex)
     {
         var csvSeparator = StatisticsLoggerSO.CSV_SEPARATOR;
+        var header = GetHeader(fileindex, csvSeparator);
         await Task.Run(() =>
         {
             lock (_locks[fileindex])
             {
                 _sb.Length = 0;
+
+                if (!File.Exists(_logFilePaths[fileindex]))
+                    _sb.Append(header).Append("\n");
+
                 _sb.Append(type).Append(csvSeparator);
                 _sb.Append(DateTime.Now.ToString("yyyy/MM/dd_HH:mm:ss.fff")).Append(csvSeparator);
+
                 foreach (var s in values)
                 {
                     _sb.Append(s).Append(csvSeparator);
@@ -162,7 +201,7 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
                 _sb.Append("\n");
 
                 if (!File.Exists(_logFilePaths[fileindex]))
-                    File.WriteAllText(_logFilePaths[fileindex], _sb.ToString());
+                    File.WriteAllText(_logFilePaths[fileindex], _sb.ToString());                   
                 else
                     File.AppendAllText(_logFilePaths[fileindex], _sb.ToString());
             }
@@ -175,12 +214,16 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
     protected async void WriteToCSVMulipleLines(string type, List<List<string>> lines, int fileindex)
     {
         var csvSeparator = StatisticsLoggerSO.CSV_SEPARATOR;
+        var header = GetHeader(fileindex, csvSeparator);
         var values = new List<List<string>>(lines);
         await Task.Run(() =>
         {
             lock (_locks[fileindex])
             {
                 _sb.Length = 0;
+
+                if (!File.Exists(_logFilePaths[fileindex]))
+                    _sb.Append(header).Append("\n");
                 foreach (var line in values)
                 {
                     _sb.Append(type).Append(csvSeparator);
@@ -194,9 +237,7 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
                 }
 
                 if (!File.Exists(_logFilePaths[fileindex]))
-                {
                     File.WriteAllText(_logFilePaths[fileindex], _sb.ToString());
-                }
                 else
                     File.AppendAllText(_logFilePaths[fileindex], _sb.ToString());
             }
@@ -210,6 +251,14 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
     {
         _masterlog = true;
         _masterlogtype = type;
+    }
+
+    public string GetHeader(int index, string CSVseparator)
+    {
+        String fileHeader = "Task" + CSVseparator + "Timestamp";
+        foreach (var s in StatisticsLoggerData.LogFiles[index].Metrics)
+            fileHeader += CSVseparator + s;
+        return fileHeader;
     }
 
     protected float GetAverageFloat(ref List<float> list)
@@ -280,6 +329,31 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
                 values.Add("" + _rightlegrotations[i].y);
                 values.Add("" + _rightlegrotations[i].z);
             }
+            else
+            {
+                values.Add("");
+                values.Add("");
+                values.Add("");
+                values.Add("");
+                values.Add("");
+                values.Add("");
+
+
+                values.Add("");
+                values.Add("");
+                values.Add("");
+                values.Add("");
+                values.Add("");
+                values.Add("");
+
+
+                values.Add("");
+                values.Add("");
+                values.Add("");
+                values.Add("");
+                values.Add("");
+                values.Add("");
+            }
 
             if (_masterlogtype == "C")
             {
@@ -287,10 +361,17 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
                 values.Add("" + _targetpositions[i].y);
                 values.Add("" + _targetpositions[i].z);
             }
-            else if (_masterlogtype == "DG")
+            else
             {
-                values.Add("" + _gazewalkangles[i]);
+                values.Add("");
+                values.Add("");
+                values.Add("");
             }
+
+            if (_masterlogtype == "DG")
+                values.Add("" + _gazewalkangles[i]);
+            else
+                values.Add("");
 
             _allValues.Add(values);
         }
