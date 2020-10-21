@@ -11,6 +11,10 @@ The testbed application is complemented by
 > **LET-VR** helps to select the best suitable locomotion technique to adopt in a given VR application scenario.   
 > To dig more into the details about the testbed design, you can refer to the paper (see [**Citation**](#citation))
 
+<p align="center" width="100%">
+    <img width="600" src="https://i.postimg.cc/FK4923pp/architettura.png"> 
+</p>
+
 ## Table of contents
 * [Videos](#videos)
 * [Experimental Material](#experimental-material)
@@ -42,7 +46,7 @@ The application targets only **Windows 10** and can be deployed to any VR system
 ### Build *LET-VR* from scratch
 Instructions to compile the project:
 
-#### Infos:
+#### Infos
 The project was created and tested with [**Unity 2018.4.x (LTS)**](https://unity3d.com/unity/qa/lts-releases?version=2018.4)
 - NOTE: the project is built around the **SteamVR asset v1.2.3**, any update to higher versions of the asset will break part of the code due to the different input management (of course is possible to update the SteamVR version installed on the host system)
    
