@@ -1,5 +1,5 @@
 ﻿<p align="center" width="100%">
-    <img width="350" src="https://i.postimg.cc/HLR1mw5D/giffone-2.gif"> 
+    <img width="300" src="https://i.postimg.cc/JhCd9T52/giffone-2c.gif"> 
 </p>
 
 # Locomotion Evaluation Testbed VR
@@ -9,11 +9,11 @@ The testbed application is complemented by
 > - a scoring system able to **rank** locomotion techniques based on a **weighted** set of requirements
 >
 > **LET-VR** helps to select the best suitable locomotion technique to adopt in a given VR application scenario.   
-> To dig more into the details about the testbed design, you can refer to the paper (see [Citation](#citation))
+> To dig more into the details about the testbed design, you can refer to the paper (see [**Citation**](#citation))
 
 ## Table of contents
 * [Videos](#videos)
-* [Experimental Material](#experimental material)
+* [Experimental Material](#experimental-material)
 * [Builds](#builds)
 * [Configuration](#configuration)
 * [Citation](#citation)
@@ -39,16 +39,16 @@ The application targets only **Windows 10** and can be deployed to any VR system
 - The builds have been tested with **HTC Vive/Pro** w/ controllers (+ Vive Trackers for the WIP), **Oculus Rift** w/ touch controllers, and **(WMR) Samsung Odyssey** w/ controllers
     
     
-###Build *LET-VR* from scratch
+### Build *LET-VR* from scratch
 Instructions to compile the project:
 
-####Infos:
+#### Infos:
 The project was created and tested with [**Unity 2018.4.x (LTS)**](https://unity3d.com/unity/qa/lts-releases?version=2018.4)
 - NOTE: the project is built around the **SteamVR asset v1.2.3**, any update to higher versions of the asset will break part of the code due to the different input management (of course is possible to update the SteamVR version installed on the host system)
    
 The list of package dependencies is in the [**manifest file**](UnityProject/Packages/manifest.json) and will be automatically managed by the Unity editor
 
-####Prepare to Build
+#### Prepare to Build
 1. In Unity, open an existing project and select the [**UnityProject/**](UnityProject/) folder
     1. If package errors are reported, press Continue, open the Package Manager (Window -> Package Manager) and try updating the involved packages, after that restart the project
 1. Scene files for each scenario are placed inside the [**UnityProject/Assets/Scenes/**](UnityProject/Assets/Scenes/) folder. Before building, open each scene file and perform the bake of the lighting (Window -> Lighting Tab -> Generate Lighting). 
@@ -56,7 +56,7 @@ The list of package dependencies is in the [**manifest file**](UnityProject/Pack
 1. The *CybSDK* plug-in required to compile with support to the *Cyberith Virtualizer*, is **NOT** included within the project source due to licensing. To support the locomotion treadmill it is required to obtain and import the relative unity package.
     1. If you are not able to get the *CybSDK* but want to test **LET-VR** on the *Cyberith Virtualizer* you can use the compiled version in [**Release**](https://github.com/VRatPolito/LET-VR/releases)
 
-####Build facilities
+#### Build facilities
 - To Build it from scratch, use the facility in the custom menu VR@POliTO (N.B. remember to bake lighting for all the scenarios):
     - **Build All Scenarios Split**: build all scenarios in a different path with each executable including just one scenario (e.g. *Scenario1.exe*)
     - **Build Launcher (built-in scenarios)**: build all scenarios embedded into a single executable (*Launcher.exe*)
@@ -70,6 +70,7 @@ The **LET-VR** testbed application can be configured with additional parameter w
 <p align="center" width="100%">
     <img width="500" src="https://i.postimg.cc/TYLXqD4t/launcher.png"> 
 </p>
+
 Otherwise, is possible to manually edit the configuration file. The file is located in the *BuildData/* folder, e.g. `..\LET-VR\Launcher\Launcher_Data\BuildData\config.txt`
     
 This is an example of a `config.txt` file:
@@ -87,7 +88,7 @@ This is an example of a `config.txt` file:
     AutoFreeze=true
 
 
-####Calibration Data
+#### Calibration Data
 At the first run, a calibration file `calibrationData.pgd` with the participant data will be created in the User's document folder, e.g. `..\FooUser\Documents\LET_VR`. The file can be automatically populated by using the *Tutorial Scenario* or manually by editing the json file.
 ```json
 {
