@@ -32,7 +32,7 @@ Additional material to support the user-study can be found in the [**Experimenta
 
  - [**Administrator Script.odt**](Experimental%20Material/Administrator%20Script.odt): Script supporting the test administrator in providing information to the participant
  - [**( R ) WDB.xlsx**](Experimental%20Material/(R)WDB.xlsx): Example of WDB (plus Raw data) with 4 techniques comparison
- - [**Questionnaire.ods**](Experimental%20Material/Questionnaire/Questionnaire.ods): The full questionnaire in a calc sheet format
+ - [**Questionnaire.ods**](Experimental%20Material/Questionnaire/Questionnaire.ods): The full questionnaire in a spreadsheet format
  - [**Questionnaire_printable.pdf**](Experimental%20Material/Questionnaire/Questionnaire_printable.pdf): The **same** full questionnaire in a printable format
  
 ## Builds
@@ -108,13 +108,14 @@ Please cite this paper in your publications if it helps your research.
       author = {Cannav{\`o}, Alberto and Calandra, Davide and Prattic{\`o}, Filippo Gabriele and Gatteschi, Valentina and Lamberti, Fabrizio},
       journal = {IEEE Transactions on Visualization and Computer Graphics},
       title = {An Evaluation Testbed for Locomotion in Virtual Reality},
+      pages={1871-1889},
       year = {2020},
       doi = {10.1109/TVCG.2020.3032440}
     }
 
 The **LET-VR** design is detailed in:
 - *An Evaluation Testbed for Locomotion in Virtual Reality* 
-    - **IEEE TVCG** (TBA)
+    - [**IEEE TVCG**](https://dx.doi.org/10.1109/TVCG.2020.3032440)
     - [**ArXiv**](https://arxiv.org/abs/2010.10178)
 
 
