@@ -21,6 +21,7 @@ The testbed application is complemented by
 * [Builds](#builds)
 * [Configuration](#configuration)
 * [Citation](#citation)
+* [Forking Policies](#forking-policies)
 * [License](#license)
 * [Acknowledgements](#acknowledgements)
 
@@ -120,9 +121,13 @@ The **LET-VR** design is detailed in:
     - [**IEEE TVCG**](https://dx.doi.org/10.1109/TVCG.2020.3032440)
     - [**ArXiv**](https://arxiv.org/abs/2010.10178)
 
-
 ## Contact
 Maintained by [F. Gabriele Prattico\`](mailto:filippogabriele.prattico@polito.it?subject=[GitHub]%20LET-VR) - feel free to contact me!
+
+## Forking Policies
+
+Please contact [F. Gabriele Prattico\`](mailto:filippogabriele.prattico@polito.it?subject=[GitHub]%20LET-VR) **BEFORE**
+forking the Project
 
 ## License
 Experimental material and Unity project are licensed under
