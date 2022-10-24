@@ -47,7 +47,9 @@ The application targets only **Windows 10** and can be deployed to any VR system
 Instructions to compile the project:
 
 #### Infos
-The project was created and tested with [**Unity 2018.4.x (LTS)**](https://unity3d.com/unity/qa/lts-releases?version=2018.4)
+If you are looking for the version of this project working with newer Unity versions have a look at the [**master_public_OpenXR_2020LTS**](https://github.com/VRatPolito/LET-VR/tree/master_public_OpenXR_2020LTS) branch.
+
+This project version was created and tested with [**Unity 2018.4.x (LTS)**](https://unity3d.com/unity/qa/lts-releases?version=2018.4). 
 - NOTE: the project is built around the **SteamVR asset v1.2.3**, any update to higher versions of the asset will break part of the code due to the different input management (of course is possible to update the SteamVR version installed on the host system)
    
 The list of package dependencies is in the [**manifest file**](UnityProject/Packages/manifest.json) and will be automatically managed by the Unity editor
