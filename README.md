@@ -23,7 +23,7 @@
 * [Experimental Material](#experimental-material)
 * [Builds and Building](#builds)
 * [Configuration](#configuration)
-* [Custom Locomotion Technique](#Implementing-a-*Custom*-Locomotion-Technique)
+* [Custom Locomotion Technique](#Implementing-a-Custom-Locomotion-Technique)
 * [Forking Policies](#Forking-Policies)
 * [Citation](#citation)
 * [Contacts](#contact)
