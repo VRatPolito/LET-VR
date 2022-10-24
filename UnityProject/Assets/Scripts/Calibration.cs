@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.InputSystem;
 
 public class Calibration : MonoBehaviour
 {
@@ -13,8 +14,8 @@ public class Calibration : MonoBehaviour
 
     #region Editor Visible
 
-    [SerializeField] private KeyCode _startCalibrationKey = KeyCode.Space;
-
+    [SerializeField]
+    private InputActionReference _startCalibrationKey;
     #endregion
 
     #region Private Members and Constants
@@ -48,20 +49,24 @@ public class Calibration : MonoBehaviour
 
     private void Awake()
     {
+        _startCalibrationKey.action.performed += ctx => OnCalibrate(ctx); 
         _calibrationDoneAudioSource = GetComponent<AudioSource>();
         Assert.IsNotNull(_calibrationDoneAudioSource);
         _calibrationDoneAudioSource.spatialize = false;
     }
 
-    void Update()
-    {
-        if (_playerinside && Input.GetKeyDown(_startCalibrationKey))
-            Calibrate();
-    }
-
     #endregion
 
     #region Public Methods
+
+    public void OnCalibrate(InputAction.CallbackContext e)
+    {
+        if (_playerinside || (LocomotionManager.Instance.Locomotion == LocomotionTechniqueType.RealWalk && 
+                                  LocomotionManager.Instance.CurrentPlayerController != null &&
+                                  (LocomotionManager.Instance.CurrentPlayerController.GetComponent<InputManagement>().IsLeftTriggerClicked &&
+                                   LocomotionManager.Instance.CurrentPlayerController.GetComponent<InputManagement>().IsRightTriggerClicked)))
+            Calibrate();
+    }
 
     #endregion
 
@@ -71,7 +76,9 @@ public class Calibration : MonoBehaviour
     {
         LocomotionManager.Instance.CalibrationData.HeadHeight = LocomotionManager.Instance.CameraEye.localPosition.y;
         LocomotionManager.Instance.CalibrationData.ControllerDistance = Vector3.Distance(LocomotionManager.Instance.LeftController.position, LocomotionManager.Instance.RightController.position);
+
         LocomotionManager.Instance.CalibrationData.SavePersistent();
+        //calibrate in WS + save data in calibration data
         _calibrated = true;
 
         LocomotionManager.Instance.CurrentUIController.ShowCalibrationIcon(1.5f);

@@ -2,22 +2,76 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.InputSystem;
+using PrattiToolkit;
 
-public enum ControllerButton { Nothing, Trigger, RGrip, LGrip, Grip, Pad, All };
-public enum ControllerButtonInput { Trigger, RGrip, LGrip, Grip, Pad, All, Any };
-public enum ControllerButtonByFunc { ButtonToInteract, ButtonToDrop, ButtonToUse, All };
-public enum GrabMode { HoldButton, ClickButton };
+public enum ControllerButton
+{
+    Nothing,
+    Trigger,
+    RGrip,
+    LGrip,
+    Grip,
+    Pad,
+    All
+};
+
+public enum ControllerButtonInput
+{
+    Trigger,
+    RGrip,
+    LGrip,
+    Grip,
+    Pad,
+    All,
+    Any
+};
+
+public enum ControllerButtonByFunc
+{
+    ButtonToInteract,
+    ButtonToDrop,
+    ButtonToUse,
+    All
+};
+
+public enum GrabMode
+{
+    HoldButton,
+    ClickButton
+};
 
 public class VRItemController : ItemController
 {
     public event Action<GenericItem> OnGrab, OnDrop, OnInteract;
+
     [HideInInspector]
-    public SteamVR_TrackedController LeftVRController, RightVRController;
-    Material oldmat;
+    //public SteamVR_TrackedController LeftVRController, RightVRController;
+    public ActionBasedController LeftVRController, RightVRController;
+
+    /*[Space]
+    [SerializeField] private InputActionReference LeftTrigger;
+    [SerializeField] private InputActionReference LeftPadPress;
+    [SerializeField] private InputActionReference LeftPadTouch;
+    [SerializeField] private InputActionReference LeftGrip;
+
+    [Space]
+    [SerializeField] private InputActionReference RightTrigger;
+    [SerializeField] private InputActionReference RightPadPress;
+    [SerializeField] private InputActionReference RightPadTouch;
+    [SerializeField] private InputActionReference RightGrip;*/
+
+    [Space] Material oldmat;
     public Shader Outline;
     float t;
     bool up = true;
-    ControllerButton LeftButtonToPulse = ControllerButton.Nothing, RightButtonToPulse = ControllerButton.Nothing, ExternalLeftButtonToPulse = ControllerButton.Nothing, ExternalRightButtonToPulse = ControllerButton.Nothing;
+
+    ControllerButton LeftButtonToPulse = ControllerButton.Nothing,
+        RightButtonToPulse = ControllerButton.Nothing,
+        ExternalLeftButtonToPulse = ControllerButton.Nothing,
+        ExternalRightButtonToPulse = ControllerButton.Nothing;
+
     public ControllerButtonInput ButtonToInteract = ControllerButtonInput.Trigger;
     public ControllerButtonInput ButtonToDrop = ControllerButtonInput.Trigger;
     public ControllerButtonInput ButtonToUse = ControllerButtonInput.Pad;
@@ -34,45 +88,57 @@ public class VRItemController : ItemController
     public Color PadColor = Color.yellow;
     public Color TriggerColor = Color.magenta;
     public Color GripColor = Color.cyan;
-    [HideInInspector]
-    public VibrationController LeftVibrationController, RightVibrationController;   
-
+    [HideInInspector] public VibrationController LeftVibrationController, RightVibrationController;
 
 
     private void Awake()
     {
         Type = ItemControllerType.VR;
     }
+
     // Use this for initialization
     public override void Start()
     {
         base.Start();
         LeftVibrationController = LeftController.GetComponent<VibrationController>();
         RightVibrationController = RightController.GetComponent<VibrationController>();
-        LeftVRController = LeftController.GetComponent<SteamVR_TrackedController>();
-        RightVRController = RightController.GetComponent<SteamVR_TrackedController>();
-        
+        /*LeftVRController = LeftController.GetComponent<ActionBasedController>();
+        RightVRController = RightController.GetComponent<ActionBasedController>();*/
+
         switch (ButtonToInteract)
         {
             case ControllerButtonInput.Pad:
-                LeftVRController.PadClicked += LeftInteract;
-                RightVRController.PadClicked += RightInteract;
+                //LeftVRController.PadClicked += LeftInteract;
+                InputManager.OnLeftPadPressed += LeftInteract;
+                //RightVRController.PadClicked += RightInteract;
+                InputManager.OnRightPadPressed += RightInteract;
                 break;
             case ControllerButtonInput.Grip:
-                LeftVRController.Gripped += LeftInteract;
-                RightVRController.Gripped += RightInteract;
+                //LeftVRController.Gripped += LeftInteract;
+                InputManager.OnLeftGripped += LeftInteract;
+                //RightVRController.Gripped += RightInteract;
+                InputManager.OnRightGripped += RightInteract;
                 break;
             case ControllerButtonInput.Any:
-                LeftVRController.PadClicked += LeftInteract;
-                LeftVRController.Gripped += LeftInteract;
-                LeftVRController.TriggerClicked += LeftInteract;
-                RightVRController.PadClicked += RightInteract;
-                RightVRController.Gripped += RightInteract;
-                RightVRController.TriggerClicked += RightInteract;
+                //LeftVRController.PadClicked += LeftInteract;
+                InputManager.OnLeftPadPressed += LeftInteract;
+                //LeftVRController.Gripped += LeftInteract;
+                InputManager.OnLeftGripped += LeftInteract;
+                //LeftVRController.TriggerClicked += LeftInteract;
+                InputManager.OnLeftTriggerClicked += LeftInteract;
+
+                //RightVRController.PadClicked += RightInteract;
+                InputManager.OnRightPadPressed += RightInteract;
+                //RightVRController.Gripped += RightInteract;
+                InputManager.OnRightGripped += RightInteract;
+                //RightVRController.TriggerClicked += RightInteract;
+                InputManager.OnRightTriggerClicked += RightInteract;
                 break;
             default:
-                LeftVRController.TriggerClicked += LeftInteract;
-                RightVRController.TriggerClicked += RightInteract;
+                //LeftVRController.TriggerClicked += LeftInteract;
+                InputManager.OnLeftTriggerClicked += LeftInteract;
+                //RightVRController.TriggerClicked += RightInteract;
+                InputManager.OnRightTriggerClicked += RightInteract;
                 break;
         }
 
@@ -81,16 +147,22 @@ public class VRItemController : ItemController
             switch (ButtonToInteract)
             {
                 case ControllerButtonInput.Pad:
-                    LeftVRController.PadUnclicked += LeftDropPressed;
-                    RightVRController.PadUnclicked += RightDropPressed;
+                    //LeftVRController.PadUnclicked += LeftDropPressed;
+                    InputManager.OnLeftPadUnpressed += LeftDropPressed;
+                    //RightVRController.PadUnclicked += RightDropPressed;
+                    InputManager.OnRightPadUnpressed += RightDropPressed;
                     break;
                 case ControllerButtonInput.Grip:
-                    LeftVRController.Ungripped += LeftDropPressed;
-                    RightVRController.Ungripped += RightDropPressed;
+                    //LeftVRController.Ungripped += LeftDropPressed;
+                    InputManager.OnLeftUngripped += LeftDropPressed;
+                    //RightVRController.Ungripped += RightDropPressed;
+                    InputManager.OnRightUngripped += RightDropPressed;
                     break;
                 default:
-                    LeftVRController.TriggerUnclicked += LeftDropPressed;
-                    RightVRController.TriggerUnclicked += RightDropPressed;
+                    //LeftVRController.TriggerUnclicked += LeftDropPressed;
+                    InputManager.OnLeftTriggerUnclicked += LeftDropPressed;
+                    //RightVRController.TriggerUnclicked += RightDropPressed;
+                    InputManager.OnRightTriggerUnclicked += RightDropPressed;
                     break;
             }
         }
@@ -103,6 +175,7 @@ public class VRItemController : ItemController
             if (i != this)
                 i.enabled = false;
     }
+
     // Update is called once per frame
     void Update()
     {
@@ -161,7 +234,8 @@ public class VRItemController : ItemController
     {
         if (hand == ControllerHand.LeftHand)
         {
-            if (leftpulsing || (LeftButtonToPulse == ControllerButton.Nothing && ExternalLeftButtonToPulse == ControllerButton.Nothing))
+            if (leftpulsing || (LeftButtonToPulse == ControllerButton.Nothing &&
+                                ExternalLeftButtonToPulse == ControllerButton.Nothing))
                 return;
 
             MeshRenderer r = null;
@@ -171,8 +245,12 @@ public class VRItemController : ItemController
             else
                 button = ExternalLeftButtonToPulse;
 
-            var c = LeftController.Find("Model");
+            var c = LeftVRController?.modelParent?.GetChild(0);
             Transform t = null;
+#if CONTROLLERS_MODELS_AS_SINGLEMESH
+            t = c;
+            r = t?.GetComponent<MeshRenderer>();
+#else
             switch (button)
             {
                 case ControllerButton.RGrip:
@@ -356,11 +434,13 @@ public class VRItemController : ItemController
                     mr.materials = m;
                 }
             }
+#endif
             leftpulsing = true;
         }
         else if (hand == ControllerHand.RightHand)
         {
-            if (rightpulsing || (RightButtonToPulse == ControllerButton.Nothing && ExternalRightButtonToPulse == ControllerButton.Nothing))
+            if (rightpulsing || (RightButtonToPulse == ControllerButton.Nothing &&
+                                 ExternalRightButtonToPulse == ControllerButton.Nothing))
                 return;
 
             MeshRenderer r = null;
@@ -370,8 +450,12 @@ public class VRItemController : ItemController
             else
                 button = ExternalRightButtonToPulse;
 
-            var c = RightController.Find("Model");
+            var c = RightVRController?.modelParent?.GetChild(0);
             Transform t = null;
+#if CONTROLLERS_MODELS_AS_SINGLEMESH
+            t = c;
+            r = t?.GetComponent<MeshRenderer>();
+#else
             switch (button)
             {
                 case ControllerButton.RGrip:
@@ -382,6 +466,7 @@ public class VRItemController : ItemController
                         if (r != null)
                             RGrips.Add(r);
                     }
+
                     break;
                 case ControllerButton.LGrip:
                     t = c.Find("lgrip");
@@ -391,6 +476,7 @@ public class VRItemController : ItemController
                         if (r != null)
                             RGrips.Add(r);
                     }
+
                     break;
                 case ControllerButton.Grip:
                     t = c.Find("rgrip");
@@ -400,6 +486,7 @@ public class VRItemController : ItemController
                         if (r != null)
                             RGrips.Add(r);
                     }
+
                     t = c.Find("lgrip");
                     if (t != null)
                     {
@@ -407,6 +494,7 @@ public class VRItemController : ItemController
                         if (r != null)
                             RGrips.Add(r);
                     }
+
                     t = c.Find("handgrip");
                     if (t != null)
                     {
@@ -414,6 +502,7 @@ public class VRItemController : ItemController
                         if (r != null)
                             RGrips.Add(r);
                     }
+
                     break;
                 case ControllerButton.Pad:
                     t = c.Find("trackpad");
@@ -434,6 +523,7 @@ public class VRItemController : ItemController
                                     RPads.Add(r);
                         }
                     }
+
                     break;
                 case ControllerButton.Trigger:
                     t = c.Find("trigger");
@@ -443,6 +533,7 @@ public class VRItemController : ItemController
                         if (r != null)
                             RTriggers.Add(r);
                     }
+
                     break;
                 case ControllerButton.All:
 
@@ -463,6 +554,7 @@ public class VRItemController : ItemController
                                 RPads.Add(r);
                         }
                     }
+
                     t = c.Find("trigger");
                     if (t != null)
                     {
@@ -470,6 +562,7 @@ public class VRItemController : ItemController
                         if (r != null)
                             RTriggers.Add(r);
                     }
+
                     t = c.Find("rgrip");
                     if (t != null)
                     {
@@ -477,6 +570,7 @@ public class VRItemController : ItemController
                         if (r != null)
                             RGrips.Add(r);
                     }
+
                     t = c.Find("lgrip");
                     if (t != null)
                     {
@@ -484,6 +578,7 @@ public class VRItemController : ItemController
                         if (r != null)
                             RGrips.Add(r);
                     }
+
                     t = c.Find("handgrip");
                     if (t != null)
                     {
@@ -491,10 +586,12 @@ public class VRItemController : ItemController
                         if (r != null)
                             RGrips.Add(r);
                     }
+
                     break;
                 default:
                     return;
             }
+
             if (oldmat == null)
             {
                 if (RTriggers.Count > 0)
@@ -514,6 +611,7 @@ public class VRItemController : ItemController
                     }
                 }
             }
+
             if (oldmat != null)
             {
                 if (PadMaterial == null)
@@ -523,6 +621,7 @@ public class VRItemController : ItemController
                     PadMaterial.SetColor("_OutlineColor", PadColor);
                     PadMaterial.SetFloat("_Outline", 0.03f);
                 }
+
                 if (GripMaterial == null)
                 {
                     GripMaterial = new Material(Outline);
@@ -530,6 +629,7 @@ public class VRItemController : ItemController
                     GripMaterial.SetColor("_OutlineColor", GripColor);
                     GripMaterial.SetFloat("_Outline", 0.03f);
                 }
+
                 if (TriggerMaterial == null)
                 {
                     TriggerMaterial = new Material(Outline);
@@ -537,18 +637,21 @@ public class VRItemController : ItemController
                     TriggerMaterial.SetColor("_OutlineColor", TriggerColor);
                     TriggerMaterial.SetFloat("_Outline", 0.03f);
                 }
+
                 foreach (MeshRenderer mr in RPads)
                 {
                     var m = new Material[1];
                     m[0] = PadMaterial;
                     mr.materials = m;
                 }
+
                 foreach (MeshRenderer mr in RTriggers)
                 {
                     var m = new Material[1];
                     m[0] = TriggerMaterial;
                     mr.materials = m;
                 }
+
                 foreach (MeshRenderer mr in RGrips)
                 {
                     var m = new Material[1];
@@ -556,6 +659,7 @@ public class VRItemController : ItemController
                     mr.materials = m;
                 }
             }
+#endif
             rightpulsing = true;
         }
     }
@@ -577,25 +681,28 @@ public class VRItemController : ItemController
                 LeftButtonToPulse = ControllerButton.Nothing;
                 return;
             }
-
+#if !CONTROLLERS_MODELS_AS_SINGLEMESH
             foreach (MeshRenderer mr in LTriggers)
             {
                 var m = new Material[1];
                 m[0] = oldmat;
                 mr.materials = m;
             }
+
             foreach (MeshRenderer mr in LGrips)
             {
                 var m = new Material[1];
                 m[0] = oldmat;
                 mr.materials = m;
             }
+
             foreach (MeshRenderer mr in LPads)
             {
                 var m = new Material[1];
                 m[0] = oldmat;
                 mr.materials = m;
             }
+#endif
             LTriggers.Clear();
             LPads.Clear();
             LGrips.Clear();
@@ -608,30 +715,34 @@ public class VRItemController : ItemController
         {
             if (!rightpulsing)
                 return;
-            if (ExternalRightButtonToPulse != ControllerButton.Nothing && ExternalRightButtonToPulse == RightButtonToPulse)
+            if (ExternalRightButtonToPulse != ControllerButton.Nothing &&
+                ExternalRightButtonToPulse == RightButtonToPulse)
             {
                 RightButtonToPulse = ControllerButton.Nothing;
                 return;
             }
-
+#if !CONTROLLERS_MODELS_AS_SINGLEMESH
             foreach (MeshRenderer mr in RTriggers)
             {
                 var m = new Material[1];
                 m[0] = oldmat;
                 mr.materials = m;
             }
+
             foreach (MeshRenderer mr in RGrips)
             {
                 var m = new Material[1];
                 m[0] = oldmat;
                 mr.materials = m;
             }
+
             foreach (MeshRenderer mr in RPads)
             {
                 var m = new Material[1];
                 m[0] = oldmat;
                 mr.materials = m;
             }
+#endif
             RTriggers.Clear();
             RPads.Clear();
             RGrips.Clear();
@@ -643,10 +754,11 @@ public class VRItemController : ItemController
     }
 
 
-
     void PulseButton()
     {
-        if (LeftButtonToPulse != ControllerButton.Nothing || RightButtonToPulse != ControllerButton.Nothing || ExternalLeftButtonToPulse != ControllerButton.Nothing || ExternalRightButtonToPulse != ControllerButton.Nothing)
+        if (LeftButtonToPulse != ControllerButton.Nothing || RightButtonToPulse != ControllerButton.Nothing ||
+            ExternalLeftButtonToPulse != ControllerButton.Nothing ||
+            ExternalRightButtonToPulse != ControllerButton.Nothing)
         {
             t += Time.deltaTime / PulseTime;
 
@@ -673,6 +785,7 @@ public class VRItemController : ItemController
                         mr.materials = m;
                     }
                 }
+
                 foreach (MeshRenderer mr in LTriggers)
                 {
                     if (up)
@@ -694,6 +807,7 @@ public class VRItemController : ItemController
                         mr.materials = m;
                     }
                 }
+
                 foreach (MeshRenderer mr in LPads)
                 {
                     if (up)
@@ -716,6 +830,7 @@ public class VRItemController : ItemController
                     }
                 }
             }
+
             if (rightpulsing)
             {
                 foreach (MeshRenderer mr in RGrips)
@@ -739,6 +854,7 @@ public class VRItemController : ItemController
                         mr.materials = m;
                     }
                 }
+
                 foreach (MeshRenderer mr in RTriggers)
                 {
                     if (up)
@@ -760,6 +876,7 @@ public class VRItemController : ItemController
                         mr.materials = m;
                     }
                 }
+
                 foreach (MeshRenderer mr in RPads)
                 {
                     if (up)
@@ -782,6 +899,7 @@ public class VRItemController : ItemController
                     }
                 }
             }
+
             if (t >= 1)
             {
                 up = true;
@@ -921,6 +1039,7 @@ public class VRItemController : ItemController
                     StartPulse(ControllerButton.Trigger, hand);
                     break;
             }
+
             LeftVibrationController.ShortVibration();
         }
         else if (hand == ControllerHand.RightHand)
@@ -940,6 +1059,7 @@ public class VRItemController : ItemController
                     StartPulse(ControllerButton.Trigger, hand);
                     break;
             }
+
             RightVibrationController.ShortVibration();
         }
     }
@@ -969,6 +1089,7 @@ public class VRItemController : ItemController
                     }
                 }
             }
+
             /*else if (o.tag == "NPC" && toucheditemleft == o)
             {
                 o.GetComponentInParent<NPCController>().DisableOutline();
@@ -996,6 +1117,7 @@ public class VRItemController : ItemController
                     }
                 }
             }
+
             /*else if (o.tag == "NPC" && toucheditemright == o)
             {
                 o.GetComponentInParent<NPCController>().DisableOutline();
@@ -1005,7 +1127,12 @@ public class VRItemController : ItemController
         }
     }
 
-    private void LeftInteract(object sender, ClickedEventArgs e)
+    private void LeftInteract(object sender, PadEventArgs e)
+    {
+        LeftInteract(sender);
+    }
+
+    private void LeftInteract(object sender)
     {
         if (!leftoperating)
         {
@@ -1053,6 +1180,7 @@ public class VRItemController : ItemController
                                 GrabItem(gbs.Master, ControllerHand.LeftHand);
                         }
                     }
+
                     LeftInteracting = false;
                 }
                 /*else
@@ -1062,11 +1190,17 @@ public class VRItemController : ItemController
                         ClickItem(i, ControllerHand.LeftHand);
                 }*/
             }
+
             leftoperating = false;
         }
     }
 
-    private void RightInteract(object sender, ClickedEventArgs e)
+    private void RightInteract(object sender, PadEventArgs e)
+    {
+        RightInteract(sender);
+    }
+
+    private void RightInteract(object sender)
     {
         if (!rightoperating)
         {
@@ -1114,6 +1248,7 @@ public class VRItemController : ItemController
                                 GrabItem(gbs.Master, ControllerHand.RightHand);
                         }
                     }
+
                     RightInteracting = false;
                 }
                 /*else
@@ -1123,9 +1258,11 @@ public class VRItemController : ItemController
                         ClickItem(i, ControllerHand.RightHand);
                 }*/
             }
+
             rightoperating = false;
         }
     }
+
     private void GrabItem(GrabbableItem i, ControllerHand hand)
     {
         StopPulse(hand);
@@ -1140,6 +1277,7 @@ public class VRItemController : ItemController
             toucheditemright = g.transform;
         GrabItem(g, hand);
     }
+
     public override void GrabItem(GenericItem g, ControllerHand hand)
     {
         g.Interact(this);
@@ -1159,6 +1297,7 @@ public class VRItemController : ItemController
                     LeftItemSource.volume = gb.GrabVolume;
                     LeftItemSource.Play();
                 }
+
                 toucheditemleft = null;
             }
             else if (hand == ControllerHand.RightHand)
@@ -1173,6 +1312,7 @@ public class VRItemController : ItemController
                     RightItemSource.volume = gb.GrabVolume;
                     RightItemSource.Play();
                 }
+
                 toucheditemright = null;
             }
         }
@@ -1189,6 +1329,7 @@ public class VRItemController : ItemController
                     LeftItemSource.volume = DefaultGrabSoundVolume;
                     LeftItemSource.Play();
                 }
+
                 toucheditemleft = null;
                 LeftVibrationController.ShortVibration();
             }
@@ -1202,16 +1343,16 @@ public class VRItemController : ItemController
                     RightItemSource.volume = DefaultGrabSoundVolume;
                     RightItemSource.Play();
                 }
+
                 toucheditemright = null;
                 RightVibrationController.ShortVibration();
             }
         }
+
         g.SignalGrab();
-        if(OnGrab != null)
+        if (OnGrab != null)
             OnGrab.Invoke(g);
     }
-
-
 
 
     private void ClickItem(GenericItem i, ControllerHand hand)
@@ -1305,6 +1446,7 @@ public class VRItemController : ItemController
                 if (!force && OnDrop != null)
                     OnDrop.Invoke(i);
             }
+
             LeftInteracting = false;
             leftoperating = false;
         }
@@ -1363,17 +1505,18 @@ public class VRItemController : ItemController
                 if (!force && OnDrop != null)
                     OnDrop.Invoke(i);
             }
+
             RightInteracting = false;
             rightoperating = false;
         }
     }
 
-    void DropLeftItem(object sender, ClickedEventArgs e)
+    void DropLeftItem(InputAction.CallbackContext e)
     {
         DropLeftItem(false);
     }
 
-    void DropRightItem(object sender, ClickedEventArgs e)
+    void DropRightItem(InputAction.CallbackContext e)
     {
         DropRightItem(false);
     }
@@ -1408,6 +1551,7 @@ public class VRItemController : ItemController
                 }
             }
         }
+
         return null;
     }
 
@@ -1434,6 +1578,7 @@ public class VRItemController : ItemController
         else
             return new Quaternion(0, 0, 0, 0);
     }
+
     Quaternion CurrentRightItemRot()
     {
         if (ItemRightIndex != -1)
@@ -1441,6 +1586,7 @@ public class VRItemController : ItemController
         else
             return new Quaternion(0, 0, 0, 0);
     }
+
     GrabbableItem DisableItem(ControllerHand hand)
     {
         if (hand == ControllerHand.LeftHand && ItemLeftIndex != -1)
@@ -1467,6 +1613,7 @@ public class VRItemController : ItemController
                 else if (hand == ControllerHand.RightHand)
                     RightController.Find("Model").gameObject.SetActive(false);
             }
+
             if (t != null)
             {
                 var gi = t.GetComponent<GenericItem>();
@@ -1496,6 +1643,7 @@ public class VRItemController : ItemController
                 else if (hand == ControllerHand.RightHand)
                     RightController.Find("Model").gameObject.SetActive(false);
             }
+
             if (t != null)
             {
                 var gi = t.GetComponent<GenericItem>();
@@ -1531,6 +1679,7 @@ public class VRItemController : ItemController
                 else if (hand == ControllerHand.RightHand)
                     RightController.Find("Model").gameObject.SetActive(true);
             }
+
             g.SaveState();
         }
         else if (hand == ControllerHand.RightHand)
@@ -1546,8 +1695,10 @@ public class VRItemController : ItemController
                 else if (hand == ControllerHand.RightHand)
                     RightController.Find("Model").gameObject.SetActive(true);
             }
+
             g.SaveState();
         }
+
         return g;
     }
 
@@ -1574,7 +1725,6 @@ public class VRItemController : ItemController
             ExternalRightButtonToPulse = button;
             if (RightButtonToPulse == ControllerButton.Nothing)
                 StartPulse(ControllerHand.RightHand);
-
         }
     }
 
@@ -1600,6 +1750,7 @@ public class VRItemController : ItemController
                     ExternalLeftButtonToPulse = ControllerButton.Nothing;
                     break;
             }
+
             if (LeftButtonToPulse == ControllerButton.Nothing)
                 StartPulse(ControllerHand.LeftHand);
         }
@@ -1623,6 +1774,7 @@ public class VRItemController : ItemController
                     ExternalRightButtonToPulse = ControllerButton.Nothing;
                     break;
             }
+
             if (RightButtonToPulse == ControllerButton.Nothing)
                 StartPulse(ControllerHand.RightHand);
         }
@@ -1653,6 +1805,7 @@ public class VRItemController : ItemController
                 ExternalRightButtonToPulse = ControllerButton.Nothing;
                 break;
         }
+
         if (LeftButtonToPulse == ControllerButton.Nothing)
             StartPulse(ControllerHand.LeftHand);
         if (RightButtonToPulse == ControllerButton.Nothing)
@@ -1693,6 +1846,7 @@ public class VRItemController : ItemController
         }
         else
             StopPulse(ControllerHand.LeftHand);
+
         if (RightButtonToPulse != ControllerButton.Nothing)
         {
             button = RightButtonToPulse;

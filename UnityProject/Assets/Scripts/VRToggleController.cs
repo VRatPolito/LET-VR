@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(AudioSource))]
@@ -12,6 +14,8 @@ public class VRToggleController : VRUIElement
     [HideInInspector]
     public MyDelegate OnToggleSet, OnToggleUnSet, OnToggle;
     public bool CanUntoggle = false;
+
+    [SerializeField] private InputActionReference Trigger;
     public bool State { get; private set; }
 
     public bool ActiveFromTheBeginning;
@@ -29,7 +33,7 @@ public class VRToggleController : VRUIElement
             ToggleUnselected();
     }
 
-    public void Toggle(object sender, ClickedEventArgs e)
+    public void Toggle(InputAction.CallbackContext e)
     {
         if (!CanUntoggle && State)
             return;
@@ -88,7 +92,8 @@ public class VRToggleController : VRUIElement
     public override void ElementSelected()
     {
         if (c != null)
-            c.TriggerClicked += Toggle;
+            //c.TriggerClicked += Toggle;
+            Trigger.action.performed += Toggle;
         /*else if (fp != null)
             fp.OnButtonClicked += Toggle;
         else if (fpi != null)
@@ -113,7 +118,8 @@ public class VRToggleController : VRUIElement
         if (c != null && (OnToggle != null || OnToggleSet != null || OnToggleUnSet != null))
         {
             //OnToggleUnSelected(c);
-            c.TriggerClicked -= Toggle;
+            //c.TriggerClicked -= Toggle;
+            Trigger.action.performed -= Toggle;
         }
         /*else if (fp != null && (OnToggle != null || OnToggleSet != null || OnToggleUnSet != null))
         {

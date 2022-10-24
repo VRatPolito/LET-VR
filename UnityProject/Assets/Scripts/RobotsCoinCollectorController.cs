@@ -11,7 +11,7 @@ using BansheeGz.BGSpline.Curve;
 using DG.Tweening;
 using PrattiToolkit;
 using TMPro;
-using Unity.Entities;
+//using Unity.Entities;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -181,15 +181,15 @@ public class RobotsCoinCollectorController : MonoBehaviour
     private void Collect(Collider coin)
     {
         if (coin.tag != "Collectable") return;
-        GameObjectEntity otherGameObjectEntity = coin.GetComponent<GameObjectEntity>();
-        if (!otherGameObjectEntity) return;
+        var isCoin = coin.GetComponent<CoinRotator>();
+        if (!isCoin) return;
 
         Score++;
-        Destroy(coin.gameObject);
-        Debug.Log($"collect {coin.gameObject.name}");
+        Debug.Log($"collect {isCoin.gameObject.name}");
         _coinAudioSource.ForEach(source => source.PlayOneShot(source.clip, 0.6f));
         //var entityManager = World.Active.GetExistingManager<EntityManager>();
         //entityManager.DestroyEntity(otherGameObjectEntity.Entity);
+        Destroy(isCoin.gameObject);
     }
 
     #endregion
@@ -227,7 +227,7 @@ public class RobotsCoinCollectorController : MonoBehaviour
 
         while (IsCollecting)
         {
-            currPos = LocomotionManager.Instance.CurrentPlayerController.transform.position;
+            currPos = LocomotionManager.Instance.CurrentPlayerController.transform.position; //TODO: check if need to remove local position _LV
             leftControllerDistance = Mathf.Abs(LocomotionManager.Instance.LeftController.localPosition.x -
                                                    LocomotionManager.Instance.CameraEye.localPosition.x);
             rightControllerDistance = Mathf.Abs(LocomotionManager.Instance.RightController.localPosition.x -

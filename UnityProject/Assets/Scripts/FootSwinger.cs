@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using PrattiToolkit;
 using UnityEngine;
-using Valve.VR;
+using UnityEngine.InputSystem.XR;
+//using Valve.VR;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class FootSwinger : MonoBehaviour {
 
@@ -25,9 +28,6 @@ public class FootSwinger : MonoBehaviour {
     [SerializeField]
     [Tooltip("Foot Swing - Button\nOnly if Foot Swing Navigation is enabled, FootS wing Mode isn't No Buttons and leg controllers are available\n\nDefines which controller button is used to activate FootSwinger.  The button is the same on both controllers.\n\n(Default: Grip button)")]
     private ControllerButton _footSwingButton = ControllerButton.Grip;
-    [SerializeField]
-    [Tooltip("Foot Swing - Mode\nOnly if Foot Swing Navigation is enabled\n\nDetermines what is necessary to activate foot swing locomotion.\n\nBoth Buttons - Activate by pushing both buttons on both controllers.\n\nLeft Button - Activate by pushing the left controller button.\n\nRight Button - Activate by pushing the right controller button.\n\nOne Button - Activate by pushing either controller's button.\n\n(Default: One Button Same Controller)")]
-    private FootSwingMode _footSwingMode = FootSwingMode.NoButtons; 
     [SerializeField]
     [Tooltip("Foot Swing - Direction Mode\nDetermines what direction is used to calculate the movement.\n\nLeg Direction Rear Controllers - uses the average rotation of the leg controllers, supports must be placed behind the calfs.\n\nLeg Direction Side Controllers - uses the average rotation of the leg controllers, supports must be placed on the external side of the legs.\n\nArm Direction - uses the rotation of the arm controllers.\n\nHead Direction - uses the direction of the headset.\n\n(Default: Leg Direction Rear Controllers)")]
     private FootSwingDirectionMode _footSwingDirectionMode = FootSwingDirectionMode.LegDirectionRearControllers;
@@ -96,7 +96,7 @@ public class FootSwinger : MonoBehaviour {
     public CharacterController Target;
     [SerializeField]
     [Tooltip("Additiona tracker useful to track the decouple the movement direction from the limb average rotation.\n\n(Default: null)")]
-    public SteamVR_TrackedObject DirectionalTracker;
+    public TrackedPoseDriver DirectionalTracker;
 
     // Pause Variables
     [Header("Pause Variables")]
@@ -105,14 +105,6 @@ public class FootSwinger : MonoBehaviour {
     private bool _FootSwingingPaused = false;
 
     // Enums
-    public enum FootSwingMode
-    {
-        NoButtons,
-        BothButtons,
-        LeftButton,
-        RightButton,
-        OneButton
-    };
     
     public enum FootSwingDirectionMode
     {
@@ -120,14 +112,6 @@ public class FootSwinger : MonoBehaviour {
         LegDirectionsSideControllers,
         ArmDirection,
         HeadDirection
-    };
-
-    public enum ControllerButton
-    {
-        Menu,
-        Grip,
-        TouchPad,
-        Trigger
     };
 
         public enum LegTrackingDevice
@@ -164,30 +148,34 @@ public class FootSwinger : MonoBehaviour {
     private AnimationCurve inspectorCurve;
 
     //// Controller buttons ////
-    private Valve.VR.EVRButtonId steamVRFootSwingButton;
+    [SerializeField]
+    private InputManagement _input;
     private bool leftButtonPressed = false;
     private bool rightButtonPressed = false;
 
     //// Controllers ////
-    private SteamVR_ControllerManager controllerManager;
+    //private SteamVR_ControllerManager controllerManager;
+    [SerializeField]
     private GameObject leftlegDeviceGameObject;
+    [SerializeField]
     private GameObject rightlegDeviceGameObject;
-    private SteamVR_TrackedObject leftlegDeviceTrackedObj;
-    private SteamVR_TrackedObject rightlegDeviceTrackedObj;
-    private SteamVR_Controller.Device leftlegDevice;
+    private TrackedPoseDriver leftlegDeviceTrackedObj;
+    private TrackedPoseDriver rightlegDeviceTrackedObj;
+    /*private SteamVR_Controller.Device leftlegDevice;
     private SteamVR_Controller.Device rightlegDevice;
-    private int leftlegDeviceIndex;
-    private int rightlegDeviceIndex;    
+    /*private int leftlegDeviceIndex;
+    private int rightlegDeviceIndex;*/
+    [SerializeField]
     private GameObject leftControllerGameObject;
+    [SerializeField]
     private GameObject rightControllerGameObject;
-    private SteamVR_TrackedObject leftControllerTrackedObj;
-    private SteamVR_TrackedObject rightControllerTrackedObj;
-    private SteamVR_Controller.Device leftController;
-    private SteamVR_Controller.Device rightController;
-    private int leftControllerIndex;
-    private int rightControllerIndex;
+    private ActionBasedController leftController;
+    private ActionBasedController rightController;
+    /*private int leftControllerIndex;
+    private int rightControllerIndex;*/
 
     // GameObjects
+    [SerializeField]
     private GameObject headsetGameObject;
 
     // Camera Rig scaling
@@ -199,192 +187,204 @@ public class FootSwinger : MonoBehaviour {
 
     private void Awake()
     {
-        controllerManager = this.GetComponent<SteamVR_ControllerManager>();
-        leftControllerGameObject = controllerManager.left;
-        rightControllerGameObject = controllerManager.right;
-        leftControllerTrackedObj = leftControllerGameObject.GetComponent<SteamVR_TrackedObject>();
-        rightControllerTrackedObj = rightControllerGameObject.GetComponent<SteamVR_TrackedObject>();
+        //Debug.LogError("FootSwinger.cs hasn't been updated to XRInteractionToolkit yet");
+
     }
 
-    /****** INITIALIZATION ******/
+    /****** INITIALIZATION ******/ 
     void Initialize()
     {
-        // Find an assign components and objects		
-        if(controllerManager.objects.Length > 2)
-            leftlegDeviceGameObject = controllerManager.objects[2];
+        leftController = leftControllerGameObject.GetComponent<ActionBasedController>();
+        rightController = rightControllerGameObject.GetComponent<ActionBasedController>();
+        leftlegDeviceTrackedObj = leftlegDeviceGameObject.GetComponent<TrackedPoseDriver>();
+        rightlegDeviceTrackedObj = rightlegDeviceGameObject.GetComponent<TrackedPoseDriver>();
 
         if (leftlegDeviceGameObject != null)
         {
-            var controller = leftlegDeviceGameObject.transform.Find("Model");
-
-            if (_footSwingLegTrackingDevice == LegTrackingDevice.Controller)
-            {
-                var sc = leftlegDeviceGameObject.GetComponent<SphereCollider>();
-                if (sc != null)
-                    sc.enabled = false;
-                
-                if (_footSwingDirectionMode == FootSwingDirectionMode.LegDirectionsSideControllers)
-                {
-                    if (controller.childCount == 0)
-                        setleftcolorlater = true;
-                    else
-                    {
-                        for (int i = 0; i < controller.childCount; i++)
-                        {
-                            Transform t = controller.GetChild(i);
-                            var mr = t.GetComponent<MeshRenderer>();
-                            if (mr != null)
-                            {
-                                var m = mr.materials[0];
-                                Material m1 = new Material(m);
-                                m1.EnableKeyword("_EMISSION");
-                                m1.SetColor("_EmissionColor", LeftLegDeviceColor);
-                                m1.SetTexture("_EmissionMap", m1.GetTexture("_MainTex"));
-                                var mats = new Material[1];
-                                mats[0] = m1;
-                                mr.materials = mats;
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                var mr = controller.GetComponent<MeshRenderer>();
-                if (mr != null)
-                {
-                    var m = mr.materials[0];
-                    Material m1 = new Material(m);
-                    if (_footSwingDirectionMode == FootSwingDirectionMode.LegDirectionsSideControllers)
-                    {
-                        m1.EnableKeyword("_EMISSION");
-                        m1.SetColor("_EmissionColor", LeftLegDeviceColor);
-                        if (TrackerTexture != null)
-                        {
-                            m1.SetTexture("_EmissionMap", TrackerTexture);
-                            m1.SetTexture("_MainTex", TrackerTexture);
-                        }
-                        else
-                            m1.SetTexture("_EmissionMap", m1.GetTexture("_MainTex"));
-                    }
-                    else
-                    {
-                        if (TrackerTexture != null)
-                            m1.SetTexture("_MainTex", TrackerTexture);
-                    }
-                    var mats = new Material[1];
-                    mats[0] = m1;
-                    mr.materials = mats;
-                }
-                else
-                    setleftcolorlater = true;
-            }
-            leftlegDeviceTrackedObj = leftlegDeviceGameObject.GetComponent<SteamVR_TrackedObject>();
+            //var controller = leftlegDeviceGameObject.transform.Find("Model");
+            // if (_footSwingLegTrackingDevice == LegTrackingDevice.Controller)
+            // {
+            //     var sc = leftlegDeviceGameObject.GetComponent<SphereCollider>();
+            //     if (sc != null)
+            //         sc.enabled = false;
+            //     
+            //     if (_footSwingDirectionMode == FootSwingDirectionMode.LegDirectionsSideControllers)
+            //     {
+            //             if (controller != null)
+            //             {
+            //                 if (controller.childCount == 0)
+            //                     setleftcolorlater = true;
+            //                 else
+            //                 {
+            //                     for (int i = 0; i < controller.childCount; i++)
+            //                     {
+            //                         Transform t = controller.GetChild(i);
+            //                         var mr = t.GetComponent<MeshRenderer>();
+            //                         if (mr != null)
+            //                         {
+            //                             var m = mr.materials[0];
+            //                             Material m1 = new Material(m);
+            //                             m1.EnableKeyword("_EMISSION");
+            //                             m1.SetColor("_EmissionColor", LeftLegDeviceColor);
+            //                             m1.SetTexture("_EmissionMap", m1.GetTexture("_MainTex"));
+            //                             var mats = new Material[1];
+            //                             mats[0] = m1;
+            //                             mr.materials = mats;
+            //                         }
+            //                     }
+            //                 }
+            //             }
+            //     }
+            // }
+            // else
+            // {
+            //     var mr = controller.GetComponent<MeshRenderer>();
+            //     if (mr != null)
+            //     {
+            //         var m = mr.materials[0];
+            //         Material m1 = new Material(m);
+            //         if (_footSwingDirectionMode == FootSwingDirectionMode.LegDirectionsSideControllers)
+            //         {
+            //             m1.EnableKeyword("_EMISSION");
+            //             m1.SetColor("_EmissionColor", LeftLegDeviceColor);
+            //             if (TrackerTexture != null)
+            //             {
+            //                 m1.SetTexture("_EmissionMap", TrackerTexture);
+            //                 m1.SetTexture("_MainTex", TrackerTexture);
+            //             }
+            //             else
+            //                 m1.SetTexture("_EmissionMap", m1.GetTexture("_MainTex"));
+            //         }
+            //         else
+            //         {
+            //             if (TrackerTexture != null)
+            //                 m1.SetTexture("_MainTex", TrackerTexture);
+            //         }
+            //         var mats = new Material[1];
+            //         mats[0] = m1;
+            //         mr.materials = mats;
+            //     }
+            //     else
+            //         setleftcolorlater = true;
+            // }
+            leftlegDeviceTrackedObj = leftlegDeviceGameObject.GetComponent<TrackedPoseDriver>();
+            var model = GetComponentInParent<ControllersModelsLoaderOpenXR>().RetrieveModel("HTC Vive Tracker");
+            model.transform.parent = leftlegDeviceGameObject.transform;
+            model.transform.localPosition = Vector3.zero;
+            model.transform.rotation = Quaternion.Euler(0, 180, 0);;
         }
         
-            if (controllerManager.objects.Length > 2)
-                rightlegDeviceGameObject = controllerManager.objects[3];
+            /*if (controllerManager.objects.Length > 2)
+                rightlegDeviceGameObject = controllerManager.objects[3];*/
 
             if (rightlegDeviceGameObject != null)
             {
-                var controller = rightlegDeviceGameObject.transform.Find("Model");
+                // var controller = rightlegDeviceGameObject.transform.Find("Model");
+                //
+                // if (_footSwingLegTrackingDevice == LegTrackingDevice.Controller)
+                // {
+                //     var sc = rightlegDeviceGameObject.GetComponent<SphereCollider>();
+                //     if (sc != null)
+                //         sc.enabled = false;
+                //
+                //
+                //     if (_footSwingDirectionMode == FootSwingDirectionMode.LegDirectionsSideControllers)
+                //     {
+                //         if (controller != null)
+                //         {
+                //             if (controller.childCount == 0)
+                //                 setrightcolorlater = true;
+                //             else
+                //             {
+                //                 for (int i = 0; i < controller.childCount; i++)
+                //                 {
+                //                     Transform t = controller.GetChild(i);
+                //                     var mr = t.GetComponent<MeshRenderer>();
+                //                     if (mr != null)
+                //                     {
+                //                         var m = mr.materials[0];
+                //                         Material m1 = new Material(m);
+                //                         m1.EnableKeyword("_EMISSION");
+                //                         m1.SetColor("_EmissionColor", RightLegDeviceColor);
+                //                         m1.SetTexture("_EmissionMap", m1.GetTexture("_MainTex"));
+                //                         var mats = new Material[1];
+                //                         mats[0] = m1;
+                //                         mr.materials = mats;
+                //                     }
+                //                 }
+                //             }
+                //         }
+                //     }
+                // }
+                // else
+                // {
+                //     var mr = controller.GetComponent<MeshRenderer>();
+                //     if (mr != null)
+                //     {
+                //         var m = mr.materials[0];
+                //         Material m1 = new Material(m);
+                //         if (_footSwingDirectionMode == FootSwingDirectionMode.LegDirectionsSideControllers)
+                //         {
+                //             m1.EnableKeyword("_EMISSION");
+                //             m1.SetColor("_EmissionColor", RightLegDeviceColor);
+                //             if (TrackerTexture != null)
+                //             {
+                //                 m1.SetTexture("_EmissionMap", TrackerTexture);
+                //                 m1.SetTexture("_MainTex", TrackerTexture);
+                //             }
+                //             else
+                //                 m1.SetTexture("_EmissionMap", m1.GetTexture("_MainTex"));
+                //         }
+                //         else
+                //         {
+                //             if (TrackerTexture != null)
+                //                 m1.SetTexture("_MainTex", TrackerTexture);
+                //         }
+                //
+                //         var mats = new Material[1];
+                //         mats[0] = m1;
+                //         mr.materials = mats;
+                //     }
+                //     else
+                //         setrightcolorlater = true;
+                // }
 
-                if (_footSwingLegTrackingDevice == LegTrackingDevice.Controller)
-                {
-                    var sc = rightlegDeviceGameObject.GetComponent<SphereCollider>();
-                    if (sc != null)
-                        sc.enabled = false;
-               
-
-                    if (_footSwingDirectionMode == FootSwingDirectionMode.LegDirectionsSideControllers)
-                    {
-                        if (controller.childCount == 0)
-                            setrightcolorlater = true;
-                        else
-                        {
-                            for (int i = 0; i < controller.childCount; i++)
-                            {
-                                Transform t = controller.GetChild(i);
-                                var mr = t.GetComponent<MeshRenderer>();
-                                if (mr != null)
-                                {
-                                    var m = mr.materials[0];
-                                    Material m1 = new Material(m);
-                                    m1.EnableKeyword("_EMISSION");
-                                    m1.SetColor("_EmissionColor", RightLegDeviceColor);
-                                    m1.SetTexture("_EmissionMap", m1.GetTexture("_MainTex"));
-                                    var mats = new Material[1];
-                                    mats[0] = m1;
-                                    mr.materials = mats;
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    var mr = controller.GetComponent<MeshRenderer>();
-                    if (mr != null)
-                    {
-                        var m = mr.materials[0];
-                        Material m1 = new Material(m);
-                        if (_footSwingDirectionMode == FootSwingDirectionMode.LegDirectionsSideControllers)
-                        {
-                            m1.EnableKeyword("_EMISSION");
-                            m1.SetColor("_EmissionColor", RightLegDeviceColor);
-                            if (TrackerTexture != null)
-                            {
-                                m1.SetTexture("_EmissionMap", TrackerTexture);
-                                m1.SetTexture("_MainTex", TrackerTexture);
-                            }
-                            else
-                                m1.SetTexture("_EmissionMap", m1.GetTexture("_MainTex"));
-                        }
-                        else
-                        {
-                            if (TrackerTexture != null)
-                                m1.SetTexture("_MainTex", TrackerTexture);
-                        }
-
-                        var mats = new Material[1];
-                        mats[0] = m1;
-                        mr.materials = mats;
-                    }
-                    else
-                        setrightcolorlater = true;
-                }
-
-                rightlegDeviceTrackedObj = rightlegDeviceGameObject.GetComponent<SteamVR_TrackedObject>();
+                rightlegDeviceTrackedObj = rightlegDeviceGameObject.GetComponent<TrackedPoseDriver>();
+                var model = GetComponentInParent<ControllersModelsLoaderOpenXR>().RetrieveModel("HTC Vive Tracker");
+                model.transform.parent = rightlegDeviceTrackedObj.transform;
+                model.transform.localPosition = Vector3.zero;
+                model.transform.rotation = Quaternion.Euler(0, 180, 0);;
             }
        
         if (DirectionalTracker != null)
         {
-            var mr = DirectionalTracker.GetComponent<MeshRenderer>();
-            if (mr != null)
-            {
-                var m = mr.materials[0];
-                Material m1 = new Material(m);
-                m1.EnableKeyword("_EMISSION");
-                m1.SetColor("_EmissionColor", DirectionalDeviceColor);
-                if (TrackerTexture != null)
-                {
-                    m1.SetTexture("_EmissionMap", TrackerTexture);
-                    m1.SetTexture("_MainTex", TrackerTexture);
-                }
-                else
-                    m1.SetTexture("_EmissionMap", m1.GetTexture("_MainTex"));
-                
-                var mats = new Material[1];
-                mats[0] = m1;
-                mr.materials = mats;
-            }
-            else
-                setdirectionalcolorlater = true;
+            var model = GetComponentInParent<ControllersModelsLoaderOpenXR>().RetrieveModel("HTC Vive Tracker");
+            model.transform.parent = DirectionalTracker.transform;
+            model.transform.localPosition = Vector3.zero;
+            model.transform.rotation = Quaternion.Euler(0, 180, 0);;
+            // var mr = DirectionalTracker.GetComponent<MeshRenderer>();
+            // if (mr != null)
+            // {
+            //     var m = mr.materials[0];
+            //     Material m1 = new Material(m);
+            //     m1.EnableKeyword("_EMISSION");
+            //     m1.SetColor("_EmissionColor", DirectionalDeviceColor);
+            //     if (TrackerTexture != null)
+            //     {
+            //         m1.SetTexture("_EmissionMap", TrackerTexture);
+            //         m1.SetTexture("_MainTex", TrackerTexture);
+            //     }
+            //     else
+            //         m1.SetTexture("_EmissionMap", m1.GetTexture("_MainTex"));
+            //     
+            //     var mats = new Material[1];
+            //     mats[0] = m1;
+            //     mr.materials = mats;
+            // }
+            // else
+            //     setdirectionalcolorlater = true;
         }        
-                
-        headsetGameObject = GameObject.FindObjectOfType<SteamVR_Camera>().gameObject;
 
-        steamVRFootSwingButton = convertControllerButtonToSteamVRButton(footSwingButton);
 
         // Save the initial movement curve, in case it's switched off
         inspectorCurve = FootSwingControllerToMovementCurve;
@@ -401,6 +401,7 @@ public class FootSwinger : MonoBehaviour {
     }
 
     /***** FIXED UPDATE *****/
+   
     void FixedUpdate()
     {
         if (!initialized)
@@ -560,9 +561,6 @@ public class FootSwinger : MonoBehaviour {
                 cameraRigScaleModifier = this.transform.localScale.x;
             }
 
-            // Store controller button states
-            getControllerButtons();
-
             // Save the current controller positions for our use
             if (leftlegDeviceGameObject != null)
                 leftlegDeviceLocalPosition = leftlegDeviceGameObject.transform.localPosition;
@@ -602,9 +600,9 @@ public class FootSwinger : MonoBehaviour {
     {
 
         // Camera Rig checking
-        if (!this.GetComponent<SteamVR_ControllerManager>())
+        if (!this.GetComponent<UnityEngine.XR.Interaction.Toolkit.Inputs.InputActionManager>())
         {
-            Debug.LogError("FootSwinger.verifySettings():: FootSwinger is applied on a GameObject that is not a SteamVR CameraRig, or is a CameraRig without a SteamVR Controller Manager.  Please review the FootSwinger instructions.  FootSwinger will fail.");
+            Debug.LogError("FootSwinger.verifySettings():: FootSwinger is applied on a GameObject that is not an XR Origin, or is an XR Origin without an InputActionManager.  Please review the FootSwinger instructions.  FootSwinger will fail.");
         }
 
         // Check fixed time setting
@@ -630,27 +628,7 @@ public class FootSwinger : MonoBehaviour {
         // Initialize movement variables
         float movementAmount = 0f;
         Quaternion movementRotation = Quaternion.identity;
-        bool movedThisFrame = false;
-        
-       
-            switch (footSwingMode)
-            {
-                case FootSwingMode.NoButtons:
-                    movedThisFrame = swingNoButtons(ref movementAmount, ref movementRotation);
-                    break;
-                case FootSwingMode.BothButtons:
-                    movedThisFrame = swingBothButtons(ref movementAmount, ref movementRotation);
-                    break;
-                case FootSwingMode.RightButton:
-                    movedThisFrame = swingLeftRightButtons(ref movementAmount, ref movementRotation);
-                    break;
-                case FootSwingMode.LeftButton:
-                    movedThisFrame = swingLeftRightButtons(ref movementAmount, ref movementRotation);
-                    break;
-                case FootSwingMode.OneButton:
-                    movedThisFrame = swingOneButton(ref movementAmount, ref movementRotation);
-                    break;
-            }
+        bool movedThisFrame = swing(ref movementAmount, ref movementRotation);              
 
         if (movedThisFrame)
         {
@@ -677,7 +655,7 @@ public class FootSwinger : MonoBehaviour {
     }
 
     // Foot Swing when footSwingMode is NoButtons
-    bool swingNoButtons(ref float movement, ref Quaternion rotation)
+    bool swing(ref float movement, ref Quaternion rotation)
     {
         if (DirectionalTracker != null)
         {
@@ -737,213 +715,6 @@ public class FootSwinger : MonoBehaviour {
             movement = controllerMovement;
 
         return true;
-    }
-
-    // Foot Swing when footSwingMode is BothButtons
-    bool swingBothButtons(ref float movement, ref Quaternion rotation)
-    {
-        if (leftButtonPressed && rightButtonPressed)
-        {
-            if (DirectionalTracker != null)
-            {
-                //If the directional tracker is present, use its rotation
-                rotation = DirectionalTracker.transform.rotation * Quaternion.Euler(0, 180, 0);
-            }
-            else
-            {
-                // Otherwise the rotation is the average of the two controllers
-                rotation = determineAverageLegControllerRotation();
-            }
-
-            // Find the change in controller position since last Update()
-            float leftControllerChange = 0;
-            float rightControllerChange = 0;
-
-            float leftMovement = 0;
-            float rightMovement = 0;
-
-            if (FootSwingOnlyVerticalMovement)
-                leftControllerChange = Mathf.Abs(leftlegDevicePreviousLocalPosition.y - leftlegDeviceLocalPosition.y);
-            else
-                leftControllerChange = Vector3.Distance(leftlegDevicePreviousLocalPosition, leftlegDeviceLocalPosition);
-            if (FootSwingOnlyVerticalMovement)
-                rightControllerChange = Mathf.Abs(rightlegDevicePreviousLocalPosition.y - rightlegDeviceLocalPosition.y);
-            else
-                rightControllerChange = Vector3.Distance(rightlegDevicePreviousLocalPosition, rightlegDeviceLocalPosition);
-
-
-            // Calculate what camera rig movement the change should be converted to
-            leftMovement = calculateMovement(FootSwingControllerToMovementCurve, leftControllerChange, FootSwingControllerSpeedForMaxSpeed, footSwingMaxSpeed);
-            rightMovement = calculateMovement(FootSwingControllerToMovementCurve, rightControllerChange, FootSwingControllerSpeedForMaxSpeed, footSwingMaxSpeed);
-
-            // Both controllers are in use, so controller movement is the average of the two controllers' change times the both controller coefficient
-            float controllerMovement = (leftMovement + rightMovement) / 2 * FootSwingBothControllersCoefficient;
-
-            // If movingInertia is enabled, the higher of inertia or controller movement is used
-            if (movingInertia)
-            {
-                movement = movingInertiaOrControllerMovement(controllerMovement);
-            }
-            else
-            {
-                movement = controllerMovement;
-            }
-
-            return true;
-        }   
-        // If stopping inertia is enabled
-        else if (stoppingInertia && latestArtificialMovement != 0)
-        {
-
-            // The rotation is the cached one
-            rotation = latestArtificialRotation;
-            // The stopping movement is calculated using a curve, the latest movement, last frame's deltaTime, max speed, and the stop time for max speed
-            movement = inertiaMovementChange(stoppingInertiaCurve, latestArtificialMovement, previousTimeDeltaTime, footSwingMaxSpeed, stoppingInertiaTimeToStopAtMaxSpeed);
-
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    // Foot Swing when footSwingMode is LeftButton or RightButton
-    bool swingLeftRightButtons(ref float movement, ref Quaternion rotation)
-    {
-        if (footSwingMode == FootSwingMode.LeftButton && leftButtonPressed ||
-               footSwingMode == FootSwingMode.RightButton && rightButtonPressed)
-        {
-
-            if (DirectionalTracker != null)
-            {
-                //If the directional tracker is present, use its rotation
-                rotation = DirectionalTracker.transform.rotation * Quaternion.Euler(0, 180, 0);
-            }
-            else
-            {
-                // Otherwise the rotation is the average of the two controllers
-                rotation = determineAverageLegControllerRotation();
-            }
-
-            // Find the change in controller position since last Update()
-            float leftControllerChange = 0;
-                float rightControllerChange = 0;
-
-                float leftMovement = 0;
-                float rightMovement = 0;
-            
-                if (FootSwingOnlyVerticalMovement)
-                    leftControllerChange = Mathf.Abs(leftlegDevicePreviousLocalPosition.y - leftlegDeviceLocalPosition.y);
-                else
-                    leftControllerChange = Vector3.Distance(leftlegDevicePreviousLocalPosition, leftlegDeviceLocalPosition);
-                if (FootSwingOnlyVerticalMovement)
-                    rightControllerChange = Mathf.Abs(rightlegDevicePreviousLocalPosition.y - rightlegDeviceLocalPosition.y);
-                else
-                    rightControllerChange = Vector3.Distance(rightlegDevicePreviousLocalPosition, rightlegDeviceLocalPosition);
-
-                // Calculate what camera rig movement the change should be converted to
-                leftMovement = calculateMovement(FootSwingControllerToMovementCurve, leftControllerChange, FootSwingControllerSpeedForMaxSpeed, footSwingMaxSpeed);
-                rightMovement = calculateMovement(FootSwingControllerToMovementCurve, rightControllerChange, FootSwingControllerSpeedForMaxSpeed, footSwingMaxSpeed);
-
-                // Both controllers are in use, so controller movement is the average of the two controllers' change times the both controller coefficient
-                float controllerMovement = (leftMovement + rightMovement) / 2 * FootSwingBothControllersCoefficient;
-            
-                // If movingInertia is enabled, the higher of inertia or controller movement is used
-                if (movingInertia)
-                {
-                    movement = movingInertiaOrControllerMovement(controllerMovement);
-                }
-                else
-                {
-                    movement = controllerMovement;
-                }
-
-                return true;
-        }
-        // If stopping inertia is enabled
-        else if (stoppingInertia && latestArtificialMovement != 0)
-        {
-
-            // The rotation is the cached one
-            rotation = latestArtificialRotation;
-            // The stopping movement is calculated using a curve, the latest movement, last frame's deltaTime, max speed, and the stop time for max speed
-            movement = inertiaMovementChange(stoppingInertiaCurve, latestArtificialMovement, previousTimeDeltaTime, footSwingMaxSpeed, stoppingInertiaTimeToStopAtMaxSpeed);
-
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    // Foot Swing when footSwingMode is OneButton
-    bool swingOneButton(ref float movement, ref Quaternion rotation)
-    {
-        if (leftButtonPressed || rightButtonPressed)
-        {
-            if (DirectionalTracker != null)
-            {
-                //If the directional tracker is present, use its rotation
-                rotation = DirectionalTracker.transform.rotation * Quaternion.Euler(0, 180, 0);
-            }
-            else
-            {
-                // Otherwise the rotation is the average of the two controllers
-                rotation = determineAverageLegControllerRotation();
-            }
-
-            // Find the change in controller position since last Update()
-            float leftControllerChange = 0;
-            float rightControllerChange = 0;
-
-            float leftMovement = 0;
-            float rightMovement = 0;
-           
-            if (FootSwingOnlyVerticalMovement)
-                leftControllerChange = Mathf.Abs(leftlegDevicePreviousLocalPosition.y - leftlegDeviceLocalPosition.y);
-            else
-                leftControllerChange = Vector3.Distance(leftlegDevicePreviousLocalPosition, leftlegDeviceLocalPosition);
-            if (FootSwingOnlyVerticalMovement)
-                rightControllerChange = Mathf.Abs(rightlegDevicePreviousLocalPosition.y - rightlegDeviceLocalPosition.y);
-            else
-                rightControllerChange = Vector3.Distance(rightlegDevicePreviousLocalPosition, rightlegDeviceLocalPosition);
-
-            // Calculate what camera rig movement the change should be converted to
-            leftMovement = calculateMovement(FootSwingControllerToMovementCurve, leftControllerChange, FootSwingControllerSpeedForMaxSpeed, footSwingMaxSpeed);
-            rightMovement = calculateMovement(FootSwingControllerToMovementCurve, rightControllerChange, FootSwingControllerSpeedForMaxSpeed, footSwingMaxSpeed);
-
-            // Both controllers are in use, so controller movement is the average of the two controllers' change times the both controller coefficient
-            float controllerMovement = (leftMovement + rightMovement) / 2 * FootSwingBothControllersCoefficient;
-
-
-            if (movingInertia)
-            {
-                movement = movingInertiaOrControllerMovement(controllerMovement);
-            }
-            else
-            {
-                movement = controllerMovement;
-            }
-
-            return true;
-        }
-        // If stopping inertia is enabled
-        else if (stoppingInertia && latestArtificialMovement != 0)
-        {
-
-            // The rotation is the cached one
-            rotation = latestArtificialRotation;
-            // The stopping movement is calculated using a curve, the latest movement, last frame's deltaTime, max speed, and the stop time for max speed
-            movement = inertiaMovementChange(stoppingInertiaCurve, latestArtificialMovement, previousTimeDeltaTime, footSwingMaxSpeed, stoppingInertiaTimeToStopAtMaxSpeed);
-
-            return true;
-        }
-        else
-        {
-            return false;
-        }
     }
 
     float movingInertiaOrControllerMovement(float movement)
@@ -1038,160 +809,26 @@ public class FootSwinger : MonoBehaviour {
 
     /***** HELPER FUNCTIONS *****/
 
-    void getControllerButtons()
-    {
-        // Left
-        int newLeftControllerIndex = (int)leftControllerTrackedObj.index;
-
-        if (newLeftControllerIndex != -1 && newLeftControllerIndex != leftControllerIndex)
-        {
-            leftControllerIndex = newLeftControllerIndex;
-            leftController = SteamVR_Controller.Input(leftControllerIndex);
-        }
-
-        if (newLeftControllerIndex != -1 && leftController != null)
-        {
-            leftButtonPressed = leftController.GetPress(steamVRFootSwingButton);
-        }
-        else
-        {
-            leftButtonPressed = false;
-        }
-
-        //Right
-        int newRightControllerIndex = (int)rightControllerTrackedObj.index;
-
-        if (newRightControllerIndex != -1 && newRightControllerIndex != rightControllerIndex)
-        {
-            rightControllerIndex = newRightControllerIndex;
-            rightController = SteamVR_Controller.Input(rightControllerIndex);
-        }
-
-        if (newRightControllerIndex != -1 && rightController != null)
-        {
-            rightButtonPressed = rightController.GetPress(steamVRFootSwingButton);
-        }
-        else
-        {
-            rightButtonPressed = false;
-        }
-
-        // Leg Left
-        if (leftlegDeviceGameObject)
-        {
-            int newLeftLegDeviceIndex = (int)leftlegDeviceTrackedObj.index;
-
-            if (newLeftLegDeviceIndex != -1 && newLeftLegDeviceIndex != leftlegDeviceIndex)
-            {
-                leftlegDeviceIndex = newLeftLegDeviceIndex;
-                leftlegDevice = SteamVR_Controller.Input(leftlegDeviceIndex);
-            }
-        }
-
-        //Leg Right
-        if (rightlegDeviceGameObject)
-        {
-            int newRightLegDeviceIndex = (int)rightlegDeviceTrackedObj.index;
-
-            if (newRightLegDeviceIndex != -1 && newRightLegDeviceIndex != rightlegDeviceIndex)
-            {
-                rightlegDeviceIndex = newRightLegDeviceIndex;
-                rightlegDevice = SteamVR_Controller.Input(rightlegDeviceIndex);
-            }
-        }
-    }
-
-    // Assigns the real SteamVR button based on the user selection
-    Valve.VR.EVRButtonId convertControllerButtonToSteamVRButton(ControllerButton controllerButton)
-    {
-        EVRButtonId returnValue;
-
-        switch (controllerButton)
-        {
-            case ControllerButton.Grip:
-                returnValue = EVRButtonId.k_EButton_Grip;
-                break;
-            case ControllerButton.Menu:
-                returnValue = EVRButtonId.k_EButton_ApplicationMenu;
-                break;
-            case ControllerButton.TouchPad:
-                returnValue = EVRButtonId.k_EButton_SteamVR_Touchpad;
-                break;
-            case ControllerButton.Trigger:
-                returnValue = EVRButtonId.k_EButton_SteamVR_Trigger;
-                break;
-            default:
-                returnValue = EVRButtonId.k_EButton_Grip;
-                break;
-        }
-
-        return returnValue;
-    }
-
     // Returns the average of two Quaternions
     Quaternion averageRotation(Quaternion rot1, Quaternion rot2)
     {
         return Quaternion.Slerp(rot1, rot2, 0.5f);
     }
 
-    // Fade the screen to black
-   /* public void fadeOut()
-    {
-        // SteamVR_Fade is too fast in builds.  We compenstate for this here.
-#if UNITY_EDITOR
-        SteamVR_Fade.View(Color.black, FadeOutSec);
-#else
-				SteamVR_Fade.View(Color.black, FadeOutSec * .666f);
-#endif
-    }
-
-    // Fade the screen back to clear
-    public void fadeIn()
-    {
-        // SteamVR_Fade is too fast in builds.  We compenstate for this here.
-#if UNITY_EDITOR
-        SteamVR_Fade.View(Color.clear, FadeInSec);
-#else
-				SteamVR_Fade.View(Color.clear, FadeInSec * .666f);
-#endif
-    }
-
-    // Fade the screen to black
-    public static void fadeOut(float FadeOutSec)
-    {
-        // SteamVR_Fade is too fast in builds.  We compenstate for this here.
-#if UNITY_EDITOR
-        SteamVR_Fade.View(Color.black, FadeOutSec);
-#else
-				SteamVR_Fade.View(Color.black, FadeOutSec * .666f);
-#endif
-    }
-
-    // Fade the screen back to clear
-    public static void fadeIn(float FadeInSec)
-    {
-        // SteamVR_Fade is too fast in builds.  We compenstate for this here.
-#if UNITY_EDITOR
-        SteamVR_Fade.View(Color.clear, FadeInSec);
-#else
-				SteamVR_Fade.View(Color.clear, FadeInSec * .666f);
-#endif
-    }*/
-
     // Returns a Vector3 with only the X and Z components (Y is 0'd)
-    public static Vector3 vector3XZOnly(Vector3 vec)
+    static Vector3 vector3XZOnly(Vector3 vec)
     {
         return new Vector3(vec.x, 0f, vec.z);
     }
 
     // Returns a forward vector given the distance and direction
-    public static Vector3 getForwardXZ(float forwardDistance, Quaternion direction)
+    static Vector3 getForwardXZ(float forwardDistance, Quaternion direction)
     {
         Vector3 forwardMovement = direction * Vector3.forward * forwardDistance;
         return vector3XZOnly(forwardMovement);
     }
 
-    public Quaternion determineAverageLegControllerRotationPublic(out Quaternion left, out Quaternion right)
+    Quaternion determineAverageLegControllerRotationPublic(out Quaternion left, out Quaternion right)
     {
         left = leftlegDeviceGameObject.transform.rotation;
         right = rightlegDeviceGameObject.transform.rotation;
@@ -1230,7 +867,7 @@ public class FootSwinger : MonoBehaviour {
     }
 
 
-    public Quaternion determineAverageArmControllerRotationPublic(out Quaternion left, out Quaternion right)
+    Quaternion determineAverageArmControllerRotationPublic(out Quaternion left, out Quaternion right)
     {
         left = leftControllerGameObject.transform.rotation;
         right = rightControllerGameObject.transform.rotation;
@@ -1250,12 +887,12 @@ public class FootSwinger : MonoBehaviour {
                     return ArmRoot;
 
                 case FootSwingDirectionMode.HeadDirection:
-                    return SteamVR_Render.Top().transform.rotation;
+                    return headsetGameObject.transform.rotation;
 
                 case FootSwingDirectionMode.LegDirectionRearControllers:
 
                     // Both devices are present
-                    if (leftlegDevice != null && rightlegDevice != null)
+                    if (leftlegDeviceTrackedObj != null && rightlegDeviceTrackedObj != null)
                     {
                         var leftrot = leftlegDeviceGameObject.transform.rotation;
 
@@ -1268,7 +905,7 @@ public class FootSwinger : MonoBehaviour {
                     }
 
                     // Left device only
-                    else if (leftlegDevice != null && rightlegDevice == null)
+                    else if (leftlegDeviceTrackedObj != null && rightlegDeviceTrackedObj == null)
                     {
                         var leftrot = leftlegDeviceGameObject.transform.rotation;
                         if (footSwingLegTrackingDevice == LegTrackingDevice.Controller)
@@ -1278,7 +915,7 @@ public class FootSwinger : MonoBehaviour {
                     }
 
                     // Right device only
-                    else if (rightlegDevice != null && leftlegDevice == null)
+                    else if (rightlegDeviceTrackedObj != null && leftlegDeviceTrackedObj == null)
                     {
                         var rightrot = rightlegDeviceGameObject.transform.rotation;
                         if (footSwingLegTrackingDevice == LegTrackingDevice.Controller)
@@ -1298,7 +935,7 @@ public class FootSwinger : MonoBehaviour {
                 case FootSwingDirectionMode.LegDirectionsSideControllers:
 
                     // Both devices are present
-                    if (leftlegDevice != null && rightlegDevice != null)
+                    if (leftlegDeviceTrackedObj != null && rightlegDeviceTrackedObj != null)
                     {
                         var leftrot = leftlegDeviceGameObject.transform.rotation;
                         var rightrot = rightlegDeviceGameObject.transform.rotation;
@@ -1309,7 +946,7 @@ public class FootSwinger : MonoBehaviour {
                     }
 
                     // Left device only
-                    else if (leftlegDevice != null && rightlegDevice == null)
+                    else if (leftlegDeviceTrackedObj != null && rightlegDeviceTrackedObj == null)
                     {
                         var leftrot = leftlegDeviceGameObject.transform.rotation;
 
@@ -1326,7 +963,7 @@ public class FootSwinger : MonoBehaviour {
                         }
                     }
                     // Right device only
-                    else if (rightlegDevice != null && leftlegDevice == null)
+                    else if (rightlegDeviceTrackedObj != null && leftlegDeviceTrackedObj == null)
                     {
                         var rightrot = rightlegDeviceGameObject.transform.rotation;
 
@@ -1518,19 +1155,6 @@ public class FootSwinger : MonoBehaviour {
         }
     }
 
-    public FootSwingMode footSwingMode
-    {
-        get
-        {
-            return _footSwingMode;
-        }
-        set
-        {
-            controllerMovementResultHistory.Clear();
-            _footSwingMode = value;
-        }
-    }
-
     public FootSwingDirectionMode footSwingDirectionMode
     {
         get
@@ -1552,7 +1176,7 @@ public class FootSwinger : MonoBehaviour {
         }
         set
         {
-            steamVRFootSwingButton = convertControllerButtonToSteamVRButton(value);
+           // steamVRFootSwingButton = convertControllerButtonToSteamVRButton(value);
             _footSwingButton = value;
         }
     }

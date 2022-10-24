@@ -1,18 +1,18 @@
-﻿
-/*
+﻿/*
  * Custom template by Gabriele P.
  */
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.XR.CoreUtils;
 using UnityEngine;
 using VRStandardAssets.Utils;
+using UnityEngine.XR;
+
 
 namespace PrattiToolkit
 {
-
-
     public class OpenVR_GazeRaycaster : MonoBehaviour
     {
         #region Events
@@ -38,7 +38,6 @@ namespace PrattiToolkit
         #endregion
 
         #region Private Members and Constants
-
 
         private Transform _hmdTrackedObject = null;
         private Transform m_Camera;
@@ -77,21 +76,33 @@ namespace PrattiToolkit
 
         #region MonoBehaviour
 
+        //void Start()
+        //{
+        //    // dovrebbe essere per inizializzare i tracker dell'HMD valve e trovare la camera: provo a usare direttametne la main camera 
+        //    /* if (_hmdTrackedObject == null)
+        //     {
+        //         SteamVR_TrackedObject[] trackedObjects = FindObjectsOfType<SteamVR_TrackedObject>();
+        //         foreach (SteamVR_TrackedObject tracked in trackedObjects)
+        //         {
+        //             if (tracked.index == SteamVR_TrackedObject.EIndex.Hmd)
+        //             {
+        //                 _hmdTrackedObject = m_Camera = tracked.transform;
+        //                 break;
+        //             }
+        //         }
+        //     }*/
+        //    _hmdTrackedObject = FindObjectOfType<Camera>().transform;
+        //}
         void Start()
         {
-            if (_hmdTrackedObject == null)
+            //_hmdTrackedObject = m_Camera = 
+            var goXR = GetComponentInParent<XROrigin>();
+            if (goXR != null)
             {
-                SteamVR_TrackedObject[] trackedObjects = FindObjectsOfType<SteamVR_TrackedObject>();
-                foreach (SteamVR_TrackedObject tracked in trackedObjects)
-                {
-                    if (tracked.index == SteamVR_TrackedObject.EIndex.Hmd)
-                    {
-                        _hmdTrackedObject = m_Camera = tracked.transform;
-                        break;
-                    }
-                }
+                _hmdTrackedObject = m_Camera = goXR.GetComponentInChildren<Camera>().transform;
             }
         }
+
 
         void Update()
         {
@@ -122,7 +133,6 @@ namespace PrattiToolkit
             // Do the raycast forweards to see if we hit an interactive item
             foreach (var hit in Physics.RaycastAll(m_Camera.position, m_Camera.forward, m_RayLength, _checkingLayers))
             {
-
                 VRInteractiveItem
                     interactible =
                         hit.collider
@@ -198,7 +208,6 @@ namespace PrattiToolkit
         {
             if (m_CurrentInteractible != null)
                 m_CurrentInteractible.DoubleClick();
-
         }
 
         #endregion
@@ -210,7 +219,5 @@ namespace PrattiToolkit
         #region Coroutines
 
         #endregion
-
-
     }
 }

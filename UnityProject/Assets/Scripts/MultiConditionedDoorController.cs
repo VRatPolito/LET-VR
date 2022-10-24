@@ -7,7 +7,6 @@ using UnityEngine.Assertions;
 
 public class MultiConditionedDoorController : DoorController
 {
-
     public bool NeedBatteries
     {
         get { return _needBatteries; }
@@ -35,11 +34,7 @@ public class MultiConditionedDoorController : DoorController
     [SerializeField] protected List<ColliderEventsListener> _batteryTriggers;
     [SerializeField] protected bool _needBatteries = false;
     private bool[] _batteryInserted;
-
-    private bool[] _pulseEnabled;
-    private float _t;
-    private bool _up = false;
-
+    
     protected override void Awake()
     {
         Assert.IsNotNull(_batteryHolders);
@@ -47,7 +42,6 @@ public class MultiConditionedDoorController : DoorController
         Assert.IsNotNull(_batteryTargets);
         Assert.IsNotNull(_batteryTriggers);
         _batteryInserted = new bool[_batteryTargets.Count];
-        _pulseEnabled = new bool[_batteryTargets.Count];
         base.Awake();
         if (NeedBatteries)
             StartPulse();
@@ -56,11 +50,11 @@ public class MultiConditionedDoorController : DoorController
             b.OnTriggerEnterAction += c =>
             {
                 if (!NeedBatteries || !PlayerInRange || c.tag != "Item") return;
-                
+
                 var i = GetBatteryIndex(b);
                 if (c.gameObject == _batteries[i])
                 {
-                     var g = c.GetComponent<GenericItem>();
+                    var g = c.GetComponent<GenericItem>();
 
                     if (g._hand == ControllerHand.Invalid)
                         return;
@@ -70,30 +64,27 @@ public class MultiConditionedDoorController : DoorController
                         g.Player.RightController.GetComponent<VibrationController>().ShortVibration();
 
                     ((VRItemController)g.Player).OnDrop += ItemDropped;
-
-                    var m1 = _batteryHolders[i].materials[0];
-                    var col = m1.GetColor("_OutlineColor");
-                    m1.SetColor("_OutlineColor", new Color(col.r, col.g, col.b, 1));
-                    var m = new Material[1];
-                    m[0] = m1;
-                    _batteryHolders[i].materials = m;
-                    _pulseEnabled[i] = false;
+                    
+                    _batteryHolders[i].GetComponent<QuickOutline>().enabled = true;
+                    _batteryHolders[i].GetComponent<QuickOutline>().Blink = false;
                 }
             };
         }
+
         foreach (var b in _batteryTriggers)
         {
             b.OnTriggerExitAction += c =>
-        {
-            if (!NeedBatteries || !PlayerInRange || c.tag != "Item") return;
-            
-            var i = GetBatteryIndex(b);
-            if (c.gameObject == _batteries[i])
+            {
+                if (!NeedBatteries || !PlayerInRange || c.tag != "Item") return;
+
+                var i = GetBatteryIndex(b);
+                if (c.gameObject == _batteries[i])
                 {
-                (LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>()).OnDrop -= ItemDropped;
-                StartPulse(i);
+                    (LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>()).OnDrop -=
+                        ItemDropped;
+                    StartPulse(i);
                 }
-        };
+            };
         }
     }
 
@@ -109,6 +100,7 @@ public class MultiConditionedDoorController : DoorController
                 NeedBatteries = false;
                 StopPulse();
             }
+
             var g = _batteries[i].GetComponent<GenericItem>();
             g.GetComponent<Rigidbody>().isKinematic = true;
             g.CanInteract(false, LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>());
@@ -122,13 +114,13 @@ public class MultiConditionedDoorController : DoorController
 
     private void StopPulse()
     {
-        for (int i = 0; i < _pulseEnabled.Length; i++)
+        for (int i = 0; i < _batteries.Count; i++)
             StopPulse(i);
     }
 
     private void StartPulse()
     {
-        for (int i = 0; i < _pulseEnabled.Length; i++)
+        for (int i = 0; i < _batteries.Count; i++)
             StartPulse(i);
     }
 
@@ -170,78 +162,15 @@ public class MultiConditionedDoorController : DoorController
         return true;
     }
 
-    protected override void Update()
-    {
-        base.Update();
-        Pulse();
-    }
-
     public void StartPulse(int i)
     {
-        if (_pulseEnabled[i])
-            StopPulse(i);
-
-        _pulseEnabled[i] = true;
+        _batteryHolders[i].GetComponent<QuickOutline>().enabled = true;
+        _batteryHolders[i].GetComponent<QuickOutline>().Blink = true;
     }
+
     public void StopPulse(int i)
     {
-        var b = _batteryHolders[i];
-        var m1 = b.materials[0];
-        var c = m1.GetColor("_OutlineColor");
-        m1.SetColor("_OutlineColor", new Color(c.r, c.g, c.b, 0));
-        var m = new Material[1];
-        m[0] = m1;
-        b.materials = m;
-        _pulseEnabled[i] = false;
+        _batteryHolders[i].GetComponent<QuickOutline>().enabled = false;
+        _batteryHolders[i].GetComponent<QuickOutline>().Blink = false;
     }
-
-    void Pulse()
-    {
-            for (int i = 0; i < _batteryHolders.Count; i++)
-            {
-            if (_pulseEnabled[i])
-                {
-                    if (_batteryInserted[i])
-                    {
-                        var m1 = _batteryHolders[i].materials[0];
-                        var c = m1.GetColor("_OutlineColor");
-                        m1.SetColor("_OutlineColor", new Color(c.r, c.g, c.b, 0));
-                        var m = new Material[1];
-                        m[0] = m1;
-                        _batteryHolders[i].materials = m;
-                        _pulseEnabled[i] = false;
-                    }
-                    else if (_up)
-                    {
-                        _t += Time.deltaTime / 0.5f;
-                        var m1 = _batteryHolders[i].materials[0];
-                        var c = m1.GetColor("_OutlineColor");
-                        m1.SetColor("_OutlineColor", new Color(c.r, c.g, c.b, Mathf.Lerp(0, 1, _t)));
-                        var m = new Material[1];
-                        m[0] = m1;
-                        _batteryHolders[i].materials = m;
-                        if (_t >= 1)
-                        {
-                            _up = false;
-                            _t = 0;
-                        }
-                    }
-                    else
-                    {
-                        _t += Time.deltaTime / 0.5f;
-                        var m1 = _batteryHolders[i].materials[0];
-                        var c = m1.GetColor("_OutlineColor");
-                        m1.SetColor("_OutlineColor", new Color(c.r, c.g, c.b, Mathf.Lerp(1, 0, _t)));
-                        var m = new Material[1];
-                        m[0] = m1;
-                        _batteryHolders[i].materials = m;
-                        if (_t >= 1)
-                        {
-                            _up = true;
-                            _t = 0;
-                        }
-                    }
-                }
-            }
-        }
-    }
+}

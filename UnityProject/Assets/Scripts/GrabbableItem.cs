@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.InputSystem;
 //public enum ItemHand { Left, Right, Any };
 public abstract class GrabbableItem : MonoBehaviour
 {
@@ -55,6 +57,7 @@ public abstract class GrabbableItem : MonoBehaviour
 
     public virtual void Initialize()
     {
+        Debug.LogError("GrabbableItem not updated to XRtoolkit yet");
         if (setupdone && !initialized)
             initialized = true;
     }
@@ -113,9 +116,10 @@ public abstract class GrabbableItem : MonoBehaviour
         Initialize();
     }
 
-    public abstract void ClickButton(object sender, ClickedEventArgs e);
+    //done substitute with action toolkit 
+    public abstract void ClickButton(object sender, PadEventArgs arg2);
 
-    public abstract void UnClickButton(object sender, ClickedEventArgs e);
+    public abstract void UnClickButton(object sender);
 
     internal void EnableItem()
     {

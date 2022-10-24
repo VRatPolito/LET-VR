@@ -2,24 +2,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.InputSystem;
 
 public class GenericItemSlave : MonoBehaviour
 {
     [HideInInspector]
     public GenericItem Master;
-
+    
     public void Interact(ItemController c)
     {
         Master.Interact(this, c);
     }
 
-    public void ClickButton(object sender, ClickedEventArgs e)
+    //done update to action 
+    public void ClickButton(object arg1, PadEventArgs arg2)
     {
         if (Master != null)
-            Master.ClickButton(this);
+            Master.ClickButton(this, arg2);
     }
 
-    public void UnClickButton(object sender, ClickedEventArgs e)
+    public void UnClickButton(object arg1)
     {
         if (Master != null)
             Master.UnClickButton(this);

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 577d091792144ac4f9ce86698aee1350, type: 3}
+  m_Name: ControllerModelsBindings
+  m_EditorClassIdentifier: 
+  _loadSteamVRPathFromConfigFile: 0
+  modelPathBindings:
+  - ControllerName: HTC Vive Controller
+    ModelName: vr_controller_vive_1_5
+    LeftRightSameModel: 1
+    PositionOffset: {x: 0, y: 0, z: 0}
+    RotationOffset: {x: 0, y: 0, z: 0}
+  - ControllerName: Oculus Touch Controller
+    ModelName: oculus_quest2_controller
+    LeftRightSameModel: 0
+    PositionOffset: {x: 0, y: 0, z: 0}
+    RotationOffset: {x: 0, y: 0, z: 0}
+  - ControllerName: HTC Vive Tracker
+    ModelName: vr_tracker_vive_1_0
+    LeftRightSameModel: 1
+    PositionOffset: {x: 0, y: 0, z: 0}
+    RotationOffset: {x: 0, y: 0, z: 0}

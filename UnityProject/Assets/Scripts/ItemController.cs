@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.InputSystem;
 public enum ItemControllerType { VR, FPS };
 public enum ControllerHand { LeftLeg, RightLeg, LeftHand, RightHand, Invalid };
 
@@ -29,10 +32,14 @@ public class ItemController : MonoBehaviour
     public bool LeftInteracting, RightInteracting = false;
     [HideInInspector]
     public bool rightoperating, leftoperating;
+    protected InputManagement _inputManager;
+
+    public InputManagement InputManager => _inputManager;
 
     // Use this for initialization
     public virtual void Start()
     {
+        _inputManager = GetComponent<InputManagement>();
         BlipSource = GetComponent<AudioSource>();
         RightItemSource = RightController.GetComponent<AudioSource>();
         LeftItemSource = LeftController.GetComponent<AudioSource>();
@@ -148,9 +155,31 @@ public class ItemController : MonoBehaviour
         DropItem(ControllerHand.LeftHand, true);
         DropItem(ControllerHand.RightHand, true);
     }
-
-
-    public void RightDropPressed(object sender, ClickedEventArgs e)
+    public void RightDropPressed(object sender, PadEventArgs e)
+    {
+        RightDropPressed(sender);
+    }
+    public void RightDropPressed(object sender)
+     {
+         if (ItemRight != null && !RightInteracting)
+         {
+             RightInteracting = true;
+             DropItem(ControllerHand.RightHand, false);
+         }
+    }
+    public void LeftDropPressed(object sender, PadEventArgs e)
+    {
+        LeftDropPressed(sender);
+    }
+    public void LeftDropPressed(object sender)
+      {
+          if (ItemLeft != null && !LeftInteracting)
+          {
+              LeftInteracting = true;
+              DropItem(ControllerHand.LeftHand, false);
+          }
+      }
+    /*public void RightDropPressed(InputAction.CallbackContext obj)
     {
         if (ItemRight != null && !RightInteracting)
         {
@@ -158,12 +187,12 @@ public class ItemController : MonoBehaviour
             DropItem(ControllerHand.RightHand, false);
         }
     }
-    public void LeftDropPressed(object sender, ClickedEventArgs e)
+    public void LeftDropPressed(InputAction.CallbackContext obj)
     {
         if (ItemLeft != null && !LeftInteracting)
         {
             LeftInteracting = true;
             DropItem(ControllerHand.LeftHand, false);
         }
-    }
+    }*/
 }

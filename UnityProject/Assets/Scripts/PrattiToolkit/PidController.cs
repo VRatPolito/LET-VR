@@ -1,8 +1,44 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 namespace PrattiToolkit
 {
+    public class SimplePID
+    {
+        float integral = 0;
+        private float deriv;
+        float lastError = 0;
+        public float LastError => lastError;
+        private PIDPars _pidPars;
+
+        private float outValue = 0;
+        private float newOutValue = 0;
+        private float _outValueVelocity = 0;
+        private float present;
+
+        public SimplePID(PIDPars pars)
+        {
+            this._pidPars= pars;
+        }
+
+        public float UpdatePars(float setpoint, float actual, float timeFrame)
+        {
+            present = setpoint - actual;
+            integral += present * timeFrame;
+            deriv = (present - lastError) / timeFrame;
+            lastError = present;
+            newOutValue = Mathf.Clamp(present * _pidPars.Kp + integral * _pidPars.Ki + deriv * _pidPars.Kd, _pidPars.minout, _pidPars.maxout);
+            outValue = _pidPars.smoothing > 0 ? Mathf.SmoothDamp(outValue, newOutValue, ref _outValueVelocity, _pidPars.smoothing) : newOutValue;
+            return outValue;
+        }
+
+        public void resetValues()
+        {
+            integral = 0;
+            lastError = 0;
+        }
+    }
+
     public class PidController3Axis
     {
 
@@ -184,4 +220,5 @@ namespace PrattiToolkit
             return variableToClamp;
         }
     }
+
 }

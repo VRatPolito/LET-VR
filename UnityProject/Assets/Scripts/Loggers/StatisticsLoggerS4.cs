@@ -1,7 +1,7 @@
-﻿
-/*
+﻿/*
  * Custom template by Gabriele P.
  */
+
 using System.Collections;
 using System.Collections.Generic;
 using PrattiToolkit;
@@ -19,10 +19,12 @@ public class StatisticsLoggerS4 : StatisticsLoggerBase
     #endregion
 
     #region Private Members and Constants
+
     private float _timeStart, _timeStop;
     private bool _dynamicAgility = false, _stationaryAgility = false, _evasion = false;
     private Vector3 _stopPos = Vector3.negativeInfinity;
     private int _numObsColl = 0;
+
     #endregion
 
     #region Properties
@@ -38,6 +40,7 @@ public class StatisticsLoggerS4 : StatisticsLoggerBase
         _dynamicAgility = true;
         _prevpos = LocomotionManager.Instance.CurrentPlayerController.position;
     }
+
     public void StopLogDynamicAgility()
     {
         _dynamicAgility = false;
@@ -48,7 +51,7 @@ public class StatisticsLoggerS4 : StatisticsLoggerBase
             "" + _numObsColl
         };
         WriteToCSV("DA", values, 1);
-        StopMasterLog();        
+        StopMasterLog();
     }
 
     public void StartLogStationaryAgility()
@@ -62,7 +65,7 @@ public class StatisticsLoggerS4 : StatisticsLoggerBase
         _stationaryAgility = false;
         var NumHits = Scenario4Manager.Instance.HeadShooterHits;
         var values = new List<string>
-        { 
+        {
             "" + NumHits
         };
         WriteToCSV("SA", values, 2);
@@ -92,8 +95,6 @@ public class StatisticsLoggerS4 : StatisticsLoggerBase
         if (_dynamicAgility)
         {
             _numObsColl++;
-            LocomotionManager.Instance.LeftController.GetComponent<VibrationController>().ShortVibration(.7f);
-            LocomotionManager.Instance.RightController.GetComponent<VibrationController>().ShortVibration(.7f);
         }
     }
 

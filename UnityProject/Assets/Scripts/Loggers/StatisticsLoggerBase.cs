@@ -306,7 +306,7 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
                 "" + _righthandrotations[i].z
             };
 
-            if (LocomotionManager.Instance.Locomotion == LocomotionTechniqueType.WalkInPlace)
+           /* if (LocomotionManager.Instance.Locomotion == LocomotionTechniqueType.WalkInPlace)
             {
                 values.Add("" + _dirtrackpositions[i].x);
                 values.Add("" + _dirtrackpositions[i].y);
@@ -330,7 +330,7 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
                 values.Add("" + _rightlegrotations[i].z);
             }
             else
-            {
+            {*/
                 values.Add("");
                 values.Add("");
                 values.Add("");
@@ -353,7 +353,7 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
                 values.Add("");
                 values.Add("");
                 values.Add("");
-            }
+           /* }*/
 
             if (_masterlogtype == "C")
             {
@@ -409,7 +409,7 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
             _lefthandrotations.Add(LocomotionManager.Instance.LeftController.localEulerAngles);
             _righthandpositions.Add(LocomotionManager.Instance.RightController.localPosition);
             _righthandrotations.Add(LocomotionManager.Instance.RightController.localEulerAngles);
-            if (LocomotionManager.Instance.Locomotion == LocomotionTechniqueType.WalkInPlace)
+           /* if (LocomotionManager.Instance.Locomotion == LocomotionTechniqueType.WalkInPlace)
             {
                 _dirtrackpositions.Add(LocomotionManager.Instance.DirectionalTracker.localPosition);
                 _dirtrackrotations.Add(LocomotionManager.Instance.DirectionalTracker.localEulerAngles);
@@ -417,7 +417,7 @@ public abstract class StatisticsLoggerBase : MonoBehaviour, IStatisticsLogger
                 _leftlegrotations.Add(LocomotionManager.Instance.LeftTracker.localEulerAngles);
                 _rightlegpositions.Add(LocomotionManager.Instance.RightTracker.localPosition);
                 _rightlegrotations.Add(LocomotionManager.Instance.RightTracker.localEulerAngles);
-            }
+            }*/
         }
     }
 

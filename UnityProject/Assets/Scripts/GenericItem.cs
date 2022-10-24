@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using PrattiToolkit;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.InputSystem;
 
-public enum ItemCodes { Generic };
+public enum ItemCodes
+{
+    Generic
+};
 
-public class GenericItem : MonoBehaviour {
-
-    
+public class GenericItem : MonoBehaviour
+{
     public virtual void Interact(GenericItemSlave slave, ItemController c)
     {
         throw new NotImplementedException();
@@ -27,60 +32,75 @@ public class GenericItem : MonoBehaviour {
         EnableOutline(c);
     }
 
-    public virtual void ClickButton(object sender)
+    public virtual void ClickButton(object arg1, PadEventArgs arg2)
     {
         throw new NotImplementedException();
     }
 
-    public virtual void UnClickButton(object sender)
+    public virtual void UnClickButton(object arg1)
     {
         throw new NotImplementedException();
     }
 
     public bool CanInteractFromStart = true;
     bool _CanInteract;
-    [HideInInspector]
-    public bool outlined = false;
+    [HideInInspector] public bool outlined = false;
     public bool IsKinematic = false;
-    [HideInInspector]
-    public Transform InitialParent;
-    [HideInInspector]
-    public Vector3 prevpos;
-    [HideInInspector]
-    public Vector3 currvelocity;
-    [HideInInspector]
-    public Vector3 direction;
+    [HideInInspector] public Transform InitialParent;
+    [HideInInspector] public Vector3 prevpos;
+    [HideInInspector] public Vector3 currvelocity;
+    [HideInInspector] public Vector3 direction;
     Rigidbody rbody;
     public List<Transform> Pieces;
-    [HideInInspector]
-    public bool ItemActive = false;
-    public enum RotationAxis { X, Y, Z };
-    [HideInInspector]
-    public Transform SeekTarget;
+    [HideInInspector] public bool ItemActive = false;
+    
+    public enum RotationAxis
+    {
+        X,
+        Y,
+        Z
+    };
+
+    [HideInInspector] public Transform SeekTarget;
     public GenericItemSlave Slave;
     internal ItemController Player;
     internal ControllerHand _hand = ControllerHand.Invalid;
-    [SerializeField]
-    internal bool _grabSound = true;
+    [SerializeField] internal bool _grabSound = true;
 
-    [HideInInspector]
-    public Vector3 startParentPosition;
-    [HideInInspector]
-    public Quaternion startParentRotationQ;
-    [HideInInspector]
-    public Vector3 startChildPosition;
-    [HideInInspector]
-    public Quaternion startChildRotationQ;
+    [HideInInspector] public Vector3 startParentPosition;
+    [HideInInspector] public Quaternion startParentRotationQ;
+    [HideInInspector] public Vector3 startChildPosition;
+    [HideInInspector] public Quaternion startChildRotationQ;
+
+    private List<QuickOutline> _outline = new List<QuickOutline>();
 
     [Serializable]
-    public class InteractEvent : UnityEvent<ItemController, ControllerHand> { }
+    public class InteractEvent : UnityEvent<ItemController, ControllerHand>
+    {
+    }
 
     public InteractEvent OnInteract, OnGrab, OnDrop;
+
+    public virtual void Awake()
+    {
+        _outline.Add(Slave != null ? Slave.GetOrAddComponent<QuickOutline>() : this.GetOrAddComponent<QuickOutline>());
+        foreach (var piece in Pieces)
+        {
+            _outline.Add(piece.GetOrAddComponent<QuickOutline>());
+        }
+
+        foreach (var ol in _outline)
+        {
+            ol.OutlineColor = Grabbable ? Color.yellow : Color.white;
+            ol.enabled = false;
+        }
+        
+    }
 
     // Use this for initialization
     public virtual void Start()
     {
-        if(Slave != null)
+        if (Slave != null)
         {
             Slave.Master = this;
             prevpos = Slave.transform.position;
@@ -93,6 +113,7 @@ public class GenericItem : MonoBehaviour {
             InitialParent = transform.parent;
             rbody = GetComponent<Rigidbody>();
         }
+
         if (CanInteractFromStart)
             CanInteract(true, null);
         else
@@ -100,8 +121,9 @@ public class GenericItem : MonoBehaviour {
     }
 
     // Update is called once per frame
-    public virtual void Update () {
-	}
+    public virtual void Update()
+    {
+    }
 
     public virtual void EnablePhysics()
     {
@@ -133,177 +155,64 @@ public class GenericItem : MonoBehaviour {
 
     public virtual void EnableOutline(ItemController c)
     {
-        Material[] mts = null;
-        if (Slave == null)
-        {
-            var m = GetComponent<MeshRenderer>();
-            if (m != null)
-                mts = m.materials;
-        }
-
-        else
-        {
-            var m = Slave.GetComponent<MeshRenderer>();
-            if(m != null)
-                mts = m.materials;
-        }
-
-        Color col;
-        if (mts != null)
-        {
-            foreach (Material m in mts)
-            {
-                if (Grabbable)
-                    col = Color.yellow;
-                else
-                    col = Color.white;
-                col.a = 255;
-                m.SetColor("_OutlineColor", col);
-            }
-        }
-
-        foreach (Transform t in Pieces)
-        {
-            var mat = t.GetComponent<MeshRenderer>();
-            if (mat != null)
-                mts = mat.materials;
-            foreach (Material m in mts)
-            {
-                if (Grabbable)
-                    col = Color.yellow;
-                else
-                    col = Color.white;
-                col.a = 255;
-                m.SetColor("_OutlineColor", col);
-            }
-        }
-        outlined = true;
+        foreach (var ol in _outline) 
+                ol.enabled = outlined = true;
     }
 
     public virtual void DisableOutline(ItemController c)
     {
-        Material[] mts = null;
-        if (Slave == null)
-        {
-            var m = GetComponent<MeshRenderer>();
-            if (m != null)
-                mts = m.materials;
-        }
-
-        else
-        {
-            var m = Slave.GetComponent<MeshRenderer>();
-            if (m != null)
-                mts = m.materials;
-        }
-
-        Color col;
-        if (mts != null)
-        {
-            foreach (Material m in mts)
-            {
-                if (Grabbable)
-                    col = Color.yellow;
-                else
-                    col = Color.white;
-                col.a = 0;
-                m.SetColor("_OutlineColor", col);
-            }
-        }
-        foreach (Transform t in Pieces)
-        {
-            var mat = t.GetComponent<MeshRenderer>();
-            if (mat != null)
-                mts = mat.materials;
-            foreach (Material m in mts)
-            {
-                if (Grabbable)
-                    col = Color.yellow;
-                else
-                    col = Color.white;
-                col.a = 0;
-                m.SetColor("_OutlineColor", col);
-            }
-        }
-        outlined = false;
+        foreach (var ol in _outline)
+            ol.enabled = outlined = false;
     }
 
-    public virtual void ClickButton(object sender, ClickedEventArgs e) { }
-
-    public virtual void UnClickButton(object sender, ClickedEventArgs e) { }
-
-    public virtual void Interact(ItemController c) { OnInteract?.Invoke(c, ControllerHand.Invalid); }
+    public virtual void Interact(ItemController c)
+    {
+        OnInteract?.Invoke(c, ControllerHand.Invalid);
+    }
 
     public void DisableItem(Transform controller)
     {
         if (Slave != null)
         {
-            if (Slave.gameObject.activeSelf)
-            {
+            if (!Slave.gameObject.activeSelf)
                 Slave.gameObject.SetActive(false);
-                var tcontr = controller.GetComponent<SteamVR_TrackedController>();
-                if (tcontr != null)
-                {
-                    tcontr.PadClicked += ClickButton;
-                    tcontr.GetComponent<SteamVR_TrackedController>().PadUnclicked += UnClickButton;
-                }
-                //SeekTarget = controller;
-                //transform.parent = controller;
-                return;
-            }
+        }
+        else if (!gameObject.activeSelf)
+            gameObject.SetActive(false);
 
-        }
-        else
-        {
-            if (gameObject.activeSelf)
-            {
-                gameObject.SetActive(false);
-                var tcontr = controller.GetComponent<SteamVR_TrackedController>();
-                if (tcontr != null)
-                {
-                    tcontr.PadClicked += ClickButton;
-                    tcontr.GetComponent<SteamVR_TrackedController>().PadUnclicked += UnClickButton;
-                }
-                //SeekTarget = controller;
-                //transform.parent = controller;
-                return;
-            }
-        }
+        controller.GetComponent<ControllerManager>().Controller.InputManager.OnLeftPadPressed += ClickButton;
+        controller.GetComponent<ControllerManager>().Controller.InputManager.OnLeftPadUnpressed +=
+            UnClickButton;
+        controller.GetComponent<ControllerManager>().Controller.InputManager.OnRightPadPressed += ClickButton;
+        controller.GetComponent<ControllerManager>().Controller.InputManager.OnRightPadUnpressed +=
+            UnClickButton;
+
+        //SeekTarget = controller;
+        //transform.parent = controller;
+        return;
     }
+
 
     public void EnableItem(Transform controller)
     {
         if (Slave != null)
         {
             if (!Slave.gameObject.activeSelf)
-            {
                 Slave.gameObject.SetActive(true);
-                var tcontr = controller.GetComponent<SteamVR_TrackedController>();
-                if (tcontr != null)
-                {
-                    tcontr.GetComponent<SteamVR_TrackedController>().PadClicked -= ClickButton;
-                    tcontr.GetComponent<SteamVR_TrackedController>().PadUnclicked -= UnClickButton;
-                }
-                DropParent();
-                return;
-            }
         }
-        else
-        {
-            if (!gameObject.activeSelf)
-            {
-                gameObject.SetActive(true);
-                var tcontr = controller.GetComponent<SteamVR_TrackedController>();
-                if (tcontr != null)
-                {
-                    tcontr.GetComponent<SteamVR_TrackedController>().PadClicked -= ClickButton;
-                    tcontr.GetComponent<SteamVR_TrackedController>().PadUnclicked -= UnClickButton;
-                }
-                DropParent();
-                return;
-            }
-        }
+        else if (!gameObject.activeSelf)
+            gameObject.SetActive(true);
+
+        controller.GetComponent<ControllerManager>().Controller.InputManager.OnLeftPadPressed -= ClickButton;
+        controller.GetComponent<ControllerManager>().Controller.InputManager.OnLeftPadUnpressed -=
+            UnClickButton;
+        controller.GetComponent<ControllerManager>().Controller.InputManager.OnRightPadPressed -= ClickButton;
+        controller.GetComponent<ControllerManager>().Controller.InputManager.OnRightPadUnpressed -=
+            UnClickButton;
+        DropParent();
+        return;
     }
+
 
     public virtual void ForceParent(Transform p, bool KeepOrientation)
     {
@@ -317,7 +226,9 @@ public class GenericItem : MonoBehaviour {
             startChildPosition = transform.position;
             startChildRotationQ = transform.rotation;
 
-            startChildPosition = DivideVectors(Quaternion.Inverse(p.rotation) * (startChildPosition - startParentPosition), p.lossyScale);
+            startChildPosition =
+                DivideVectors(Quaternion.Inverse(p.rotation) * (startChildPosition - startParentPosition),
+                    p.lossyScale);
         }
         else
         {
@@ -329,12 +240,12 @@ public class GenericItem : MonoBehaviour {
         }
         //transform.parent = p;
     }
+
     Vector3 DivideVectors(Vector3 num, Vector3 den)
     {
-
         return new Vector3(num.x / den.x, num.y / den.y, num.z / den.z);
-
     }
+
     public virtual void DropParent()
     {
         SeekTarget = null;

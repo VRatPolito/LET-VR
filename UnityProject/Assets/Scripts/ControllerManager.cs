@@ -6,7 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(VibrationController))]
 public class ControllerManager : MonoBehaviour
 {
-
+    
     public ControllerHand Hand;
     public VRItemController Controller;
     [HideInInspector]

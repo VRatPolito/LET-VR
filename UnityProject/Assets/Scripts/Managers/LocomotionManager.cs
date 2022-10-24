@@ -9,13 +9,17 @@ using PrattiToolkit;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.InputSystem;
 
+//public enum LocomotionTechniqueType { WalkingSeat, WalkInPlace, CVirtualizer, KatWalk, RealWalk, Joystick };
 public enum LocomotionTechniqueType
 {
+    Joystick,
     ArmSwing,
     WalkInPlace,
     CVirtualizer,
-    Joystick
+    KatWalk,
+    RealWalk
 };
 
 
@@ -37,7 +41,8 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
     [SerializeField] private bool _autoFreezable = true;
     [SerializeField] private List<Transform> _playerControllers;
 
-    [SerializeField] private KeyCode _freezePalyerKeyCode = KeyCode.F;
+    //[SerializeField] private KeyCode _freezePalyerKeyCode = KeyCode.F;
+    [SerializeField] private InputActionReference _freezePalyerKey;
 
     //[Expandable]
     [SerializeField] private LocomotionCalibrationData _calibrationData;
@@ -57,8 +62,8 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
 
     public bool IsAutoFreezable
     {
-        get => _autoFreezable;
-        private set => _autoFreezable = value;
+        get { return _autoFreezable; }
+        private set { _autoFreezable = value; }
     }
 
     public float CurrentPlayerSpeed { get; private set; }
@@ -73,8 +78,9 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
 
     public LocomotionTechniqueType Locomotion
     {
-        get => _locomotion;
-        private set => _locomotion = value;
+        get { return _locomotion; }
+
+        private set { _locomotion = value; }
     }
 
     public bool IsPlayerFreezed
@@ -116,8 +122,12 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
         _calibrationData = GetOrCreateCalibrationData();
         Assert.IsNotNull(_calibrationData);
 
+        //TODO uncomment for KAT_WALK
+        //_startingKATmultiply = _playerControllers[(int)LocomotionTechniqueType.KatWalk].GetComponentInChildren<KATDevice>().multiply;
+        //_startingKATmultiplyback = _playerControllers[(int)LocomotionTechniqueType.KatWalk].GetComponentInChildren<KATDevice>().multiplyBack;
         IsPlayerFreezed = false;
-        CurrentPlayerController = _playerControllers[(int) Locomotion];
+        _freezePalyerKey.action.performed += ctx => { IsPlayerFreezed = !IsPlayerFreezed; };
+        CurrentPlayerController = _playerControllers[(int)Locomotion];
     }
 
     private void Start()
@@ -129,7 +139,8 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
         var cc = c.GetComponent<Canvas>();
         Assert.IsNotNull(cc);
         cc.renderMode = RenderMode.ScreenSpaceCamera;
-        cc.worldCamera = CameraEye.transform.GetChildRecursive("UI").GetComponent<Camera>();
+
+        cc.worldCamera = CameraEye.GetComponent<Camera>();
         CurrentUIController = c;
         _lastPlayerPosition = CurrentPlayerController.position;
 
@@ -138,8 +149,8 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
 
     private void Update()
     {
-        if (Input.GetKeyDown(_freezePalyerKeyCode))
-            IsPlayerFreezed = !IsPlayerFreezed;
+        // if (Input.GetKeyDown(_freezePalyerKeyCode))// || (Locomotion == LocomotionTechniqueType.RealWalk && CurrentPlayerController != null && (CurrentPlayerController.GetComponent<InputManagement>().IsLeftGripped && CurrentPlayerController.GetComponent<InputManagement>().IsRightGripped)))
+        //     IsPlayerFreezed = !IsPlayerFreezed;
 
         CurrentPlayerSpeed = Vector3.Distance(_lastPlayerPosition, CurrentPlayerController.position) / Time.deltaTime;
         _lastPlayerPosition = CurrentPlayerController.position;
@@ -157,7 +168,7 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
 
     public void AutoFreeze()
     {
-        if (_autoFreezable && !Application.isEditor)
+        if (_autoFreezable) // && !Application.isEditor)
             IsPlayerFreezed = true;
     }
 
@@ -179,34 +190,37 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
     private void InitializeTechnique()
     {
         CurrentPlayerController.gameObject.SetActive((true));
+        if (CurrentPlayerController.gameObject.activeSelf)
+            Debug.Log("currentplayer is  active;");
         var ic = CurrentPlayerController.GetComponent<VRItemController>();
         LeftController = ic.LeftController;
         RightController = ic.RightController;
+
+        //Common For any, overwrite otherwise
+        CameraEye = CurrentPlayerController.GetComponent<CircularLimitTracking>()?.CameraEye;
         switch (Locomotion)
         {
             case LocomotionTechniqueType.ArmSwing:
-                var cr = CurrentPlayerController.Find("[CameraRig]");
-                DirectionalTracker = cr.Find("Tracker (hip)");
-                var l = CurrentPlayerController.GetComponent<CircularLimitTracking>();
-                CameraEye = l.CameraEye;
                 break;
             case LocomotionTechniqueType.WalkInPlace:
-                l = CurrentPlayerController.GetComponent<CircularLimitTracking>();
-                CameraEye = l.CameraEye;
-                cr = CurrentPlayerController.Find("[CameraRig]");
-                DirectionalTracker = cr.Find("Tracker (hip)");
-                LeftTracker = cr.Find("Tracker (left)");
-                RightTracker = cr.Find("Tracker (right)");
+                LeftTracker = CurrentPlayerController.GetChildRecursive("Tracker (left)");
+                RightTracker = CurrentPlayerController.GetChildRecursive("Tracker (right)");
                 break;
             case LocomotionTechniqueType.CVirtualizer:
-                var pcm = CurrentPlayerController.GetComponent<PlayerColliderManager>();
-                CameraEye = pcm.Head;
+                CameraEye = CurrentPlayerController.GetComponent<PlayerColliderManager>()?.Head;
                 //TODO uncomment for CV
                 //_initialMult = CurrentPlayerController.GetComponent<CVirtPlayerController>().movementSpeedMultiplier;
                 break;
+            case LocomotionTechniqueType.KatWalk:
+                CameraEye = CurrentPlayerController.GetComponent<PlayerColliderManager>()?.Head;
+                //TODO uncomment for KAT_WALK
+                //_initialMult = CurrentPlayerController.GetComponentInChildren<KATDevice>().multiply;
+                //_initialBackMultKat = CurrentPlayerController.GetComponentInChildren<KATDevice>().multiplyBack;
+                break;
+            case LocomotionTechniqueType.RealWalk:
+                CameraEye = CurrentPlayerController.GetComponent<CharacterControllerVR>()?.CameraEye;
+                break;
             case LocomotionTechniqueType.Joystick:
-                l = CurrentPlayerController.GetComponent<CircularLimitTracking>();
-                CameraEye = l.CameraEye;
                 break;
         }
     }
@@ -223,7 +237,16 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
                 CurrentPlayerController.GetComponentInChildren<FootSwinger>().footSwingingPaused = false;
                 break;
             case LocomotionTechniqueType.CVirtualizer:
-                //TODO unblock CVirt movements here
+                //TODO uncomment for CV
+                //CurrentPlayerController.GetComponent<CVirtPlayerController>().movementSpeedMultiplier = _initialMult;
+                break;
+            case LocomotionTechniqueType.KatWalk:
+                //TODO uncomment for KAT_WALK
+                //CurrentPlayerController.GetComponentInChildren<KATDevice>().multiply = _initialMult;
+                //CurrentPlayerController.GetComponentInChildren<KATDevice>().multiplyBack = _initialBackMultKat;
+                break;
+            case LocomotionTechniqueType.RealWalk:
+                CurrentPlayerController.GetComponent<CharacterControllerVR>().Blocked = false;
                 break;
             case LocomotionTechniqueType.Joystick:
                 CurrentPlayerController.GetComponent<JoystickMovement>().Blocked = false;
@@ -243,7 +266,16 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
                 CurrentPlayerController.GetComponentInChildren<FootSwinger>().footSwingingPaused = true;
                 break;
             case LocomotionTechniqueType.CVirtualizer:
-                //TODO block CVirt movements here
+                //TODO uncomment for CV
+                //CurrentPlayerController.GetComponent<CVirtPlayerController>().movementSpeedMultiplier = 0.0f;
+                break;
+            case LocomotionTechniqueType.KatWalk:
+                //TODO uncomment for KAT_WALK
+                //CurrentPlayerController.GetComponentInChildren<KATDevice>().multiply = 0;
+                //CurrentPlayerController.GetComponentInChildren<KATDevice>().multiplyBack = 0;
+                break;
+            case LocomotionTechniqueType.RealWalk:
+                CurrentPlayerController.GetComponent<CharacterControllerVR>().Blocked = true;
                 break;
             case LocomotionTechniqueType.Joystick:
                 CurrentPlayerController.GetComponent<JoystickMovement>().Blocked = true;
@@ -253,10 +285,9 @@ public class LocomotionManager : UnitySingleton<LocomotionManager>
 
     private LocomotionCalibrationData GetOrCreateCalibrationData()
     {
-        var dataPath = PersistentSaveLoad.GetDefaultDataPath("LET_VR", "calibrationData.pgd");
+        string dataPath = PersistentSaveLoad.GetDefaultDataPath("LET_VR", "calibrationData.pgd");
         var calib = PersistentSaveLoad.Load<LocomotionCalibrationData>(dataPath,
             PersistentSaveLoad.SerializationType.Json);
-
         if (calib == null)
             calib = new LocomotionCalibrationData();
         return calib;

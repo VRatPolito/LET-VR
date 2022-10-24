@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.InputSystem;
 
 public class HeadsetCollider : MonoBehaviour {
 
@@ -83,11 +85,12 @@ public class HeadsetCollider : MonoBehaviour {
 	void OnCollisionEnter(Collision collision) {
 
         // Never collide with any SteamVR tracked objects
-        if (collision.gameObject.GetComponent<SteamVR_TrackedObject>()) {
+        if (collision.gameObject.GetComponent<ActionBasedController>()) {  // sostituire con oggetto di rig open xr
             return;
         }
         
-        if (armSwinger.preventWallClip == false || armSwinger.wallClipPreventionPaused || armSwinger.preventionsPaused) {
+		// commentato perchè armswinger non serve in test walkign seat 
+       /* if (armSwinger.preventWallClip == false || armSwinger.wallClipPreventionPaused || armSwinger.preventionsPaused) {
 			return;
 		}
 
@@ -123,7 +126,7 @@ public class HeadsetCollider : MonoBehaviour {
 					}
 				}
 			}
-		}
+		}*/
 	}
 
 	public void OnCollisionExit(Collision collision) {

@@ -266,6 +266,16 @@ namespace PrattiToolkit
             return new Vector3(vec.x, 0f, vec.z);
         }
 
+        // Returns a forward vector given the distance and direction
+        public static Vector3 getForwardXZ(this Quaternion direction, float forwardDistance)
+        {
+            return Vector3.Normalize(vector3XZOnly(direction * Vector3.forward)) * forwardDistance;
+        }
+        public static Vector3 getRightXZ(this Quaternion direction, float forwardDistance)
+        {
+            return Vector3.Normalize(vector3XZOnly(direction * Vector3.right)) * forwardDistance;
+        }
+
         #endregion
 
         #region Transform
@@ -668,6 +678,13 @@ namespace PrattiToolkit
 
         #endregion
 
+    }
+
+    [Serializable]
+    public class Pair<T1, T2>
+    {
+        public T1 First { get; set; }
+        public T2 Second { get; set; }
     }
 
     public static class AndroidUtils

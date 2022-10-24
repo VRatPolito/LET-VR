@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using System;
-using UnityEngine.Experimental.PlayerLoop;
+using UnityEngine.PlayerLoop;
+using PrattiToolkit;
+using UnityEngine.Assertions;
 
 public class ChasingDestination : Destination {
     
@@ -12,6 +14,9 @@ public class ChasingDestination : Destination {
     float traveltime = 10;
     [SerializeField]
     Transform targetpos;
+    private ColliderEventsListener _celTargetPos;
+    private bool _playerAtTargetPos = false;
+
 
     public bool PlayerInside
     {
@@ -20,10 +25,23 @@ public class ChasingDestination : Destination {
     private bool _inside = false;
     
     public AnimationCurve Curve;
-    // Update is called once per frame
+
+    public override void Start()
+    {
+        base.Start();
+
+        _celTargetPos = targetpos.GetOrAddComponent<ColliderEventsListener>();
+        Assert.IsNotNull(_celTargetPos);
+        _celTargetPos.OnTriggerEnterAction += c =>
+        {
+            if (c.tag == "Player")
+                _playerAtTargetPos = true;
+        };
+    }
+
     public override void Update()
     {
-        if (moving && transform.position == targetpos.position)
+        if (moving &&  _playerAtTargetPos && transform.position == targetpos.position)
             AutoDisable();
     }
 

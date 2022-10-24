@@ -26,19 +26,17 @@ public class BatteryHolder : MonoBehaviour
     [SerializeField] protected GameObject _battery;
     ColliderEventsListener _batteryTrigger;
     [SerializeField] protected bool _pulseWhenUnplugged = false;
-    
-    private bool _pulseEnabled = false;
-    private float _t;
-    private bool _up = false;
+
     private void Awake()
     {
         _batteryHolder = GetComponent<MeshRenderer>();
         _batteryTrigger = GetComponent<ColliderEventsListener>();
     }
+
     // Start is called before the first frame update
     void Start()
     {
-        if(_needBattery && _pulseWhenUnplugged)
+        if (_needBattery && _pulseWhenUnplugged)
             StartPulse();
         _batteryTrigger.OnTriggerEnterAction += c =>
         {
@@ -57,20 +55,16 @@ public class BatteryHolder : MonoBehaviour
 
                 ((VRItemController)g.Player).OnDrop += ItemDropped;
 
-                var m1 = _batteryHolder.materials[0];
-                var col = m1.GetColor("_OutlineColor");
-                m1.SetColor("_OutlineColor", new Color(col.r, col.g, col.b, 1));
-                var m = new Material[1];
-                m[0] = m1;
-                _batteryHolder.materials = m;
-                _pulseEnabled = false;
+
+                _batteryHolder.GetComponent<QuickOutline>().enabled = true;
+                _batteryHolder.GetComponent<QuickOutline>().Blink = false;
             }
         };
         _batteryTrigger.OnTriggerExitAction += c =>
         {
             if (!NeedBattery || c.tag != "Item") return;
             (LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>()).OnDrop -= ItemDropped;
-            if(_pulseWhenUnplugged)
+            if (_pulseWhenUnplugged)
                 StartPulse();
         };
     }
@@ -86,7 +80,6 @@ public class BatteryHolder : MonoBehaviour
             Battery.transform.parent = _batteryTarget.transform;
             Battery.transform.position = _batteryTarget.transform.position;
             Battery.transform.rotation = _batteryTarget.transform.rotation;
-            StopPulse();
             NeedBattery = false;
             BatteryPlugged.Invoke();
         }
@@ -99,71 +92,22 @@ public class BatteryHolder : MonoBehaviour
         g.CanInteract(true, LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>());
         (LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>()).OnDrop += ItemDropped;
         Battery.transform.parent = null;
-        if(_pulseWhenUnplugged)
+        if (_pulseWhenUnplugged)
             StartPulse();
         NeedBattery = true;
         BatteryUnplugged.Invoke();
     }
 
-    protected void Update()
-    {
-        Pulse();
-    }
 
     public void StartPulse()
     {
-        if (_pulseEnabled)
-            StopPulse();
-
-        _pulseEnabled = true;
+        _batteryHolder.GetComponent<QuickOutline>().enabled = true;
+        _batteryHolder.GetComponent<QuickOutline>().Blink = true;
     }
+
     public void StopPulse()
-    {
-        var m1 = _batteryHolder.materials[0];
-        var c = m1.GetColor("_OutlineColor");
-        m1.SetColor("_OutlineColor", new Color(c.r, c.g, c.b, 0));
-        var m = new Material[1];
-        m[0] = m1;
-        _batteryHolder.materials = m;
-        _pulseEnabled = false;
-    }
-
-    void Pulse()
-    {
-        if (_pulseEnabled)
         {
-
-            if (_up)
-            {
-                _t += Time.deltaTime / 0.5f;
-                var m1 = _batteryHolder.materials[0];
-                var c = m1.GetColor("_OutlineColor");
-                m1.SetColor("_OutlineColor", new Color(c.r, c.g, c.b, Mathf.Lerp(0, 1, _t)));
-                var m = new Material[1];
-                m[0] = m1;
-                _batteryHolder.materials = m;
-                if (_t >= 1)
-                {
-                    _up = false;
-                    _t = 0;
-                }
-            }
-            else
-            {
-                _t += Time.deltaTime / 0.5f;
-                var m1 = _batteryHolder.materials[0];
-                var c = m1.GetColor("_OutlineColor");
-                m1.SetColor("_OutlineColor", new Color(c.r, c.g, c.b, Mathf.Lerp(1, 0, _t)));
-                var m = new Material[1];
-                m[0] = m1;
-                _batteryHolder.materials = m;
-                if (_t >= 1)
-                {
-                    _up = true;
-                    _t = 0;
-                }
-            }
+            _batteryHolder.GetComponent<QuickOutline>().enabled = false;
+            _batteryHolder.GetComponent<QuickOutline>().Blink = false;
         }
     }
-
-}

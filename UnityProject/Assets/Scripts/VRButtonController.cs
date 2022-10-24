@@ -1,8 +1,11 @@
-﻿  using System;
+﻿//#if(UNITY_EDITOR)
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(AudioSource))]
@@ -12,6 +15,9 @@ public class VRButtonController : VRUIElement
     public delegate void MyDelegate(object c);
     [HideInInspector]
     public MyDelegate OnButtonSelected, OnButtonUnSelected, onClick;
+
+    [SerializeField] private InputActionReference Trigger;
+
     Button button;
     //Text text;
     public bool SendCommandOnClick = true;
@@ -59,23 +65,25 @@ public class VRButtonController : VRUIElement
            /* if (fp != null)
                 fp.OnButtonClicked += Click;
             else */if(c!=null)
-                c.TriggerClicked += Click;
+                //c.TriggerClicked += Click;
+            Trigger.action.performed += Click;
             /*else if (fpi != null)
                 fpi.OnButtonClicked += Click;*/
         }
 
     }
 
-    public override void Click(object sender, ClickedEventArgs e)
+    public override void Click(InputAction.CallbackContext e)   // todo: controllare se vr button controller needed, in tal caso correggere click _LV - sender => debugmsg
     {
         if (button != null)
             button.onClick.Invoke();
         if (onClick != null)
         {
             DisableOutline();
-            onClick.Invoke(sender);
+            //onClick.Invoke(sender);
+            Debug.Log("onclick.invoke(sender) not updated yet");
         }
-        base.Click(sender, e);
+        base.Click(e);
     }
 
     public override void ElementUnSelected()
@@ -83,7 +91,8 @@ public class VRButtonController : VRUIElement
         if (SendCommandOnClick)
         {
             if (c != null)
-                c.TriggerClicked -= Click;
+                //c.TriggerClicked -= Click;
+                Trigger.action.performed -= Click;
             /*else if (fp != null)
                 fp.OnButtonClicked -= Click;
             else if (fpi != null)
@@ -181,3 +190,4 @@ public class VRButtonController : VRUIElement
     }
 
 }
+//#endif

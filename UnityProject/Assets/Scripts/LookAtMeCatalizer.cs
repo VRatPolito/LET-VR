@@ -32,6 +32,7 @@ public class LookAtMeCatalizer : MonoBehaviour
     private float _flightHeight;
     private bool _startingOrEnding=true;
     private bool _collided=false;
+    private Vector3 _p;
 
     #endregion
 	
@@ -58,8 +59,8 @@ public class LookAtMeCatalizer : MonoBehaviour
     void Update()
     {
         if(_startingOrEnding || _collided) return;
-        var p = CalcPosition();
-        _rb.MovePosition(p);
+        CalcPosition();
+        _rb.DOMove(_p,Time.deltaTime); //_rb.MovePosition(p);
     }
 
     #endregion
@@ -87,20 +88,20 @@ public class LookAtMeCatalizer : MonoBehaviour
 
     private Vector3 CalcPosition()
     {
-        var p = LocomotionManager.Instance.CurrentPlayerController.position;
-        p.x += _aheadOfPlayer;
-        p.y = _rb.position.y;
-        p.z += _distanceFromPlayer;
-        return p;
+        _p = LocomotionManager.Instance.CurrentPlayerController.position;
+        _p.x += _aheadOfPlayer;
+        _p.y = _rb.position.y;
+        _p.z += _distanceFromPlayer;
+        return _p;
     }
 
     private void Starting()
     {
         _flightHeight = LocomotionManager.Instance.CameraEye.transform.position.y;
-        var p = CalcPosition();
-        p.y = _flightHeight;
+        CalcPosition();
+        _p.y = _flightHeight;
         _ps.Play();
-        _rb.DOMove(p, 2).OnComplete(() => _startingOrEnding = false);
+        _rb.DOMove(_p, 2).OnComplete(() => _startingOrEnding = false);
     }
 
 	#endregion

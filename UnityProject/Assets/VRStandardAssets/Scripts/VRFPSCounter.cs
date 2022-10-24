@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Assertions;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace VRStandardAssets.Utils
@@ -10,13 +12,15 @@ namespace VRStandardAssets.Utils
     {
         private float m_DeltaTime;                      // This is the smoothed out time between frames.
         private Text m_Text;                            // Reference to the component that displays the fps.
-
+        [SerializeField] private InputActionReference _toggleDisplay;
 
         private const float k_SmoothingCoef = 0.1f;     // This is used to smooth out the displayed fps.
 
 
         private void Start ()
         {
+            Assert.IsNotNull(_toggleDisplay);
+            _toggleDisplay.action.performed += ctx => { m_Text.enabled = !m_Text.enabled; };
             m_Text = GetComponent<Text> ();
         }
 
@@ -31,12 +35,6 @@ namespace VRStandardAssets.Utils
 
             // Set the displayed value of the fps to be an integer.
             m_Text.text = Mathf.FloorToInt (fps) + " fps";
-
-            // Turn the fps display on and off using the F key.
-            if (Input.GetKeyDown (KeyCode.F))
-            {
-                m_Text.enabled = !m_Text.enabled;
-            }
         }
     }
 }

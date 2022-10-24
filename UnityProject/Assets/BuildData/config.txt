@@ -4,8 +4,11 @@ Scenario=-1
 #Participant ID (can be a string) [max lenght 15]
 ParticipantId=56
 
-#SetLocomotion Technique among {ArmSwing, WalkInPlace, CVirtualizer, Joystick}
-LocomotionTechnique=ArmSwing
+#SetLocomotion Technique among {Joystick, ArmSwing, WalkInPlace, CVirtualizer, RealWalk}
+LocomotionTechnique=Joystick
 
 #Use true to automatically freeze the player at the start/end of each task
 AutoFreeze=true
+
+#SteamVR Path (Needed to Load Controller Models)
+STEAMVR_PATH=C:\Program Files (x86)\Steam\steamapps\common\SteamVR\resources\rendermodels

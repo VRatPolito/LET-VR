@@ -94,6 +94,7 @@ public class ButtonManager : MonoBehaviour
             var m = c.GetComponent<ControllerManager>();
             if (m.Hand == ControllerHand.LeftHand)
             {
+                // islefttrigger or is right trigger devono diventare actionbased  @actionBased
                 _leftHandInArea = c;
                 if (LocomotionManager.Instance.CurrentPlayerController.GetComponent<InputManagement>().IsLeftTriggerClicked)
                     LocomotionManager.Instance.CurrentPlayerController.GetComponent<VRItemController>().GrabItem(_buttonTarget, m.Hand);

@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Valve.VR;
+using UnityEngine.XR.Interaction.Toolkit;
+//using Valve.VR;
 
 public class ArmSwinger : MonoBehaviour {
 
@@ -273,20 +274,19 @@ public class ArmSwinger : MonoBehaviour {
 	private AnimationCurve inspectorCurve;
 
 	//// Controller buttons ////
-	private Valve.VR.EVRButtonId steamVRArmSwingButton;
+	[SerializeField]
+	private InputManagement _input;
 	private bool leftButtonPressed = false;
 	private bool rightButtonPressed = false;
 
 	//// Controllers ////
-	private SteamVR_ControllerManager controllerManager;
+	//private SteamVR_ControllerManager controllerManager;
+	[SerializeField]
 	private GameObject leftControllerGameObject;
+	[SerializeField]
 	private GameObject rightControllerGameObject;
-	private SteamVR_TrackedObject leftControllerTrackedObj;
-	private SteamVR_TrackedObject rightControllerTrackedObj;
-	private SteamVR_Controller.Device leftController;
-	private SteamVR_Controller.Device rightController;
-	private int leftControllerIndex;
-	private int rightControllerIndex;
+	private ActionBasedController leftController;
+	private ActionBasedController rightController;
 
 	// Wall Clip tracking
 	[HideInInspector]
@@ -304,8 +304,10 @@ public class ArmSwinger : MonoBehaviour {
 	// Prevent Wall Clip's HeadsetCollider script
 	private HeadsetCollider headsetCollider;
 
-	// GameObjects
+    // GameObjects
+    [SerializeField]
 	private GameObject headsetGameObject;
+	[SerializeField]
 	private GameObject cameraRigGameObject;
 
 	// Camera Rig scaling
@@ -314,18 +316,14 @@ public class ArmSwinger : MonoBehaviour {
 	/****** INITIALIZATION ******/
 	void Awake() {
 
+		//Debug.LogError("ArmSwinger.cs hasn't been updated to XRInteractionToolkit yet");
 		// Find an assign components and objects
-		controllerManager = this.GetComponent<SteamVR_ControllerManager>();
-		leftControllerGameObject = controllerManager.left;
-		rightControllerGameObject = controllerManager.right;
-		leftControllerTrackedObj = leftControllerGameObject.GetComponent<SteamVR_TrackedObject>();
-		rightControllerTrackedObj = rightControllerGameObject.GetComponent<SteamVR_TrackedObject>();
+		leftController = leftControllerGameObject.GetComponent<ActionBasedController>();
+		rightController = rightControllerGameObject.GetComponent<ActionBasedController>();
 
-		headsetGameObject = GameObject.FindObjectOfType<SteamVR_Camera>().gameObject;
-		cameraRigGameObject = GameObject.FindObjectOfType<SteamVR_ControllerManager>().gameObject;
 
 		// Determine the Steam VR button for ArmSwinging
-		steamVRArmSwingButton = convertControllerButtonToSteamVRButton(armSwingButton);
+		//steamVRArmSwingButton = convertControllerButtonToSteamVRButton(armSwingButton);
 		
 		// Setup wall clipping on the headset gameobject, if enabled
 		if (preventWallClip) {
@@ -361,7 +359,7 @@ public class ArmSwinger : MonoBehaviour {
         // Verify and fix settings
         verifySettings();
 
-    }
+	}
 
 	/***** FIXED UPDATE *****/
 	void FixedUpdate() {
@@ -436,9 +434,10 @@ public class ArmSwinger : MonoBehaviour {
     /***** VERIFY SETTINGS *****/
     void verifySettings() {
 
-        // Camera Rig checking
-        if (!this.GetComponent<SteamVR_ControllerManager>()) {
-            Debug.LogError("ArmSwinger.verifySettings():: ArmSwinger is applied on a GameObject that is not a SteamVR CameraRig, or is a CameraRig without a SteamVR Controller Manager.  Please review the ArmSwinger instructions.  ArmSwinger will fail.");
+		// Camera Rig checking
+		if (!this.GetComponent<UnityEngine.XR.Interaction.Toolkit.Inputs.InputActionManager>())
+		{
+			Debug.LogError("ArmSwinger.verifySettings():: ArmSwinger is applied on a GameObject that is not an XR Origin, or is an XR Origin without an InputActionManager.  Please review the ArmSwinger instructions.  ArmSwinger will fail.");
         }
 
         // Rewind Settings
@@ -1452,60 +1451,29 @@ public class ArmSwinger : MonoBehaviour {
 
 	// Sets the button variables each frame
 	void getControllerButtons() {
-		// Left
-		int newLeftControllerIndex = (int) leftControllerTrackedObj.index;
 
-		if (newLeftControllerIndex != -1 && newLeftControllerIndex != leftControllerIndex) {
-			leftControllerIndex = newLeftControllerIndex;
-			leftController = SteamVR_Controller.Input(leftControllerIndex);
+		if (_input != null)
+		{
+			switch (armSwingButton)
+            {
+				case ControllerButton.Grip:
+					leftButtonPressed = _input.IsLeftGripped;
+					rightButtonPressed = _input.IsRightGripped;
+					break;
+				case ControllerButton.Trigger:
+					leftButtonPressed = _input.IsLeftTriggerClicked;
+					rightButtonPressed = _input.IsRightTriggerClicked;
+					break;
+				case ControllerButton.TouchPad:
+					leftButtonPressed = _input.IsLeftPadPressed;
+					rightButtonPressed = _input.IsRightPadPressed;
+					break;
+				default: 
+					leftButtonPressed = false;
+					rightButtonPressed = false;
+					break;
+			}	
 		}
-
-		if (newLeftControllerIndex != -1) {
-			leftButtonPressed = leftController.GetPress(steamVRArmSwingButton);
-		}
-		else {
-			leftButtonPressed = false;
-		}
-
-		//Right
-		int newRightControllerIndex = (int) rightControllerTrackedObj.index;
-
-		if (newRightControllerIndex != -1 && newRightControllerIndex != rightControllerIndex) {
-			rightControllerIndex = newRightControllerIndex;
-			rightController = SteamVR_Controller.Input(rightControllerIndex);
-		}
-
-		if (newRightControllerIndex != -1) {
-			rightButtonPressed = rightController.GetPress(steamVRArmSwingButton);
-		}
-		else {
-			rightButtonPressed = false;
-		}
-	}
-
-	// Assigns the real SteamVR button based on the user selection
-	Valve.VR.EVRButtonId convertControllerButtonToSteamVRButton(ControllerButton controllerButton) {
-		EVRButtonId returnValue;
-
-		switch (controllerButton) {
-			case ControllerButton.Grip:
-				returnValue = EVRButtonId.k_EButton_Grip;
-				break;
-			case ControllerButton.Menu:
-				returnValue = EVRButtonId.k_EButton_ApplicationMenu;
-				break;
-			case ControllerButton.TouchPad:
-				returnValue = EVRButtonId.k_EButton_SteamVR_Touchpad;
-				break;
-			case ControllerButton.Trigger:
-				returnValue = EVRButtonId.k_EButton_SteamVR_Trigger;
-				break;
-			default:
-				returnValue = EVRButtonId.k_EButton_Grip;
-				break;
-		}
-
-		return returnValue;
 	}
 
 	// Returns the average of two Quaternions
@@ -1517,8 +1485,8 @@ public class ArmSwinger : MonoBehaviour {
 	void fadeOut() {
 		// SteamVR_Fade is too fast in builds.  We compenstate for this here.
 #if UNITY_EDITOR
-		SteamVR_Fade.View(Color.black, rewindFadeOutSec);
-#else
+		//SteamVR_Fade.View(Color.black, rewindFadeOutSec);
+#elif STEAM_VR
 				SteamVR_Fade.View(Color.black, rewindFadeOutSec * .666f);
 #endif
     }
@@ -1527,8 +1495,8 @@ public class ArmSwinger : MonoBehaviour {
     void fadeIn() {
 		// SteamVR_Fade is too fast in builds.  We compenstate for this here.
 #if UNITY_EDITOR
-		SteamVR_Fade.View(Color.clear, rewindFadeInSec);
-#else
+		//SteamVR_Fade.View(Color.clear, rewindFadeInSec);
+#elif STEAM_VR
 				SteamVR_Fade.View(Color.clear, rewindFadeInSec * .666f);
 #endif
     }
@@ -2093,7 +2061,7 @@ public class ArmSwinger : MonoBehaviour {
 			return _armSwingButton;
 		}
 		set {
-			steamVRArmSwingButton = convertControllerButtonToSteamVRButton(value);
+			//steamVRArmSwingButton = convertControllerButtonToSteamVRButton(value);
 			_armSwingButton = value;
 		}
 	}

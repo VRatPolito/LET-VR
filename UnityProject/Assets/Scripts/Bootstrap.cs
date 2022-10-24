@@ -77,6 +77,8 @@ public class Bootstrap : MonoBehaviour
             }
             _scenarioDropdown.AddOptions(_scenes);
             _techniqueDropdown.AddOptions(Enum.GetNames(typeof(LocomotionTechniqueType)).ToList());
+            _techniqueDropdown.value =
+                (int)ConfigurationLookUp.Instance.GetEnum<LocomotionTechniqueType>("LocomotionTechnique", LocomotionTechniqueType.Joystick);
         }
         else
         {

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.XR.Interaction.Toolkit;
 public class VibrationController : MonoBehaviour {
 
     bool vibrate = false;
@@ -43,10 +43,10 @@ public class VibrationController : MonoBehaviour {
     }
     Queue<VibrationRequest> requests;
     VibrationRequest currequest;
-    SteamVR_TrackedController controller;
+    ActionBasedController controller;
     // Use this for initialization
     void Start () {
-        controller = GetComponent<SteamVR_TrackedController>();
+        controller = GetComponent<ActionBasedController>();
     }
 
     private void Awake()
@@ -83,7 +83,7 @@ public class VibrationController : MonoBehaviour {
     {
         for (float i = 0; i < length; i += Time.deltaTime)
         {
-            SteamVR_Controller.Input((int)controller.controllerIndex).TriggerHapticPulse((ushort)Mathf.Lerp(0, 3999, strength));
+            controller.SendHapticImpulse(strength, Time.deltaTime); //  Input((int)controller.controllerIndex).TriggerHapticPulse((ushort)Mathf.Lerp(0, 3999, strength));
             yield return null;
         }
         Vibration = null;

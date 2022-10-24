@@ -26,4 +26,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Scenario5.unity
     guid: 01cf8199106f98e438ebff5820cf0591
-  m_configObjects: {}
+  m_configObjects:
+    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: bc915a66cb5c3ac408203534ac632439,
+      type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 2ec2b547fbbcf5b4ab6acc0f9694dbbb,
+      type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: b42af91ab8ee4114e9353e6e3e501600,
+      type: 2}

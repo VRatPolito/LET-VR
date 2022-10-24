@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/*
 public class SteamVRFade : MonoBehaviour {
 
     // Fade the screen to black
@@ -48,3 +48,4 @@ public class SteamVRFade : MonoBehaviour {
 #endif
     }
 }
+*/

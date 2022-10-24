@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using PrattiToolkit;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 public class DoorController : MonoBehaviour
 {
     #region Events
 
-    public UnityEvent   OnOpenGate,
-                        OnOpenGateFirstTime,
-                        OnCloseGate,
-                        DoorClosedPermanently;
+    public UnityEvent OnOpenGate,
+        OnOpenGateFirstTime,
+        OnCloseGate,
+        DoorClosedPermanently;
 
     #endregion
 
@@ -32,6 +34,9 @@ public class DoorController : MonoBehaviour
     protected ColliderEventsListener _triggerEventsListener;
     protected bool _playerInRange = false;
     private bool _firstTime = true;
+#if ENABLE_INPUT_SYSTEM
+    private KeyControl _toggleGateKey;
+#endif
 
     #endregion
 
@@ -78,20 +83,30 @@ public class DoorController : MonoBehaviour
 
     protected virtual void Awake()
     {
+#if ENABLE_INPUT_SYSTEM
+        _toggleGateKey = Keyboard.current.FindKeyOnCurrentKeyboardLayout(_toggleGateKeyCode.ToString());
+#endif
         _animator = GetComponent<Animator>();
         if (_triggerCollider != null)
         {
             _triggerCollider.isTrigger = true;
             _triggerEventsListener = _triggerCollider.gameObject.GetOrAddComponent<ColliderEventsListener>();
         }
+
         if (UseTrigger)
         {
             _triggerEventsListener.OnTriggerEnterAction += c =>
             {
                 if (SensorEnabled && c.tag == "Player") PlayerInRange = true;
             };
-            _triggerEventsListener.OnTriggerExitAction += c => { if (SensorEnabled && c.tag == "Player") PlayerInRange = false; };
-            _triggerEventsListener.OnTriggerStayAction += c => { if (SensorEnabled && c.tag == "Player") PlayerInRange = true; };
+            _triggerEventsListener.OnTriggerExitAction += c =>
+            {
+                if (SensorEnabled && c.tag == "Player") PlayerInRange = false;
+            };
+            _triggerEventsListener.OnTriggerStayAction += c =>
+            {
+                if (SensorEnabled && c.tag == "Player") PlayerInRange = true;
+            };
         }
     }
 
@@ -103,8 +118,13 @@ public class DoorController : MonoBehaviour
 
     protected virtual void Update()
     {
+#if ENABLE_INPUT_SYSTEM
+        if (_allowOverride && _toggleGateKey.isPressed)
+            PlayerInRange = !PlayerInRange;
+#else
         if (_allowOverride && Input.GetKeyDown(_toggleGateKeyCode))
             PlayerInRange = !PlayerInRange;
+#endif
     }
 
     #endregion
@@ -117,7 +137,7 @@ public class DoorController : MonoBehaviour
         if (openOrClose)
         {
             OnOpenGate?.Invoke();
-            if(_firstTime)
+            if (_firstTime)
             {
                 OnOpenGateFirstTime?.Invoke();
                 _firstTime = false;

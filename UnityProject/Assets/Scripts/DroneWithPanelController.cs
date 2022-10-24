@@ -4,13 +4,12 @@
 
 using System;
 using System.Collections;
-using Boo.Lang;
 using DG.Tweening;
 using PrattiToolkit;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
-using Valve.VR.InteractionSystem;
+//using Valve.VR.InteractionSystem;
 
 public class DroneWithPanelController : MonoBehaviour
 {
@@ -77,8 +76,8 @@ public class DroneWithPanelController : MonoBehaviour
 
         PlayerInRange.AddListener(() =>
         {
-            //if (_playingCoreo != null) DOTween.KillAll();
-            _playingCoreo?.ForEach(s => s.Kill());
+            if (_playingCoreo != null) DOTween.KillAll(); // in origine era la riga sotto, ho scommentato questa perchè il for each chiede un tween. dovrebbero essere analoghi. _LV
+            //_playingCoreo?.ForEach(s => s.Kill());  
             _playingCoreo = null;
         });
     }

@@ -22,6 +22,7 @@ public class LocomotionCalibrationData
 
     [SerializeField] private float _controllerDistance = 1.5f;
     [SerializeField] private float _headHeight = 1.7f;
+    private float _WSTare = 0.0f;
 
     #endregion
 	
@@ -41,6 +42,11 @@ public class LocomotionCalibrationData
     {
         get { return _controllerDistance; }
         set { _controllerDistance = value; }
+    }
+    public float WSYCenter
+    {
+        get { return _WSTare; }
+        set { _WSTare = value; }
     }
 
     public string DefaultDataPath => PersistentSaveLoad.GetDefaultDataPath("LET_VR", "calibrationData.pgd");

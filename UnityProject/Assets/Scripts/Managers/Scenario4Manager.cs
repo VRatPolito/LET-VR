@@ -8,6 +8,8 @@ using DG.Tweening;
 using PrattiToolkit;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 public class Scenario4Manager : UnitySingleton<Scenario4Manager>
 {
@@ -34,6 +36,12 @@ public class Scenario4Manager : UnitySingleton<Scenario4Manager>
 
     #region Private Members and Constants
 
+#if ENABLE_INPUT_SYSTEM
+
+    private KeyControl _popSystemSafeStopKey;
+
+#endif
+
     #endregion
 
     #region Properties
@@ -54,6 +62,9 @@ public class Scenario4Manager : UnitySingleton<Scenario4Manager>
         StatisticsLogger = GetComponent<StatisticsLoggerS4>();
         Assert.IsNotNull(StatisticsLogger);
 
+#if ENABLE_INPUT_SYSTEM
+        _popSystemSafeStopKey = Keyboard.current.FindKeyOnCurrentKeyboardLayout(_popSystemSafeStop.ToString());
+#endif
 
         _agilityStart.OnDisabled.AddListener((Destination d) => { StatisticsLogger.StartLogDynamicAgility(); });
         _agilityEnd.OnDisabled.AddListener((Destination d) =>
@@ -73,8 +84,13 @@ public class Scenario4Manager : UnitySingleton<Scenario4Manager>
 
     private void Update()
     {
+#if ENABLE_INPUT_SYSTEM
+        if ((Keyboard.current.leftCtrlKey.isPressed || Keyboard.current.rightCtrlKey.isPressed) &&
+            _popSystemSafeStopKey.isPressed)
+#else
         if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) &&
             Input.GetKeyDown(_popSystemSafeStop))
+#endif
         {
             _pOPSystem.GetComponent<ProceduralObstacleSpawnerSystem>().DestroyRenderedElements();
             _pOPSystem.SetActive(false);
@@ -97,18 +113,25 @@ public class Scenario4Manager : UnitySingleton<Scenario4Manager>
     {
         _headShooter.enabled = true;
         LocomotionManager.Instance.StopLocomotionPublic();
-        switch(LocomotionManager.Instance.Locomotion)
+        switch (LocomotionManager.Instance.Locomotion)
         {
             case LocomotionTechniqueType.ArmSwing:
             case LocomotionTechniqueType.WalkInPlace:
             case LocomotionTechniqueType.Joystick:
-                LocomotionManager.Instance.CurrentPlayerController.GetComponent<CircularLimitTracking>().DisableCollider();
+                LocomotionManager.Instance.CurrentPlayerController.GetComponent<CircularLimitTracking>()
+                    .DisableCollider();
                 break;
-            default:
-                LocomotionManager.Instance.CurrentPlayerController.GetComponent<PlayerColliderManager>().DisableCollider();
+            case LocomotionTechniqueType.KatWalk:
+            case LocomotionTechniqueType.CVirtualizer:
+            case LocomotionTechniqueType.RealWalk:
+                LocomotionManager.Instance.CurrentPlayerController.GetComponent<PlayerColliderManager>()
+                    .DisableCollider();
                 break;
         }
-        LocomotionManager.Instance.CurrentPlayerController.position = new Vector3(LocomotionManager.Instance.CurrentPlayerController.position.x, 0, LocomotionManager.Instance.CurrentPlayerController.position.z);
+
+        LocomotionManager.Instance.CurrentPlayerController.position = new Vector3(
+            LocomotionManager.Instance.CurrentPlayerController.position.x, 0,
+            LocomotionManager.Instance.CurrentPlayerController.position.z);
         LocomotionManager.Instance.CameraEye.GetComponent<SphereCollider>().enabled = true;
         LocomotionManager.Instance.RightController.GetComponent<Collider>().enabled = false;
         LocomotionManager.Instance.LeftController.GetComponent<Collider>().enabled = false;
@@ -135,12 +158,17 @@ public class Scenario4Manager : UnitySingleton<Scenario4Manager>
             case LocomotionTechniqueType.ArmSwing:
             case LocomotionTechniqueType.WalkInPlace:
             case LocomotionTechniqueType.Joystick:
-                LocomotionManager.Instance.CurrentPlayerController.GetComponent<CircularLimitTracking>().EnableCollider();
+                LocomotionManager.Instance.CurrentPlayerController.GetComponent<CircularLimitTracking>()
+                    .EnableCollider();
                 break;
-            default:
-                LocomotionManager.Instance.CurrentPlayerController.GetComponent<PlayerColliderManager>().EnableCollider();
+            case LocomotionTechniqueType.KatWalk:
+            case LocomotionTechniqueType.CVirtualizer:
+            case LocomotionTechniqueType.RealWalk:
+                LocomotionManager.Instance.CurrentPlayerController.GetComponent<PlayerColliderManager>()
+                    .EnableCollider();
                 break;
         }
+
         LocomotionManager.Instance.CameraEye.GetComponent<SphereCollider>().enabled = true;
         LocomotionManager.Instance.RightController.GetComponent<Collider>().enabled = true;
         LocomotionManager.Instance.LeftController.GetComponent<Collider>().enabled = true;
@@ -169,9 +197,7 @@ public class Scenario4Manager : UnitySingleton<Scenario4Manager>
         StatisticsLogger.StopLogBodyShooter();
         LocomotionManager.Instance.RightController.GetComponent<Collider>().isTrigger = true;
         LocomotionManager.Instance.LeftController.GetComponent<Collider>().isTrigger = true;
-
     }
-    
 
     #endregion
 

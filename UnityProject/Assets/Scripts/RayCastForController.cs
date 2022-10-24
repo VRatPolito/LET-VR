@@ -1,14 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(SteamVR_LaserPointer))]
-[RequireComponent(typeof(SteamVR_TrackedController))]
+[RequireComponent(typeof(XRRayInteractor))]
+[RequireComponent(typeof(ActionBasedController))]
 public class RayCastForController : MonoBehaviour
 {
 
     public ControllerHand ControllerType;
-    SteamVR_TrackedController controller;
+    public ActionBasedController controller;
+
+    [SerializeField] private InputActionReference Trigger;
+    [SerializeField] private InputActionReference PadPress;
+    [SerializeField] private InputActionReference PadTouch;
+    [SerializeField] private InputActionReference Grip;
+
     Transform currentelement = null;
     public RayCastForController OtherHand;
     public Color PadColor = Color.yellow;
@@ -39,31 +47,38 @@ public class RayCastForController : MonoBehaviour
     }
     void Start()
     {
-        controller = GetComponent<SteamVR_TrackedController>();
+        controller = GetComponent<ActionBasedController>();
     }
 
     private void OnDisable()
     {
-        GetComponent<SteamVR_LaserPointer>().active = false;
-        if(transform.Find("New Game Object"))
+        //GetComponent<SteamVR_LaserPointer>().active = false;
+        GetComponent<XRRayInteractor>().enabled = false;
+        if (transform.Find("New Game Object"))
             transform.Find("New Game Object").gameObject.SetActive(false);
         if (clickeffect)
         {
             switch (ButtonToInteract)
             {
                 case ControllerButtonInput.Pad:
-                    controller.PadClicked -= ClickEffect;
+                    //controller.PadClicked -= ClickEffect;
+                    PadPress.action.performed -= ClickEffect;
                     break;
                 case ControllerButtonInput.Grip:
-                    controller.Gripped -= ClickEffect;
+                    //controller.Gripped -= ClickEffect;
+                    Grip.action.performed -= ClickEffect;
                     break;
                 case ControllerButtonInput.Any:
-                    controller.TriggerClicked -= ClickEffect;
-                    controller.Gripped -= ClickEffect;
-                    controller.PadClicked -= ClickEffect;
+                    //controller.TriggerClicked -= ClickEffect;
+                    Trigger.action.performed -= ClickEffect;
+                    //controller.Gripped -= ClickEffect;
+                    Grip.action.performed -= ClickEffect;
+                    //controller.PadClicked -= ClickEffect;
+                    PadPress.action.performed -= ClickEffect;
                     break;
                 default:
-                    controller.TriggerClicked -= ClickEffect;
+                    //controller.TriggerClicked -= ClickEffect;
+                    Trigger.action.performed -= ClickEffect;
                     break;
             }
             clickeffect = false;
@@ -73,8 +88,8 @@ public class RayCastForController : MonoBehaviour
 
     private void OnEnable()
     {
-        GetComponent<SteamVR_LaserPointer>().active = true;
-        if(transform.Find("New Game Object"))
+        GetComponent<XRRayInteractor>().enabled = true;
+        if (transform.Find("New Game Object"))
             transform.Find("New Game Object").gameObject.SetActive(true);
     }
 
@@ -105,22 +120,24 @@ public class RayCastForController : MonoBehaviour
                     switch (ButtonToInteract)
                     {
                         case ControllerButtonInput.Pad:
-                            controller.PadClicked += ClickEffect;
-                            StartPulse(ControllerButton.Pad);
+                            //controller.PadClicked += ClickEffect;
+                            PadPress.action.performed += ClickEffect;
                             break;
                         case ControllerButtonInput.Grip:
-                            controller.Gripped += ClickEffect;
-                            StartPulse(ControllerButton.Grip);
+                            //controller.Gripped += ClickEffect;
+                            Grip.action.performed += ClickEffect;
                             break;
                         case ControllerButtonInput.Any:
-                            controller.TriggerClicked += ClickEffect;
-                            controller.Gripped += ClickEffect;
-                            controller.PadClicked += ClickEffect;
-                            StartPulse(ControllerButton.All);
+                            //controller.TriggerClicked += ClickEffect;
+                            Trigger.action.performed += ClickEffect;
+                            //controller.Gripped += ClickEffect;
+                            Grip.action.performed += ClickEffect;
+                            //controller.PadClicked += ClickEffect;
+                            PadPress.action.performed += ClickEffect;
                             break;
                         default:
-                            controller.TriggerClicked += ClickEffect;
-                            StartPulse(ControllerButton.Trigger);
+                            //controller.TriggerClicked += ClickEffect;
+                            Trigger.action.performed += ClickEffect;
                             break;
                     }
                     clickeffect = true;
@@ -140,18 +157,24 @@ public class RayCastForController : MonoBehaviour
                     switch (ButtonToInteract)
                     {
                         case ControllerButtonInput.Pad:
-                            controller.PadClicked -= ClickEffect;
+                            //controller.PadClicked -= ClickEffect;
+                            PadPress.action.performed -= ClickEffect;
                             break;
                         case ControllerButtonInput.Grip:
-                            controller.Gripped -= ClickEffect;
+                            //controller.Gripped -= ClickEffect;
+                            Grip.action.performed -= ClickEffect;
                             break;
                         case ControllerButtonInput.Any:
-                            controller.TriggerClicked -= ClickEffect;
-                            controller.Gripped -= ClickEffect;
-                            controller.PadClicked -= ClickEffect;
+                            //controller.TriggerClicked -= ClickEffect;
+                            Trigger.action.performed -= ClickEffect;
+                            //controller.Gripped -= ClickEffect;
+                            Grip.action.performed -= ClickEffect;
+                            //controller.PadClicked -= ClickEffect;
+                            PadPress.action.performed -= ClickEffect;
                             break;
                         default:
-                            controller.TriggerClicked -= ClickEffect;
+                            //controller.TriggerClicked -= ClickEffect;
+                            Trigger.action.performed -= ClickEffect;
                             break;
                     }
                     clickeffect = false;
@@ -179,18 +202,24 @@ public class RayCastForController : MonoBehaviour
                             switch (ButtonToInteract)
                             {
                                 case ControllerButtonInput.Pad:
-                                    controller.PadClicked -= ClickEffect;
+                                    //controller.PadClicked -= ClickEffect;
+                                    PadPress.action.performed -= ClickEffect;
                                     break;
                                 case ControllerButtonInput.Grip:
-                                    controller.Gripped -= ClickEffect;
+                                    //controller.Gripped -= ClickEffect;
+                                    Grip.action.performed -= ClickEffect;
                                     break;
                                 case ControllerButtonInput.Any:
-                                    controller.TriggerClicked -= ClickEffect;
-                                    controller.Gripped -= ClickEffect;
-                                    controller.PadClicked -= ClickEffect;
+                                    //controller.TriggerClicked -= ClickEffect;
+                                    Trigger.action.performed -= ClickEffect;
+                                    //controller.Gripped -= ClickEffect;
+                                    Grip.action.performed -= ClickEffect;
+                                    //controller.PadClicked -= ClickEffect;
+                                    PadPress.action.performed -= ClickEffect;
                                     break;
                                 default:
-                                    controller.TriggerClicked -= ClickEffect;
+                                    //controller.TriggerClicked -= ClickEffect;
+                                    Trigger.action.performed -= ClickEffect;
                                     break;
                             }
                             clickeffect = false;
@@ -220,11 +249,11 @@ public class RayCastForController : MonoBehaviour
         PulseButton();
     }
 
-    public void ClickEffect(object sender, ClickedEventArgs e)
+    public void ClickEffect(InputAction.CallbackContext e)
     {
         if (!enabled)
         {
-            GetComponent<SteamVR_LaserPointer>().active = false;
+            GetComponent<XRRayInteractor>().enabled = false;
             if (transform.Find("New Game Object"))
                 transform.Find("New Game Object").gameObject.SetActive(false);
             if (clickeffect)
@@ -232,25 +261,30 @@ public class RayCastForController : MonoBehaviour
                 switch (ButtonToInteract)
                 {
                     case ControllerButtonInput.Pad:
-                        controller.PadClicked -= ClickEffect;
+                        //controller.PadClicked -= ClickEffect;
+                        PadPress.action.performed -= ClickEffect;
                         break;
                     case ControllerButtonInput.Grip:
-                        controller.Gripped -= ClickEffect;
+                        //controller.Gripped -= ClickEffect;
+                        Grip.action.performed -= ClickEffect;
                         break;
                     case ControllerButtonInput.Any:
-                        controller.TriggerClicked -= ClickEffect;
-                        controller.Gripped -= ClickEffect;
-                        controller.PadClicked -= ClickEffect;
+                        //controller.TriggerClicked -= ClickEffect;
+                        Trigger.action.performed -= ClickEffect;
+                        //controller.Gripped -= ClickEffect;
+                        Grip.action.performed -= ClickEffect;
+                        //controller.PadClicked -= ClickEffect;
+                        PadPress.action.performed -= ClickEffect;
                         break;
                     default:
-                        controller.TriggerClicked -= ClickEffect;
+                        //controller.TriggerClicked -= ClickEffect;
+                        Trigger.action.performed -= ClickEffect;
                         break;
                 }
                 clickeffect = false;
             }
             StopPulse();
         }
-        else
         {
             if (Source.isPlaying)
                 Source.Stop();
@@ -264,8 +298,8 @@ public class RayCastForController : MonoBehaviour
 {
     for (float i = 0; i < length; i += Time.deltaTime)
     {
-        SteamVR_Controller.Input((int)controller.controllerIndex).TriggerHapticPulse((ushort)Mathf.Lerp(0, 3999, strength));
-        yield return null;
+            controller.SendHapticImpulse((ushort)Mathf.Lerp(0, 3999, strength), 200.0f);//SteamVR_Controller.Input((int)controller.controllerIndex).TriggerHapticPulse((ushort)Mathf.Lerp(0, 3999, strength));
+            yield return null;
     }
 }
 

@@ -1,13 +1,17 @@
-﻿using System;
+﻿//#if (UNITY_EDITOR)
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.InputSystem;
 
 public class VRUIElement : MonoBehaviour
 {
     [HideInInspector]
-    public SteamVR_TrackedController c;
+    public ActionBasedController c;
     /*[HideInInspector]
     public FirstPersonMainView fp;
     [HideInInspector]
@@ -58,7 +62,7 @@ public class VRUIElement : MonoBehaviour
 
     }
 
-    public virtual void Selected(SteamVR_TrackedController controller)
+    public virtual void Selected(ActionBasedController controller)
     {
         if (Source.isPlaying)
             Source.Stop();
@@ -100,7 +104,7 @@ public class VRUIElement : MonoBehaviour
     {
         if (Active && other.gameObject.tag == "Controller" && c == null)
         {
-            c = other.GetComponent<SteamVR_TrackedController>();
+            c = other.GetComponent<ActionBasedController>();
             if (c != null)
             {
                 var i = c.GetComponent<ControllerManager>();
@@ -125,7 +129,7 @@ public class VRUIElement : MonoBehaviour
         transition = false;
     }*/
 
-    public virtual void Click(object sender, ClickedEventArgs e)
+    public virtual void Click(InputAction.CallbackContext e) // done: controllare se vr button controller needed, in tal caso correggere click _LV 
     {
         if(c != null)
             OnTriggerExit(c.GetComponent<Collider>());
@@ -170,3 +174,4 @@ public class VRUIElement : MonoBehaviour
         transition = false;
     }*/
 }
+//#endif

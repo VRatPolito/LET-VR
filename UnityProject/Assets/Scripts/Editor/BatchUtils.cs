@@ -2,12 +2,13 @@
  * Custom template by Gabriele P.
  */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
-using Valve.VR.InteractionSystem;
+//using Valve.VR.InteractionSystem;
 using Debug = UnityEngine.Debug;
 
 public class BatchUtils : MonoBehaviour
@@ -25,7 +26,8 @@ public class BatchUtils : MonoBehaviour
 
         for (int i = 1; i < EditorBuildSettings.scenes.Length; i++)
         {
-            EditorBuildSettings.scenes.ForEach(scene => scene.enabled = false);
+            Array.ForEach(EditorBuildSettings.scenes, scene => scene.enabled = false);
+            //EditorBuildSettings.scenes.ForEach(scene => scene.enabled = false);
             EditorBuildSettings.scenes[i].enabled = true;
             
             options.scenes = new[] {EditorBuildSettings.scenes[i].path};

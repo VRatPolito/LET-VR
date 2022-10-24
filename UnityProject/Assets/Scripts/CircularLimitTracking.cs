@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.VR;
+using UnityEngine.XR;
 using UnityEngine.AI;
 
 public class CircularLimitTracking : LimitTracking

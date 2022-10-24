@@ -1,16 +1,24 @@
-﻿using System;
+﻿
+//#if(UNITY_EDITOR)
+
+using System;
 using System.Collections;
 using System.Net;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(AudioSource))]
 public class VRInputFieldController : VRUIElement {
     //InputConsoleManager ic = null;
     InputField Field;
+
+    [SerializeField] private InputActionReference Trigger;
+
     int _myCaret = 0;
     int MyCaret
         {
@@ -76,12 +84,13 @@ public class VRInputFieldController : VRUIElement {
         /*if (fp != null)
             fp.OnButtonClicked += Click;
         else */if (c != null)
-            c.TriggerClicked += Click;
+        //c.TriggerClicked += Click;
+        Trigger.action.performed += Click;
 
         Field.Select();
     }
 
-    public override void Click(object sender, ClickedEventArgs e)
+    public override void Click(InputAction.CallbackContext e) // done: controllare se vr button controller needed, in tal caso correggere click _LV 
     {
         if (!InputActive)
         {
@@ -175,7 +184,7 @@ public class VRInputFieldController : VRUIElement {
         {
             if (!InputActive)
             {
-                c = other.GetComponent<SteamVR_TrackedController>();
+                c = other.GetComponent<ActionBasedController>();
                 if (c != null)
                 {
                     var i = c.GetComponent<ControllerManager>();
@@ -233,7 +242,8 @@ public class VRInputFieldController : VRUIElement {
         }
         else */if (c != null)
         { 
-            c.TriggerClicked -= Click;
+            //c.TriggerClicked -= Click;
+            Trigger.action.performed -= Click;
             c = null;
         }
         //InputActive = false;
@@ -257,3 +267,4 @@ public class VRInputFieldController : VRUIElement {
         }
     }
 }
+//#endif

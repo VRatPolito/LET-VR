@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Sample_Mod4_blocks_outline green
-  m_Shader: {fileID: 4800000, guid: 253cc723461c2fd41b101f50d8e4d824, type: 3}
+  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: _DETAIL_MULX2 _EMISSION _NORMALMAP _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
@@ -28,7 +28,7 @@ Material:
         m_Scale: {x: 12, y: 12}
         m_Offset: {x: 12, y: 12}
     - _DetailMask:
-        m_Texture: {fileID: 2800000, guid: ba2fba32e602ed14f81a5c3d77292bb8, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailNormalMap:
@@ -81,6 +81,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 0.89705884, g: 0.89705884, b: 0.89705884, a: 1}
-    - _EmissionColor: {r: 0, g: 0.5448277, b: 1, a: 1}
+    - _EmissionColor: {r: 0, g: 0.67, b: 0.07816675, a: 1}
     - _EmitColor: {r: 0, g: 0.6698113, b: 0.08346052, a: 1}
     - _OutlineColor: {r: 1, g: 1, b: 1, a: 0}
+  m_BuildTextureStacks: []

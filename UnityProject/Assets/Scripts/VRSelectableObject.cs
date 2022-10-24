@@ -1,6 +1,10 @@
-﻿using System.Collections;
+﻿//#if(UNITY_EDITOR)
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.InputSystem;
 
 public class VRSelectableObject : VRUIElement {
 
@@ -8,8 +12,11 @@ public class VRSelectableObject : VRUIElement {
     [HideInInspector]
     public MyDelegate OnObjectSelected, OnObjectClicked, OnObjectUnSelected;
     public Transform Highlight;
-	// Use this for initialization
-	void Start () {
+
+    [SerializeField] private InputActionReference Trigger;
+
+    // Use this for initialization
+    void Start () {
         Highlight.gameObject.SetActive(false);
     }
 	
@@ -35,12 +42,13 @@ public class VRSelectableObject : VRUIElement {
         /*if (fp != null)
             fp.OnButtonClicked += Click;
         else */if (c != null)
-            c.TriggerClicked += Click;
+        //c.TriggerClicked += Click;
+        Trigger.action.performed += Click;
         /*else if (fpi != null)
             fpi.OnButtonClicked += Click;*/
     }
 
-    public override void Click(object sender, ClickedEventArgs e)
+    public override void Click(InputAction.CallbackContext e) // done: controllare se vr button controller needed, in tal caso correggere click _LV  
     {
         if (OnObjectClicked != null)
         {
@@ -52,7 +60,7 @@ public class VRSelectableObject : VRUIElement {
                 OnObjectClicked(fpi);*/
         }
         Highlight.gameObject.SetActive(false);
-        base.Click(sender, e);
+        base.Click(e);
     }
 
     public override void ElementUnSelected()
@@ -60,7 +68,8 @@ public class VRSelectableObject : VRUIElement {
         Highlight.gameObject.SetActive(false);
 
         if (c != null)
-            c.TriggerClicked -= Click;
+        //c.TriggerClicked -= Click;
+        Trigger.action.performed -= Click;
         /*else if (fp != null)
             fp.OnButtonClicked -= Click;
         else if (fpi != null)
@@ -94,3 +103,4 @@ public class VRSelectableObject : VRUIElement {
     }
 
 }
+//#endif

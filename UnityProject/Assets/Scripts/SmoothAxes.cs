@@ -2,11 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.InputSystem;
 
 public class SmoothAxes : MonoBehaviour
 {
     enum InputMode { Touch, Click };
-    SteamVR_TrackedController _controller;
+    //SteamVR_TrackedController _controller;
+    ActionBasedController _controller;
     private Vector2 _axis = Vector2.zero, _target = Vector2.zero;
     [SerializeField]
     private InputMode _mode = InputMode.Click;
@@ -17,8 +20,11 @@ public class SmoothAxes : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        _controller = GetComponent<SteamVR_TrackedController>();
-        switch (_mode)
+        // _controller = GetComponent<SteamVR_TrackedController>();
+        _controller = GetComponent<ActionBasedController>();
+        Debug.LogError("SmoothAxes.cs hasn't been updated to XRInteractionToolkit yet");
+        //sostituire con action based
+       /* switch (_mode)
         {
             case InputMode.Click:
                 _controller.PadClicked += PadDown;
@@ -28,16 +34,16 @@ public class SmoothAxes : MonoBehaviour
                 _controller.PadTouched += PadDown;
                 _controller.PadUntouched += PadUp;
                 break;
-        }
+        }*/
     }
 
-    private void PadUp(object sender, ClickedEventArgs e)
+    private void PadUp(InputAction.CallbackContext e)
     {
         _padHeld = false;
         _pad = Vector2.zero;
     }
 
-    private void PadDown(object sender, ClickedEventArgs e)
+    private void PadDown(InputAction.CallbackContext e)
     {
         _padHeld = true;
     }
@@ -49,6 +55,8 @@ public class SmoothAxes : MonoBehaviour
             float x = 0, y = 0;
             if(_padHeld)
             {
+                Debug.Log("SmoothAxes partially updated: missin touch position update");
+                /*
                 _pad = _controller.touchPos;
                 if (_pad.x > 0)
                     x = 1;
@@ -57,7 +65,7 @@ public class SmoothAxes : MonoBehaviour
                 if (_pad.y > 0)
                     y = 1;
                 else if (_pad.y < 0)
-                    y = -1;
+                    y = -1;*/
             }
             _target = new Vector2(x, y);
         }

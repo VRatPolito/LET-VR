@@ -36,7 +36,12 @@ public class CollisionDetect : MonoBehaviour
         {
             HitType type = HitAnyThing(c.tag);
             if (type != HitType.Other)
+            {
                 FindObjectOfType<StatisticsLoggerBase>().LogCollisions(type);
+                LocomotionManager.Instance.LeftController.GetComponent<VibrationController>().ShortVibration(.7f);
+                LocomotionManager.Instance.RightController.GetComponent<VibrationController>().ShortVibration(.7f);
+            }
+
             OnHit.RaiseEvent(this, type);
         };
         if (IsBullet)

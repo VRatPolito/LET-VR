@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using DG.Tweening;
 using PrattiToolkit;
 using TMPro;
-using Unity.Entities;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -183,15 +182,17 @@ public class DronesCoinCollectorController : MonoBehaviour
     private void Collect(Collider coin)
     {
         if (coin.tag != "Collectable") return;
-        GameObjectEntity otherGameObjectEntity = coin.GetComponent<GameObjectEntity>();
-        if (!otherGameObjectEntity) return;
+        //FIXME GameObjectEntity otherGameObjectEntity = coin.GetComponent<GameObjectEntity>();
+        //if (!otherGameObjectEntity) return;
+        var isCoin = coin.GetComponent<CoinRotator>();
+        if (!isCoin) return;
 
         Score++;
-        Destroy(coin.gameObject);
-        Debug.Log($"collect {coin.gameObject.name}");
+        Debug.Log($"collect {isCoin.gameObject.name}");
         _coinAudioSource.ForEach(source => source.PlayOneShot(source.clip, 0.6f));
         //var entityManager = World.Active.GetExistingManager<EntityManager>();
         //entityManager.DestroyEntity(otherGameObjectEntity.Entity);
+        Destroy(isCoin.gameObject);
     }
 
     #endregion
