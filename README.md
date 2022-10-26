@@ -35,7 +35,7 @@
 For an overview of the project have a look at the video here below presented at the\
 *ACM SIGGRAPH Symposium on Interactive 3D Graphics and Games* (i3D 2021)\
 \
-[![Presentation Video i3dg 2021](https://i.postimg.cc/SRXQ68Jh/front-video.png)](https://www.youtube.com/watch?v=si1omc3T9W4?t=7600 "Video Title")
+[![Presentation Video i3dg 2021](https://i.postimg.cc/SRXQ68Jh/front-video.png)](https://youtu.be/si1omc3T9W4?t=7600 "Video Title")
 
 ## Videos
 
