@@ -1,5 +1,5 @@
 ﻿<p align="center" width="100%">
-    <img width="300" src="https://i.postimg.cc/JhCd9T52/giffone-2c.gif"> 
+    <img width="350" src="https://i.postimg.cc/JhCd9T52/giffone-2c.gif"> 
 </p>
 
 # Locomotion Evaluation Testbed VR (OpenXR - Unity v2020LTS)
@@ -18,17 +18,24 @@
 </p>
 
 ## Table of contents
-
+* [Introduction](#introduction)
 * [Videos](#videos)
 * [Experimental Material](#experimental-material)
 * [Builds and Building](#builds)
 * [Configuration](#configuration)
-* [Custom Locomotion Technique](#Implementing-a-Custom-Locomotion-Technique)
-* [Forking Policies](#Forking-Policies)
+* [Custom Locomotion Technique](#implementing-a-custom-locomotion-technique)
+* [Forking Policies](#forking-policies)
 * [Citation](#citation)
 * [Contacts](#contact)
 * [License](#license)
 * [Acknowledgements](#acknowledgements)
+
+## Introduction
+
+For an overview of the project have a look at the video here below presented at the\
+*ACM SIGGRAPH Symposium on Interactive 3D Graphics and Games* (i3D 2021)\
+\
+[![Presentation Video i3dg 2021](https://i.postimg.cc/SRXQ68Jh/front-video.png)](https://www.youtube.com/watch?v=si1omc3T9W4?t=7600 "Video Title")
 
 ## Videos
 
@@ -180,6 +187,7 @@ The **LET-VR** design is detailed in:
 - *An Evaluation Testbed for Locomotion in Virtual Reality*
     - [**IEEE TVCG**](https://dx.doi.org/10.1109/TVCG.2020.3032440)
     - [**ArXiv**](https://arxiv.org/abs/2010.10178)
+    - Have a look at the introductory video in [**Introduction**](#introduction) 
 
 
 ## Contact
